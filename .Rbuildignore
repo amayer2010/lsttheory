@@ -1,0 +1,7 @@
+ressources
+test
+R/growthcomponents.R
+^.*\.Rproj$
+^\.Rproj\.user$
+.gitignore
+.git
