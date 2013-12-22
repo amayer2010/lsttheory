@@ -1,5 +1,6 @@
 ressources
 test
+vignettes
 R/growthcomponents.R
 ^.*\.Rproj$
 ^\.Rproj\.user$

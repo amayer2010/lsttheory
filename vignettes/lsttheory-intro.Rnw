@@ -1,0 +1,328 @@
+\documentclass[10pt]{article}
+\usepackage[english]{babel}
+\usepackage{graphicx,color,alltt}
+\usepackage{hyperref}
+\usepackage{apacite}
+
+\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+
+\hypersetup{%
+hyperindex,%
+colorlinks,%
+linktocpage,%
+plainpages=false,%
+linkcolor=blue,%
+citecolor=blue,%
+urlcolor=red,%
+pdfstartview=Fit,%
+pdfview={XYZ null null null}%
+}
+
+
+\begin{document}
+
+%\SweaveOpts{concordance=TRUE}
+%\SweaveOpts{engine=R,eps=FALSE}
+%\SweaveOpts{keep.source=TRUE}
+
+%\VignetteIndexEntry{lsttheory: An \textsf{R}  Package for Fast Computation of State Trait Models}
+%\VignetteDepends{lsttheory}
+%\VignetteKeywords{states, traits, reliability, occasion specificity, consistency}
+%\VignettePackage{lsttheory}
+
+
+\title{\texttt{lsttheory}: An \textsf{R}  Package for Fast Computation of State Trait Models}
+
+\author{
+  Axel Mayer\\
+  University of Jena
+  \and
+  Rolf Steyer\\
+  University of Jena
+  \and
+  Christian Geiser\\
+  Utah State University
+  \and
+  David A. Cole\\
+  Vanderbilt University
+}
+
+\date{\today}
+\maketitle
+
+\begin{abstract}
+This \textsf{R} \cite{RCoreTeam} package is a supplement for the article 'A Theory of States and Traits' (Steyer, Geiser, Cole, \& Mayer, 2013). It is based on the structural equation modeling \textsf{R} package \texttt{lavaan} (Rosseel, 2012) and provides a convenient interface to compute some common models of the revised latent state-trait theory (LST-R theory). The main function of the package allows for easy specification of multistate, multistate-singletrait, and multistate-multitrait models. It automatically generates \texttt{lavaan} syntax for these models, runs the models, and returns model estimates together with reliability, occasion specificity, and consistency coefficients for the respective models. There is also an additional package called
+\texttt{lsttheoryGUI}, which depends on \texttt{lsttheory}. The \texttt{lsttheoryGUI} provides a graphical user interface, i.e., a click menu, for users who are not familiar with \textsf{R}. \texttt{lsttheoryGUI} works best with the JGR console for R (Markus Helbig, Simon Urbanek, \& Ian Fellows, 2013).
+
+\end{abstract}
+
+\noindent
+{\bf Keywords:} states, traits, reliability, occasion specificity, consistency \\
+
+
+\textbf{Cautionary Note:} The package is currently under development and some things may change in the future. We are at an early stage of development and it is likely that the structure and key aspects of the two packages will change. The latest versions can be downloaded from \url{metheval.uni-jena.de}. We also plan to release the package on CRAN, once we are a bit furhter in the develpment process. Please report any bugs.
+
+
+
+
+\newpage
+\tableofcontents
+
+\newpage
+
+
+
+\section{Introduction} \label{sec:intro}
+
+\texttt{lsttheory} allows for easy specification of multistate, multistate-singletrait, and multistate-multitrait models. This vignette is structured as follows: We first describe the installation process in detail for nonexperienced users of \textsf{R}. Users who are familiar with package installation from local .zip files may wish to skip this section. We then present various kinds of LST-R theory models with syntax and model results.
+
+
+
+\section{Installation}
+
+The \textsf{R} package \texttt{lsttheory} will most likely be installed from a local file. Therefore, we need to install the dependencies first. The installation has been tested under Windows 7 and under Linux (Ubuntu 11.10). It should also work under Mac OS X using the JGR console --- but we haven't tested it yet. Please make sure that you are using R version 3.0.1 or higher.
+
+\subsection{Windows Installation}
+
+For a Windows installation (without Rtools) we suggest installing the dependencies from a CRAN mirror first by executing
+%
+<<wininstall1, eval=F>>=
+install.packages("lavaan")  ## for lsttheory
+install.packages("Deducer")  ## for lsttheoryGUI
+@
+%
+in the console (either the standard Rconsole or the JGR console) and then selecting a mirror next to you. After that, the \textsf{R} package \texttt{lsttheory} can be installed using the Windows binary file (with file ending .zip) as follows:
+%
+<<wininstall2, eval=F>>=
+install.packages("D:/workspace/lsttheory_0.1-1.zip")
+install.packages("D:/workspace/lsttheoryGUI_0.1-1.zip")
+@
+%
+Please adjust the file path and version number accordingly. We recommend using the JGR console (\url{http://rforge.net/JGR/}). The JGR console can be called via a launcher or from with an R session by calling
+%
+<<loadjgr, eval=F>>=
+library(JGR)
+JGR()
+@
+%
+
+
+\subsection{Linux Installation}
+
+We assume that Linux users are familiar with installing \textsf{R} packages from source. The source files are \texttt{lsttheory\_0.1-1.tar.gz} and \texttt{lsttheoryGUI\_0.1-1.tar.gz}. Note that for the graphical user interface to work, the user may want to use the JGR console. The JGR console can be called from with an R session by calling
+%
+<<loadjgrlinux, eval=F>>=
+library(JGR)
+JGR()
+@
+%
+
+\subsection{Loading the Package}
+
+After having succesfully installed the packages, we need to load them:
+%
+<<loading,eval=TRUE>>=
+library("lsttheory")
+#library("lsttheoryGUI")
+@
+%
+If you are using the JGR console, you can click on default next to the lsttheory and lsttheoryGUI entry in the Package Installer. Then the packages and their dependencies are automatically loaded every time you open JGR.
+
+\newpage
+\section{Multistate Models}
+
+The lsttheory pacakge contains several simulated example datasets. The first one that we use is the dataset \texttt{multistate}. It contains 9 manifest variables $Y_{it}$, where the index refers to the $i$th manifest variable assessed at occasion $t$.
+%
+<<datamultistate>>=
+data(multistate)
+head(round(multistate,2))
+@
+%
+
+\subsection{Multistate Model with $\eta_t$-Congenericity}
+
+First, we use this dataset to fit a multistate model with $\eta_t$-congenericity and conditional mean independence (see Box 4.1 of SGCM). The main function of our package to be called by the user is \texttt{lsttheory}. See \texttt{?lsttheory} for details. It is used to fit all models. The multistate model with $\eta_t$-congenericity can be specified as follows:
+
+
+%
+<<multistate01>>=
+m1 <- lsttheory(neta=3, data=multistate)
+print(m1)
+@
+%
+
+The lsttheory function just requires two mandatory arguments: The number of common state variables $\eta_t$ and the dataset to use. In the current version of our package, the dataset may only include the manifest variables $Y_{it}$ and these should be ordered by occasion $t$ and indicator $i$, i.e., $Y_{11}, Y_{21}, \ldots, Y_{12}, Y_{22}, \ldots, Y_{13}, Y_{23}, \ldots$. The lsttheory function returns an object of class lsttheory for which several methods are available. \texttt{print(m1)} shows reliability, occasion specificity, and consistency coefficients (see Box 3.1 of SGCM). For the multistate model only reliability coefficients are available, because traits are not modeled.
+
+The function lsttheory has automaticall generated lavaan input syntax:
+%
+<<multistate01_lavaansyntax>>=
+cat(m1@lavaansyntax)
+@
+%
+and the lavaan output can be seen by calling:
+%
+<<multistate01_lavaanout>>=
+summary(m1@lavaanres)
+@
+%
+The slot lavaanres in the m1 object contains the fitted lavaan object of class lavaan. See \texttt{?"lavaan-class"} for more information and available methods.
+
+
+\subsection{Multistate Model with Essential $\eta_t$-Equivalence}
+
+The default setting of the lsttheory function is to assume $\eta_t$-congenericity. If we want to assume essential $\eta_t$-equivalence, we need to specify an additional argument, namely the \texttt{equiv.assumption} argument, which is a list of equivalence assumptions. For the multistate model, the xi argument will be ignored. By specifying \texttt{tau="ess"}, we assume essential $\eta_t$-equivalence:
+%
+<<multistate02>>=
+m1 <- lsttheory(neta=3, data=multistate, equiv.assumption=list(tau="ess", xi="equi"))
+coef(m1@lavaanres, type="user")
+@
+%
+
+
+
+\subsection{Multistate Model with $\eta_t$-Equivalence}
+
+Similarly, if we want to assume $\eta_t$-equivalence, we specify the equivalence assumption as follows:
+%
+<<multistate03>>=
+m1 <- lsttheory(neta=3, data=multistate, equiv.assumption=list(tau="equi", xi="equi"))
+coef(m1@lavaanres, type="user")
+@
+%
+
+
+
+\subsection{Multistate Models with Scale Invariance}
+
+In order to add scale invariance assumptions over time, we need to specify the scale.invariance argument. The default is not to assume scale invariance. The scale invariance argument is a list of four entries. For the multistate models, only the first and the second entry are relevant. The first entry refers to scale invariance of intercepts and the second entry refers to scale invariance of loadings. For example, if we want to specify a multistate model with $\eta_t$-congenericity and scale invariance of intercepts and loadings, the function call is:
+
+%
+<<multistate04>>=
+m1 <- lsttheory(neta=3, data=multistate, scale.invariance=list(lait0=TRUE, lait1=TRUE, gat0=TRUE, gat1=TRUE))
+coef(m1@lavaanres, type="user")
+@
+%
+Of course, the scale invariance argument can also be used for a multistate model with essential $\eta_t$-equivalence. Then, the lait1 entry is ignored.
+%
+<<multistate05,eval=FALSE>>=
+m1 <- lsttheory(neta=3, data=multistate, equiv.assumption=list(tau="ess", xi="equi"), scale.invariance=list(lait0=TRUE, lait1=TRUE, gat0=TRUE, gat1=TRUE))
+@
+%
+For a multistate model with $\eta_t$-equivalence, all scale invariance settings are ignored.
+
+\subsection{Multistate Models with Method Factors}
+
+Section under development
+
+\newpage
+\section{Multistate-Singletrait Models}
+
+\subsection{Multistate-Singletrait Models with $\theta$-Congenericity}
+
+The same function lsttheory can also be used to fit multistate-singletrait models in LST-R theory. We only need to specify that there is one $\xi$ variable\footnote{The names of the variables will be changed to be in line with SGCM} in addition to the specification of the corresponding multistate model. The following syntax specifies a multistate-singletrait model with the these assumptions:
+%
+\begin{itemize}
+  \item $\eta_t$-congenericity (Box 4.1 of SGCM)
+  \item conditional mean independence (Box 4.1 of SGCM)
+  \item $\theta$-congenericity (Box 5.1 of SGCM)
+\end{itemize}
+%
+<<multistatesingletrait01>>=
+m1 <- lsttheory(neta=3, nxi=1, data=multistate)
+print(m1)
+@
+%
+We now also get estimates for the occasion specificity and consistency coefficents in addition to the reliability coefficients. To see all parameters of the model:
+%
+<<multistatesingletrait02>>=
+coef(m1@lavaanres, type="user")
+@
+%
+
+
+
+\subsection{Multistate-Singletrait Models with $\theta$-Equivalence}
+
+We don't show all possible combinations of assumptions. We just give one more example of a multistate-singletrait model with this set of assumptions:
+%
+\begin{itemize}
+  \item essential $\eta_t$-equivalence (Box 4.1 of SGCM)
+  \item scale invariance over time
+  \item conditional mean independence (Box 4.1 of SGCM)
+  \item $\theta$-equivalence (Box 5.1 of SGCM)
+\end{itemize}
+%
+%
+<<multistatesingletrait03>>=
+m1 <- lsttheory(neta=3, nxi=1, data=multistate, equiv.assumption=list(tau="ess", xi="equi"), scale.invariance=list(lait0=TRUE, lait1=TRUE, gat0=TRUE, gat1=TRUE))
+coef(m1@lavaanres, type="user")
+@
+%
+
+
+
+\newpage
+\section{Multistate-Doubletrait Models}
+
+For the mulistate doubletrait models, we need to use a different data set, because we need at least two common state variables for each of the $\theta$ variables. The simulated data set is called \texttt{multitraitmultistate} and contains 8 manifest variables $Y_{it}$ distributed across 4 occasions of measurement:
+
+%
+<<datamultitraitmultistate>>=
+data(multitraitmultistate)
+head(round(multitraitmultistate,2))
+@
+%
+
+
+
+\subsection{Multistate-Doubletrait Models with $\theta_1,\theta_2$-Congenericity}
+
+
+The first model that we want to show with this dataset is a multistate-doubletrait model with these assumptions:
+%
+\begin{itemize}
+  \item $\eta_t$-congenericity (Box 4.1 of SGCM)
+  \item conditional mean independence (Box 4.1 of SGCM)
+  \item $\theta_1$-congenericity (Box 6.1 of SGCM)
+  \item $\theta_2$-congenericity (Box 6.1 of SGCM)
+\end{itemize}
+%
+
+The model syntax is:
+
+%
+<<multistatedoubletrait01>>=
+m1 <- lsttheory(neta=4, nxi=2, data=multitraitmultistate)
+coef(m1@lavaanres, type="user")
+@
+%
+
+\newpage
+
+\section{Plot LST-R Theory Models with \texttt{semPlot}}
+
+
+\newpage
+
+\section{Graphical User Interface \texttt{lsttheoryGUI}}
+
+The graphical user interface is under development. It currently contains two menu items: One for loading the datasets included in the package and one for specifying the LST-R theory model. Figure \ref{fig:loaddata} shows a screenshot of the dialog that can be used to load datasets. 
+
+\begin{figure}
+  \includegraphics[scale=0.5]{loaddata.png}
+  \label{fig:loaddata}
+\end{figure}
+
+
+Figure \ref{fig:lsttheory} shows a screenshot of the dialog for specifying the LST-R theory models. The dialog is a convenient graphical interface for the \texttt{lsttheory} function described previously. The graphical user interface provides easy access to almost all functionality described earlier in this vignette.
+
+
+\begin{figure}
+  \includegraphics[scale=0.5]{lsttheory.png}
+  \label{fig:lsttheory}
+\end{figure}
+
+
+\end{document}
