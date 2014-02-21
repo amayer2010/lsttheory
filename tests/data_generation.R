@@ -105,8 +105,37 @@ y24 <- 0.3 + 1.2*eta4 + rnorm(N)
 x <- rbinom(N,1,plogis(xi2, location=1))
 
 multitraitmultistate <- data.frame(y11,y21,y12,y22,y13,y23,y14,y24)
-multitraitmultistate02 <- data.frame(y11,y21,y12,y22,y13,y23,y14,y24,x)
-
 save(multitraitmultistate, file="../data/multitraitmultistate.RData")
+
+
+
+################ dataset: multigroup-multitrait-multistate model ###################
+
+set.seed(222999)
+
+N <- 1000
+x <- rbinom(N,1,0.5)
+xi1 <- rnorm(N,0.5,sqrt(3))
+xi2 <- 0.7 + 0.8*xi1 + 1*x + 0.4*x*xi1 + rnorm(N,0,1)
+
+eta1 <- 0 + 1*xi1 + rnorm(N)
+eta2 <- 0.4 + 0.7*xi1 + rnorm(N)
+eta3 <- 0 + 1*xi2 + rnorm(N)
+eta4 <- 0.4 + 0.7*xi2 + rnorm(N)
+
+y11 <- 0 + 1*eta1 + rnorm(N)
+y21 <- 0.3 + 1.2*eta1 + rnorm(N)
+
+y12 <- 0 + 1*eta2 + rnorm(N)
+y22 <- 0.3 + 1.2*eta2 + rnorm(N)
+
+y13 <- 0 + 1*eta3 + rnorm(N)
+y23 <- 0.3 + 1.2*eta3 + rnorm(N)
+
+y14 <- 0 + 1*eta4 + rnorm(N)
+y24 <- 0.3 + 1.2*eta4 + rnorm(N)
+
+
+multitraitmultistate02 <- data.frame(y11,y21,y12,y22,y13,y23,y14,y24,x)
 save(multitraitmultistate02, file="../data/multitraitmultistate02.RData")
 

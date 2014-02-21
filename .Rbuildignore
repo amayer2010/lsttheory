@@ -1,5 +1,4 @@
-ressources
-test
+tests
 vignettes
 R/growthcomponents.R
 ^.*\.Rproj$

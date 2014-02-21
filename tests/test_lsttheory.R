@@ -1,34 +1,11 @@
 
-model <- '
-eta1 =~ la111*y11 + la211*y21 + la311*y31
-eta2 =~ la121*y12 + la221*y22 + la321*y32
-eta3 =~ la131*y13 + la231*y23 + la331*y33
+library(lsttheory)
 
-xi =~ 1*eta1 + 1*eta2 + 1*eta3
-
-y11 ~ la110*1 + 0*1
-y21 ~ la210*1
-y31 ~ la310*1
-
-eta1 ~~ vareta1*eta1
-
-y21 ~~ eps21*y21
-y11 ~~ eps11*y11
-
-vary11 := 1^2 * vareta1 + eps11
-vary21 := la211^2 * vareta1 + eps21
-'
-
-m1 <- sem(model, multistate)
-summary(m1)
-coef(m1, type="user")
-inspect(m1,"r2")
-
-test <- parTable(m1)
 
 names(multistate)
 
-m1 <- lsttheory(3,1,data=multistate)
+m1 <- lsttheory(2,1,data=multistate,
+                equiv.assumption=list(tau="equi", xi="cong"))
 m1
 cat(m1@lavaansyntax)
 summary(m1@lavaanres)

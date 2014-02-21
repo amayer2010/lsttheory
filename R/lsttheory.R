@@ -3,6 +3,29 @@
 
 ##TODO invarianz für 3 oder mehr Indikatoren anpassen...
 
+#' Estimate latent state-trait models
+#' 
+#' This function is the main funtion of the package and can be used to estimate
+#' various latent state-trait models (LST models). It is based on the 
+#' revised version of the LST theory presented in 
+#' Steyer, Mayer, Geiser & Cole (in press).
+#' 
+#' @param neta integer. Number of latent state variables eta.
+#' @param nxi integer. Number of latent state trait variables xi.
+#' @param data a data frame. 
+#' @param subset picks a subset of data.
+#' @param order can be one of c("time").
+#' @param addsyntax character string.
+#' @param equiv.assumption list of equivalence assumptions for tau variables (tau)
+#' and xi variables (TODO: better names). Each can be one of c("equi","ess","cong"),
+#' for equivalence ("equi"), essential equivalence ("ess"), 
+#' or congenericity ("cong").
+#' @param scale.invariance list of invariance assumtions for lambda and gamma
+#' parameters
+#' @param ... further arguments passed to lavaan::sem().
+#' @return object of class LSTModel. 
+#' @export
+#' @import lavaan
 lsttheory <- function(neta, nxi=0, data, subset=NULL, order="time", addsyntax="", equiv.assumption=list(tau="cong", xi="cong"), scale.invariance=list(lait0=FALSE, lait1=FALSE, gat0=FALSE, gat1=FALSE), ...)
 {
   checkInput() # TODO
