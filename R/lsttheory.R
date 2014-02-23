@@ -11,25 +11,26 @@
 #' Steyer, Mayer, Geiser & Cole (in press).
 #' 
 #' @param neta integer. Number of latent state variables eta.
-#' @param nxi integer. Number of latent state trait variables xi.
-#' @param data a data frame. 
-#' @param subset picks a subset of data.
-#' @param order can be one of c("time").
+#' @param ntheta integer. Number of latent trait variables theta.
+#' @param data a data frame. This data frame only contains the observables, which
+#' will all be used to fit the LST-R model. The order of the observables Y_it 
+#' should be by time t and then by indicator i, i.e., Y_11, Y_21, ..., Y_12, 
+#' Y_22, ... and so forth
 #' @param addsyntax character string.
 #' @param equiv.assumption list of equivalence assumptions for tau variables (tau)
-#' and xi variables (TODO: better names). Each can be one of c("equi","ess","cong"),
+#' and theta variables. Each can be one of c("equi","ess","cong"),
 #' for equivalence ("equi"), essential equivalence ("ess"), 
 #' or congenericity ("cong").
-#' @param scale.invariance list of invariance assumtions for lambda and gamma
+#' @param scale.invariance list of invariance assumtions for lambda_it and lambda_t
 #' parameters
 #' @param ... further arguments passed to lavaan::sem().
 #' @return object of class LSTModel. 
 #' @export
 #' @import lavaan
-lsttheory <- function(neta, nxi=0, data, subset=NULL, order="time", addsyntax="", equiv.assumption=list(tau="cong", xi="cong"), scale.invariance=list(lait0=FALSE, lait1=FALSE, gat0=FALSE, gat1=FALSE), ...)
+lsttheory <- function(neta, ntheta = 0, data, addsyntax = "", equiv.assumption = list(tau = "cong", theta = "cong"), scale.invariance = list(lait0 = FALSE, lait1 = FALSE, lat0 = FALSE, lat1 = FALSE), ...)
 {
   checkInput() # TODO
-  mod <- createLSTModel(neta, nxi, data, equiv.assumption, scale.invariance)
+  mod <- createLSTModel(neta, ntheta, data, equiv.assumption, scale.invariance)
   
   completesyntax <- createCompleteSyntax(mod)
   completesyntax <- paste0(completesyntax, addsyntax, sep="\n")
@@ -77,12 +78,12 @@ setMethod ("show", "LSTModel",
 })
 
 
-createLSTModel <- function (neta, nxi, data, equiv.assumption, scale.invariance){
+createLSTModel <- function (neta, ntheta, data, equiv.assumption, scale.invariance){
   
   name=character()
-  if(nxi == 0){name <- "Multistate"}
-  if(nxi == 1){name <- "Singletrait-Multistate"}
-  if(nxi > 1){name <- "Multitrait-Multistate"}
+  if(ntheta == 0){name <- "Multistate"}
+  if(ntheta == 1){name <- "Singletrait-Multistate"}
+  if(ntheta > 1){name <- "Multitrait-Multistate"}
   
   lstmodel <- list(name = name,
                    equiv.assumption = equiv.assumption,
@@ -90,19 +91,19 @@ createLSTModel <- function (neta, nxi, data, equiv.assumption, scale.invariance)
   
   number <- list(manifest = length(names(data)),
                  eta = neta,
-                 xi = nxi,
+                 theta = ntheta,
                  etaind = length(names(data))/neta,
-                 xiind = ifelse(nxi==0, NA, neta/nxi)
+                 thetaind = ifelse(ntheta==0, NA, neta/ntheta)
   )
   
   labels <- createLabels(number, lstmodel)
   
-  xi <- character()
-  if(nxi > 0){xi <- paste0("xi", 1:nxi)}
+  theta <- character()
+  if(ntheta > 0){theta <- paste0("theta", 1:ntheta)}
   
   names <- list(manifest = names(data),
                 eta = paste0("eta", 1:neta),
-                xi = xi
+                theta = theta
   )
   
   
@@ -134,8 +135,8 @@ createLabels <- function(number, lstmodel)
   alpha <- paste0("ga",1:number$eta,"0")
   gamma <- paste0("ga",1:number$eta,"1")
   psi <- paste0("psi",1:number$eta)
-  varxi <- character()
-  mxi <- character()
+  vartheta <- character()
+  mtheta <- character()
   vareta <- paste0("vareta",1:number$eta)
   vary <- paste0("vary",it)
   rely <- paste0("rely",it)
@@ -143,7 +144,7 @@ createLabels <- function(number, lstmodel)
   cony <- paste0("cony",it)
 
   fixedeta <- seq(1,number$manifest,by=number$manifest/number$eta) 
-  fixedxi <- seq(1,number$eta,by=number$eta/number$xi)
+  fixedtheta <- seq(1,number$eta,by=number$eta/number$theta)
   
   # for all models
   if(!is.null(lstmodel$name)){
@@ -176,34 +177,34 @@ createLabels <- function(number, lstmodel)
   
   if(lstmodel$name != "Multistate"){
     
-    if(lstmodel$equiv.assumption$xi == "equi"){
+    if(lstmodel$equiv.assumption$theta == "equi"){
       alpha <- rep("0", number$eta)
       gamma <- rep("1", number$eta)      
     }
-    if(lstmodel$equiv.assumption$xi == "ess"){
-      alpha[fixedxi] <- 0
+    if(lstmodel$equiv.assumption$theta == "ess"){
+      alpha[fixedtheta] <- 0
       gamma <- rep("1", number$eta)
       
-      if(lstmodel$scale.invariance$gat0){
-        alpha <- rep(alpha[1:number$xiind], number$xi)        
+      if(lstmodel$scale.invariance$lat0){
+        alpha <- rep(alpha[1:number$thetaind], number$theta)        
       }
     }
-    if(lstmodel$equiv.assumption$xi == "cong"){
-      alpha[fixedxi] <- 0
-      gamma[fixedxi] <- 1
+    if(lstmodel$equiv.assumption$theta == "cong"){
+      alpha[fixedtheta] <- 0
+      gamma[fixedtheta] <- 1
       
-      if(lstmodel$scale.invariance$gat0){
-        alpha <- rep(alpha[1:number$xiind], number$xi)
+      if(lstmodel$scale.invariance$lat0){
+        alpha <- rep(alpha[1:number$thetaind], number$theta)
       }
-      if(lstmodel$scale.invariance$gat1){
-        gamma <- rep(gamma[1:number$xiind], number$xi)
+      if(lstmodel$scale.invariance$lat1){
+        gamma <- rep(gamma[1:number$thetaind], number$theta)
       }
     }   
   }
   
     
-  if(number$xi > 0){varxi <- paste0("varxi",1:number$xi)}
-  if(number$xi > 0){mxi <- paste0("mxi",1:number$xi)}
+  if(number$theta > 0){vartheta <- paste0("vartheta",1:number$theta)}
+  if(number$theta > 0){mtheta <- paste0("mtheta",1:number$theta)}
   
   labels <- list(nu=nu,
                  lambda=lambda,
@@ -211,8 +212,8 @@ createLabels <- function(number, lstmodel)
                  alpha=alpha,
                  gamma=gamma,
                  psi=psi,
-                 varxi=varxi,
-                 mxi=mxi,
+                 vartheta=vartheta,
+                 mtheta=mtheta,
                  vareta=vareta,
                  vary=vary,
                  rely=rely,
@@ -232,9 +233,9 @@ createCompleteSyntax <- function(mod)
                            createSyntaxMeanEta(mod), "\n",
                            createSyntaxVarEps(mod), "\n",
                            createSyntaxVarEta(mod),  "\n",
-                           createSyntaxLoadingsXi(mod),  "\n",
-                           createSyntaxVarXi(mod),  "\n",
-                           createSyntaxMeanXi(mod),  "\n",
+                           createSyntaxLoadingstheta(mod),  "\n",
+                           createSyntaxVartheta(mod),  "\n",
+                           createSyntaxMeantheta(mod),  "\n",
                            collapse=""
   )  
   
@@ -304,12 +305,12 @@ createSyntaxVarEta <- function(mod)
 }
 
 
-createSyntaxLoadingsXi <- function(mod)
+createSyntaxLoadingstheta <- function(mod)
 {
   res <- character(0)
   
-  if(mod@number$xi > 0){
-    lhs <- rep(mod@names$xi, each=mod@number$xiind)  
+  if(mod@number$theta > 0){
+    lhs <- rep(mod@names$theta, each=mod@number$thetaind)  
     rhs <- paste(mod@labels$gamma, mod@names$eta, sep="*")      
     res <- paste(lhs, "=~", rhs, collapse="\n")  
   }
@@ -320,13 +321,13 @@ createSyntaxLoadingsXi <- function(mod)
 
 
 
-createSyntaxMeanXi <- function(mod)
+createSyntaxMeantheta <- function(mod)
 {
   res <- character(0)
   
-  if(mod@number$xi > 0){
-    lhs <- mod@names$xi
-    rhs <- paste(mod@labels$mxi,"1",sep="*")
+  if(mod@number$theta > 0){
+    lhs <- mod@names$theta
+    rhs <- paste(mod@labels$mtheta,"1",sep="*")
     res <- paste(lhs, "~", rhs, collapse="\n")      
   }
 
@@ -335,13 +336,13 @@ createSyntaxMeanXi <- function(mod)
 
 
 
-createSyntaxVarXi <- function(mod)
+createSyntaxVartheta <- function(mod)
 {
   res <- character(0)
   
-  if(mod@number$xi > 0){
-    lhs <- mod@names$xi
-    rhs <- paste(mod@labels$varxi,mod@names$xi,sep="*")
+  if(mod@number$theta > 0){
+    lhs <- mod@names$theta
+    rhs <- paste(mod@labels$vartheta,mod@names$theta,sep="*")
     res <- paste(lhs, "~~", rhs, collapse="\n")      
   }
   
@@ -353,15 +354,15 @@ createSyntaxVarXi <- function(mod)
 
 createConstraintVarEta <- function(mod)
 {
-  #TODO für mehr xis machen
+  #TODO für mehr thetas machen
   res <- character(0)
   
-  if(mod@number$xi==0){
+  if(mod@number$theta==0){
     res <- paste(mod@labels$vareta, ":=", mod@labels$psi, collapse="\n")
   }else{
     lhs <- mod@labels$vareta
-    xis <- rep(mod@labels$varxi, each=mod@number$xiind)
-    rhs <- paste0(mod@labels$gamma, "^2 * ",xis, " + ", mod@labels$psi)
+    thetas <- rep(mod@labels$vartheta, each=mod@number$thetaind)
+    rhs <- paste0(mod@labels$gamma, "^2 * ",thetas, " + ", mod@labels$psi)
     res <- paste(lhs, ":=", rhs, collapse="\n")  
   }
   
@@ -397,7 +398,7 @@ createConstraintSpeY <- function(mod)
 {
   res <- character(0)
   
-  if(mod@number$xi > 0){
+  if(mod@number$theta > 0){
     lhs <- mod@labels$spey
     psis <- rep(mod@labels$psi, each=mod@number$etaind)
     rhs <- paste0(mod@labels$lambda, "^2 * ",psis, " / ", mod@labels$vary)
@@ -412,11 +413,11 @@ createConstraintConY <- function(mod)
 {
   res <- character(0)
   
-  if(mod@number$xi > 0){
+  if(mod@number$theta > 0){
     lhs <- mod@labels$cony
-    xis <- rep(mod@labels$varxi, each=mod@number$xiind*mod@number$etaind)
+    thetas <- rep(mod@labels$vartheta, each=mod@number$thetaind*mod@number$etaind)
     gammas <- rep(mod@labels$gamma, each=mod@number$etaind)
-    rhs <- paste0(mod@labels$lambda, "^2 * ",gammas, "^2 * ", xis)
+    rhs <- paste0(mod@labels$lambda, "^2 * ",gammas, "^2 * ", thetas)
     rhs <- paste0(rhs, " / ", mod@labels$vary)
     
     res <- paste(lhs, ":=", rhs, collapse="\n")      

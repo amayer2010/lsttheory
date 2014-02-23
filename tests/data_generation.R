@@ -16,7 +16,7 @@ taucong <- data.frame(y1,y2,y3)
 save(taucong, file="../data/taucong.RData")
 
 
-################## dataset: multistate model for software appendix ###################
+############## dataset: multistate model for software appendix ###############
 
 set.seed(8882211)
 
@@ -30,17 +30,17 @@ eta1 <- d[,1]
 eta2 <- d[,2]
 
 y11 <- eta1 + rnorm(N,0,0.5)
-y21 <- 0.5 + 0.8*eta1 + rnorm(N,0,0.5)
+y21 <- 0.5 + 1*eta1 + rnorm(N,0,0.5)
 
 y12 <- eta2 + rnorm(N,0,0.6)
-y22 <- 0.7 + 0.9*eta2 + rnorm(N,0,0.5)
+y22 <- 0.7 + 1*eta2 + rnorm(N,0,0.5)
 
 multistate <- data.frame(y11,y21,y12,y22)
-save(multistate, file="../data/multistate.RData")
+save(multistate, file="data/multistate.RData")
 
 
 
-################## dataset: multistate model (older version with 3 time points) ###################
+######## dataset: multistate model (older version with 3 time points) ########
 
 set.seed(3423532)
 
