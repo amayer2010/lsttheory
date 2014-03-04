@@ -1,35 +1,49 @@
 
 shinyUI(pageWithSidebar(
-  headerPanel("EffectLiteR"),
+  headerPanel("lsttheory"),
   
   sidebarPanel(
     tabsetPanel(
       tabPanel('Data',        
         selectInput("exdata", "Select Example Data", 
-                    c("none","example01","nonortho"),selected="none"),
+            c("none","multistate","multitraitmultistate"),selected="none"),
+        
         fileInput('file1', 'Choose SPSS File', accept=c('.sav')),
-        selectInput("variabley", "Dependent Variable", ""),
-        selectInput("variablex", "Treatment Variable", ""),
-        selectInput("variablek", "Categorical Covariates", "", multiple=TRUE),
-        selectInput("variablez", "Continuous Covariates", "", multiple=TRUE)
+        
+        sliderInput(inputId = "neta", label = "Number of eta variables",
+          min = 0, max = 10, step = 1, value = 2),
+        
+        sliderInput(inputId = "ntheta", label = "Number of theta variables",
+                  min = 0, max = 10, step = 1, value = 0)
       ),
-      tabPanel('Options',
-        selectInput("control", "Control Group", ""),
-        radioButtons("missing", "Missing Data", 
-                     choices=c("listwise","fiml"), 
-                     selected = "listwise"),
-        checkboxInput("fixed.cell", "Fixed Cell Sizes", FALSE)
+    
+      tabPanel('Options',        
+        selectInput("tau", "Tau-Equivalence Assumption", 
+            c("equi","ess","cong"),selected="equi"),
+        selectInput("theta", "Theta-Equivalence Assumption", 
+            c("equi","ess","cong"),selected="equi"),      
+        checkboxInput(inputId = "lait0",
+            label = "Invariance of lait0",
+            value = FALSE),
+        checkboxInput(inputId = "lait1",
+            label = "Invariance of lait1",
+            value = FALSE),
+        checkboxInput(inputId = "lat0",
+            label = "Invariance of lat0",
+            value = FALSE),
+        checkboxInput(inputId = "lat1",
+            label = "Invariance of lat1",
+            value = FALSE)      
     )
   )),
   
   mainPanel(
     tabsetPanel(
       tabPanel('Data', dataTableOutput("mytable1")),
-      tabPanel("EffectLiteR", verbatimTextOutput("summary")),
+      tabPanel("lsttheory", verbatimTextOutput("summary")),
       tabPanel("lavaan Syntax", verbatimTextOutput("lavsyntax")),
       tabPanel("lavaan Results", verbatimTextOutput("lavresults")),
-      tabPanel("Plot 1", plotOutput("plot1")),
-      tabPanel("Plot 2", plotOutput("plot2"))
+      tabPanel("Plot", plotOutput("plot1"))
     )
   )
 ))
