@@ -3,8 +3,8 @@
 \title{Estimate latent state-trait models}
 \usage{
   lsttheory(neta, ntheta = 0, data, addsyntax = "",
-    equiv.assumption = list(tauÂ =Â "cong",Â thetaÂ =Â "cong"),
-    scale.invariance = list(lait0Â =Â FALSE,Â lait1Â =Â FALSE,Â lat0Â =Â FALSE,Â lat1Â =Â FALSE),
+    equiv.assumption = list(tau = "cong", theta = "cong"),
+    scale.invariance = list(lait0 = FALSE, lait1 = FALSE, lat0 = FALSE, lat1 = FALSE),
     ...)
 }
 \arguments{
@@ -20,7 +20,8 @@
   time t and then by indicator i, i.e., Y_11, Y_21, ...,
   Y_12, Y_22, ... and so forth}
 
-  \item{addsyntax}{character string.}
+  \item{addsyntax}{character string. Will be added to
+  generated lavaan syntax.}
 
   \item{equiv.assumption}{list of equivalence assumptions
   for tau variables (tau) and theta variables. Each can be
@@ -42,5 +43,17 @@
   (LST models). It is based on the revised version of the
   LST theory presented in Steyer, Mayer, Geiser & Cole (in
   press).
+}
+\examples{
+m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate,
+ equiv.assumption=list(tau="cong", theta="cong"),
+ scale.invariance=list(lait0=TRUE,lait1=TRUE,lat0=TRUE,lat1=TRUE))
+
+print(m1)
+}
+\references{
+  Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (in
+  press). A theory of states and traits - revised. Annual
+  Review of Clinical Psychology.
 }
 

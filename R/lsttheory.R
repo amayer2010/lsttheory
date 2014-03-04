@@ -16,7 +16,7 @@
 #' will all be used to fit the LST-R model. The order of the observables Y_it 
 #' should be by time t and then by indicator i, i.e., Y_11, Y_21, ..., Y_12, 
 #' Y_22, ... and so forth
-#' @param addsyntax character string.
+#' @param addsyntax character string. Will be added to generated lavaan syntax. 
 #' @param equiv.assumption list of equivalence assumptions for tau variables (tau)
 #' and theta variables. Each can be one of c("equi","ess","cong"),
 #' for equivalence ("equi"), essential equivalence ("ess"), 
@@ -24,7 +24,15 @@
 #' @param scale.invariance list of invariance assumtions for lambda_it and lambda_t
 #' parameters
 #' @param ... further arguments passed to lavaan::sem().
-#' @return object of class LSTModel. 
+#' @return object of class LSTModel.
+#' @references 
+#' Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (in press). A theory of states and traits - revised. Annual Review of Clinical Psychology. 
+#' @examples 
+#' m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate, 
+#'  equiv.assumption=list(tau="cong", theta="cong"), 
+#'  scale.invariance=list(lait0=TRUE,lait1=TRUE,lat0=TRUE,lat1=TRUE))
+#'  
+#' print(m1)
 #' @export
 #' @import lavaan
 lsttheory <- function(neta, ntheta = 0, data, addsyntax = "", equiv.assumption = list(tau = "cong", theta = "cong"), scale.invariance = list(lait0 = FALSE, lait1 = FALSE, lat0 = FALSE, lat1 = FALSE), ...)

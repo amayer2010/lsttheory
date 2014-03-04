@@ -52,7 +52,7 @@ m3 <- lsttheory(4,0,multitraitmultistate)
 
 m4 <- lsttheory(1,0,multitraitmultistate, 
                 equiv.assumption=list(tau="equi", theta="cong"), 
-                scale.invariance=list(lait0=FALSE, lait1=TRUE, gat0=TRUE, gat1=TRUE))
+                scale.invariance=list(lait0=FALSE, lait1=TRUE, lat0=TRUE, lat1=TRUE))
 
 # m4
 # cat(m4@lavaansyntax)
@@ -63,7 +63,7 @@ m4 <- lsttheory(1,0,multitraitmultistate,
 m5 <- lsttheory(4,2,multitraitmultistate, 
                 equiv.assumption=list(tau="cong", theta="cong"), 
                 scale.invariance=list(lait0=FALSE, lait1=FALSE, 
-                                      gat0=FALSE, gat1=FALSE))
+                                      lat0=FALSE, lat1=FALSE))
 # m5
 # cat(m5@lavaansyntax)
 # summary(m5@lavaanres)
@@ -73,7 +73,7 @@ m5 <- lsttheory(4,2,multitraitmultistate,
 
 m1 <- lsttheory(4, 2, multitraitmultistate, 
                 equiv.assumption=list(tau="cong", theta="cong"), 
-                scale.invariance=list(lait0=TRUE,lait1=TRUE,gat0=TRUE,gat1=TRUE))
+                scale.invariance=list(lait0=TRUE,lait1=TRUE,lat0=TRUE,lat1=TRUE))
 # cat(m1@lavaansyntax)
 
 
