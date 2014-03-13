@@ -2,10 +2,10 @@
 \alias{lsttheory}
 \title{Estimate latent state-trait models}
 \usage{
-  lsttheory(neta, ntheta = 0, data, addsyntax = "",
-    equiv.assumption = list(tau = "cong", theta = "cong"),
-    scale.invariance = list(lait0 = FALSE, lait1 = FALSE, lat0 = FALSE, lat1 = FALSE),
-    ...)
+lsttheory(neta, ntheta = 0, data, addsyntax = "",
+  equiv.assumption = list(tau = "cong", theta = "cong"),
+  scale.invariance = list(lait0 = FALSE, lait1 = FALSE, lat0 = FALSE, lat1 =
+  FALSE), ...)
 }
 \arguments{
   \item{neta}{integer. Number of latent state variables
@@ -35,14 +35,14 @@
   \item{...}{further arguments passed to lavaan::sem().}
 }
 \value{
-  object of class LSTModel.
+object of class LSTModel.
 }
 \description{
-  This function is the main funtion of the package and can
-  be used to estimate various latent state-trait models
-  (LST models). It is based on the revised version of the
-  LST theory presented in Steyer, Mayer, Geiser & Cole (in
-  press).
+This function is the main funtion of the package and can be
+used to estimate various latent state-trait models (LST
+models). It is based on the revised version of the LST
+theory presented in Steyer, Mayer, Geiser & Cole (in
+press).
 }
 \examples{
 m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate,
@@ -52,8 +52,8 @@ m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate,
 print(m1)
 }
 \references{
-  Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (in
-  press). A theory of states and traits - revised. Annual
-  Review of Clinical Psychology.
+Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (in
+press). A theory of states and traits - revised. Annual
+Review of Clinical Psychology.
 }
 
