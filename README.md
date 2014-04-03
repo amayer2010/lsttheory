@@ -6,10 +6,10 @@ This package is a supplement for the article 'A Theory of States and Traits -- R
 Installation
 =========
 
-lsttheory can be installed from this Github repository. For those not familiar with installing packages from Github, the subfolder /old contains tar.gz files (for installing from source) and windows binaries. Please make sure all dependencies are installed (lavaan, methods), and for the shiny interface, the additional packages shiny and semPlot are required.
+lsttheory can be installed from this Github repository. For those not familiar with installing packages from Github, the subfolder /old contains tar.gz files (for installing from source) and Windows binaries. Please make sure all dependencies are installed (lavaan, methods), and for the shiny interface, the additional packages shiny and semPlot are required.
 
 
 Run lsttheory
 =========
 
-The main function of the package is lsttheory(). Type example(lsttheory) or see the vignette (subfolder vignette/) for examples. The shiny interface can be called by lsttheoryGUI() after having loaded the package lsttheory.
+The main function of the package is lsttheory(). Type example(lsttheory) or see the vignette (subfolder vignettes/) for examples. The shiny interface can be called by lsttheoryGUI() after having loaded the package lsttheory.

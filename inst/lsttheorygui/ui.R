@@ -8,7 +8,7 @@ shinyUI(pageWithSidebar(
         selectInput("exdata", "Select Example Data", 
             c("none","multistate","multitraitmultistate"),selected="none"),
         
-        fileInput('file1', 'Choose SPSS File', accept=c('.sav')),
+        fileInput('file1', 'Choose SPSS or csv File', accept=c('.sav', '.csv')),
         
         sliderInput(inputId = "neta", label = "Number of eta variables",
           min = 0, max = 10, step = 1, value = 2),

@@ -1,6 +1,7 @@
 
 require(lsttheory)
 require(semPlot)
+require(Hmisc)
 
 shinyServer(function(input, output, session) {
   
@@ -16,7 +17,11 @@ shinyServer(function(input, output, session) {
     }else if(is.null(inFile) & exdata=="multitraitmultistate"){
       return(multitraitmultistate)
     }else if(!is.null(inFile))
-      return(spss.get(inFile$datapath))    
+      if(grepl(".csv",inFile)){
+        return(read.csv(inFile$datapath))      
+      }else{
+        return(spss.get(inFile$datapath))      
+      }      
   })
   
   ###### Reactive Run Model #########
