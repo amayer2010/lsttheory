@@ -8,7 +8,7 @@
 #' This function is the main funtion of the package and can be used to estimate
 #' various latent state-trait models (LST models). It is based on the 
 #' revised version of the LST theory presented in 
-#' Steyer, Mayer, Geiser & Cole (in press).
+#' Steyer, Mayer, Geiser & Cole (2015).
 #' 
 #' @param neta integer. Number of latent state variables eta.
 #' @param ntheta integer. Number of latent trait variables theta.
@@ -26,7 +26,7 @@
 #' @param ... further arguments passed to lavaan::sem().
 #' @return object of class LSTModel.
 #' @references 
-#' Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (in press). A theory of states and traits - revised. Annual Review of Clinical Psychology. 
+#' Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (2015). A theory of states and traits - revised. Annual Review of Clinical Psychology. 
 #' @examples 
 #' m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate, 
 #'  equiv.assumption=list(tau="cong", theta="cong"), 
