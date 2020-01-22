@@ -42,23 +42,24 @@ setMethod ("show", "lstmodel",
 
 ######################## main high-level function for users ############################
 
-# traitmodel <- c("singletrait", "day-specific", "indicator-specific", "day-and-indicator-specific")
-# equiv <- c("invar", "period.invar", "free")
-
-
-#' Estimate latent state-trait models für experience sampling data
+#' Estimate latent state-trait models for experience sampling data
 #' 
 #' This function can be used to estimate various latent state-trait models (LST models)
 #' for experience sampling data. It is based on the revised version of the LST theory presented in 
 #' Steyer, Mayer, Geiser & Cole (2015) and on Eid et al. (2017). The function is a wrapper for
 #' lst_models_es_common_trait() and lst_models_es_indicator_specific_trait().
 #' 
-#' @param neta integer. Number of latent state variables eta.
-#' @param addsyntax character string. Will be added to generated lavaan syntax. 
-#' @param ... further arguments passed to lavaan::sem().
-#' @return object of class LSTModel.
-#' @references 
-#' @examples 
+#' @param traitmodel character. Can be one of c("singletrait", "day-specific", "indicator-specific", "day-and-indicator-specific")
+#' @param ntimepoints integer. Number of measurement occasions
+#' @param data data.frame.
+#' @param nperiods integer. Number of periods (trait periods, zeta periods, and epsilon periods).
+#' @param equiv character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")
+#' @param ar logical. Should autoregressive effects be included
+#' @param ... further arguments passed to lower level functions
+#' @return object of class lstmodel
+#' @examples
+#' m1 <- lst_models_es(traitmodel="singletrait", ntimepoints=9, 
+#' data=d_lst_es, nperiods=3, ar=FALSE, equiv="invar")
 #' @export
 #' @import lavaan
 lst_models_es <- 
@@ -417,9 +418,9 @@ lst_models_es_common_trait <-
 
 
 ########## TODO
-## streng genommen müsste es auch für la_o parameters eigene periods geben...
-## aber vielleicht nehmen wir da einfach auch die zetaperiods dafür (das macht wahrscheinlich Sinn)
-## nur bei den nu nochmal überlegen wegen periods
+## streng genommen m?sste es auch f?r la_o parameters eigene periods geben...
+## aber vielleicht nehmen wir da einfach auch die zetaperiods daf?r (das macht wahrscheinlich Sinn)
+## nur bei den nu nochmal ?berlegen wegen periods
 
 
 
@@ -670,6 +671,40 @@ lst_models_es_indicator_specific_trait <-
     return(res)
   }
 
+
+
+#' Dataset d_lst_es.
+#' 
+#' A simulated dataset to test experience sampling LST models. The variables are:
+#' 
+#' \itemize{
+#'   \item y11 
+#'   \item ...
+#'   \item ...
+#'   \item y39
+#' }
+#' 
+#' @docType data
+#' @keywords datasets
+#' @format A data frame with 1000 rows and 27 variables
+#' @name d_lst_es
+NULL
+
+
+
+############## namespace ###########
+
+#' @importFrom methods new is
+NULL
+
+#' @importMethodsFrom methods show 
+NULL
+
+#' @importFrom stats as.formula ftable model.frame model.matrix pnorm relevel var qnorm cov lm mahalanobis pchisq pf pt sd
+NULL
+
+#' @importFrom utils capture.output read.csv read.csv2 read.table combn
+NULL
 
 
 

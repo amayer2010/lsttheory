@@ -1,11 +1,11 @@
 Package: lsttheory
 Title: Latent State-Trait Theory
-Version: 0.2-1.001
+Version: 0.2-1.002
 Author: Axel Mayer <amayer2010@gmail.com>
 Maintainer: Axel Mayer <amayer2010@gmail.com>
 Description: Compute several models of latent state-trait theory
 Depends:
-    R (>= 3.0.1),
+    R (>= 3.5.0),
     lavaan
 Imports:
     methods
@@ -16,3 +16,4 @@ License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
 Packaged: 2013-12-07
+RoxygenNote: 7.0.2
