@@ -7,6 +7,7 @@
 .metadata
 bin/
 tmp/
+julia_norget
 *.tmp
 *.bak
 *.swp

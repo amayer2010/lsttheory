@@ -11,6 +11,11 @@
 # Test Stan version or Jags version using blavaan
 # Look at multilevel SEM and DSEM
 
+# TODO la_s_equiv:
+#      - period.invar should be renamed e.g. interval.invar
+#      - add overnight.invar (AR paths between periods may take a different value, the rest remains invariant)
+# TODO la_t_equiv:
+#      - add time.invar option
 
 ############ class definitions and show method ####################
 
@@ -31,7 +36,7 @@ setClass(
 
 setMethod ("show", "lstmodel",
            function (object){
-
+             
              print(object@lavaanres)
              cat("\n" ,"\n")
              print(object@varcomp, digits=2)
@@ -51,22 +56,42 @@ setMethod ("show", "lstmodel",
 #' 
 #' @param traitmodel character. Can be one of c("singletrait", "day-specific", "indicator-specific", "day-and-indicator-specific")
 #' @param ntimepoints integer. Number of measurement occasions
-#' @param data data.frame.
+#' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
+#' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
 #' @param nperiods integer. Number of periods (trait periods, zeta periods, and epsilon periods).
 #' @param equiv character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")
 #' @param ar logical. Should autoregressive effects be included
+#' @param manifest_thetacovariates an optional vector with variable names of manifest covariates which further explain the latent traits. 
+#' Must be assessed at a single occasion.
 #' @param ... further arguments passed to lower level functions
 #' @return object of class lstmodel
 #' @examples
 #' m1 <- lst_models_es(traitmodel="singletrait", ntimepoints=9, 
 #' data=d_lst_es, nperiods=3, ar=FALSE, equiv="invar")
+#' 
+#' print(m1)
+#' 
+#' m2 <- lst_models_es(traitmodel="indicator-specific", ntimepoints=9,
+#' data=d_lst_es, nperiods=3, ar=FALSE, equiv="invar")
+#' 
+#' print(m2)
 #' @export
 #' @import lavaan
+#' @import dplyr
 lst_models_es <- 
   function(traitmodel, ntimepoints, data, 
-           nperiods=1, equiv="invar", ar=TRUE, ...){
+           nperiods=1, equiv="invar", ar=TRUE, 
+           manifest_thetacovariates = NULL, 
+           ...){
     
     res <- NULL
+    
+    if(ntimepoints %% nperiods != 0){
+      stop("ntimepoints must be a multiple of nperiods")
+    }
+    if((ncol(data) - length(manifest_thetacovariates)) %% ntimepoints != 0){ 
+      stop("The number of variables (excluding covariates) is not a multiple of ntimepoints. Does your dataset include variables which are not part of the model?")
+    }
     
     if(equiv=="invar"){
       la_t_equiv <- "one"
@@ -78,7 +103,8 @@ lst_models_es <-
       nu_equiv <- "zero"
       alpha_equiv <- "zero"
       mtheta_equiv <- "indicator.invar"
-      
+      gamma_t_equiv <- "invar"
+
     }else if(equiv=="period.invar"){
       la_t_equiv <- "period.invar"
       la_o_equiv <- "period.invar"
@@ -89,7 +115,8 @@ lst_models_es <-
       nu_equiv <- "period.invar"
       alpha_equiv <- "period.invar"
       mtheta_equiv <- "indicator.invar"
-      
+      gamma_t_equiv <- "indicator.invar"
+
     }else if(equiv=="free"){
       la_t_equiv <- "free"
       la_o_equiv <- "free"
@@ -100,6 +127,7 @@ lst_models_es <-
       nu_equiv <- "free"
       alpha_equiv <- "free"
       mtheta_equiv <- "free"
+      gamma_t_equiv <- "free"
     }
     
     ntraitperiods <- nzetaperiods <- nepsperiods <- nperiods
@@ -129,7 +157,10 @@ lst_models_es <-
         vtheta_equiv=vtheta_equiv, 
         nu_equiv=nu_equiv, 
         alpha_equiv=alpha_equiv,
-        mtheta_equiv=mtheta_equiv, ...)
+        mtheta_equiv=mtheta_equiv, 
+        gamma_t_equiv=gamma_t_equiv,
+        manifest_thetacovariates = manifest_thetacovariates, 
+        ...)
       
     }else if(traitmodel %in% c("indicator-specific","day-and-indicator-specific")){
       
@@ -147,12 +178,14 @@ lst_models_es <-
         vtheta_equiv=vtheta_equiv, 
         nu_equiv=nu_equiv, 
         alpha_equiv=alpha_equiv,
-        mtheta_equiv=mtheta_equiv, ...)
-      
+        mtheta_equiv=mtheta_equiv,
+        gamma_t_equiv=gamma_t_equiv,
+        manifest_thetacovariates = manifest_thetacovariates, 
+        ...)
     }
-  
-  return(res)  
-}
+    
+    return(res)  
+  }
 
 
 
@@ -171,6 +204,7 @@ lst_models_es <-
 # nu_equiv <- "zero" ## c("zero", "period.invar", "free")
 # alpha_equiv <- "zero" ## c("zero", "period.invar", "free")
 # mtheta_equiv <- "invar" ## c("invar", "indicator.invar", "free")
+# gamma_t_equiv <- "invar" ## c("invar", "indicator.invar", "free")
 # ## TODO maybe cov_equiv
 
 lst_models_es_common_trait <- 
@@ -178,10 +212,11 @@ lst_models_es_common_trait <-
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
-           mtheta_equiv="invar", ...){
+           mtheta_equiv="invar", gamma_t_equiv="invar",
+           manifest_thetacovariates = NULL, ...){
     
     ######## important information ############
-    nindicators <- ncol(data)/ntimepoints
+    nindicators <- (ncol(data) - length(manifest_thetacovariates) ) / ntimepoints
     nyvariables <- ntimepoints*nindicators
     nyvariables_per_traitperiod <- nyvariables/ntraitperiods
     nyvariables_per_zetaperiod <- nyvariables/nzetaperiods
@@ -192,13 +227,16 @@ lst_models_es_common_trait <-
     ntimepoints_per_epsperiod <- ntimepoints/nepsperiods
     
     ######### variable names ##############
-    y_variables <- names(data)
+    y_variables <- data %>% dplyr::select(!all_of(manifest_thetacovariates)) %>% names()
     eta_variables_full <- paste0("eta", rep(1:ntimepoints, each=nindicators))
     eta_variables_unique <- paste0("eta", 1:ntimepoints)
     o_variables <- paste0("O", 1:ntimepoints)
     zeta_variables <- paste0("zeta", 1:ntimepoints)
     theta_variables_full <- paste0("theta", rep(1:ntvariables, each=ntimepoints_per_traitperiod))
     theta_variables_unique <- unique(theta_variables_full)
+    
+    # covariates
+    manifest_thetacovariates_full <- rep(manifest_thetacovariates, each=length(theta_variables_unique))
     
     ############ parameter names ###########
     
@@ -319,7 +357,6 @@ lst_models_es_common_trait <-
       veps <- paste0("veps", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
     }
     
-    
     ## vtheta
     if(vtheta_equiv == "invar" || vtheta_equiv == "indicator.invar"){
       vtheta <- rep("vtheta", times=ntvariables)
@@ -328,7 +365,14 @@ lst_models_es_common_trait <-
       vtheta <- paste0("vtheta", 1:ntvariables)
     }
     
-    
+    ## gamma_t (regression coefficients for covariates explaining the latent traits)
+    if(gamma_t_equiv == "invar" || gamma_t_equiv == "indicator.invar"){
+      gamma_t <- paste0("gamma_t", "c", rep(1:length(manifest_thetacovariates), each=ntraitperiods))
+    }
+    if(gamma_t_equiv == "free"){
+      gamma_t <- paste0("gamma_t", rep(1:ntraitperiods, length(manifest_thetacovariates)),
+                        "c", rep(1:length(manifest_thetacovariates), each=ntraitperiods))
+    }
     
     ############# generate syntax ##################
     
@@ -362,12 +406,19 @@ lst_models_es_common_trait <-
     tmp12 <- paste0(o_variables[-1], " ~ ", la_s , "*", 
                     o_variables[-length(o_variables)], collapse="\n")
     
+    ## theta covariates
+    if(is.null(manifest_thetacovariates)){
+      tmp13 <- ""
+    }else{
+      tmp13 <- paste0(theta_variables_unique, " ~ ", gamma_t, "*", manifest_thetacovariates_full, collapse="\n")
+    }
     
     ############# fit model ##################
     model <- paste0(tmp1, "\n", tmp2, "\n", tmp3, "\n",
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
                     tmp10, "\n", tmp11, "\n", tmp12, "\n",
+                    tmp13, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
@@ -375,7 +426,7 @@ lst_models_es_common_trait <-
     ######## compute variance components ###########
     
     ## rel
-    vary_fitted <- unlist(diag(lavInspect(m1, "fitted")$cov))
+    vary_fitted <- unlist(diag(lavInspect(m1, "fitted")$cov))[y_variables]
     veps_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("veps", label), select=est))
     rel_fitted <- 1 - veps_fitted / vary_fitted
     names(rel_fitted) <- paste0("rel", y_variables)
@@ -393,12 +444,30 @@ lst_models_es_common_trait <-
     con_fitted <- rel_fitted - spe_fitted
     names(con_fitted) <- paste0("con", y_variables)
     
+    # Pred
+    la_t_fitted <- unlist(subset(parameterEstimates(m1), 
+                                 subset=lhs %in% theta_variables_full & op=="=~", 
+                                 select=est))
+    la_t_fitted <- rep(la_t_fitted, each=nindicators)
+    vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
+    vtheta_fitted <- rep(vtheta_fitted, each=nyvariables_per_traitperiod)
+    pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
+    names(pred_fitted) <- paste0("pred", y_variables)
+    
+    # UPred
+    upred_fitted <- con_fitted - pred_fitted
+    upred_fitted <- round(upred_fitted, digits=10) 
+    # why round? the calculation of con and pred differ differ in the 17th or so digit, although they are by definition equal for the first value (for y_11). This may give the impression of negative values for upred. Slight rounding takes this issue away. 
+    names(upred_fitted) <- paste0("upred", y_variables)
+    
     ## summarize
     variance_components <- 
       data.frame(y=y_variables,
                  rel=rel_fitted,
                  spe=spe_fitted,
                  con=con_fitted,
+                 pred=pred_fitted,
+                 upred=upred_fitted,
                  indicator=rep(1:nindicators, times=ntimepoints),
                  timepoint=rep(1:ntimepoints, each=nindicators),
                  traitperiod=rep(1:ntraitperiods, each=nyvariables_per_traitperiod))
@@ -437,17 +506,20 @@ lst_models_es_common_trait <-
 # nu_equiv <- "zero" ## c("zero", "period.invar", "free")
 # alpha_equiv <- "zero" ## c("zero", "period.invar", "free")
 # mtheta_equiv <- "invar" ## c("invar", "indicator.invar", "free")
+# gamma_t_equiv <- "invar" ## c("invar", "indicator.invar", "free")
 # ## TODO maybe cov_equiv
+
 
 lst_models_es_indicator_specific_trait <- 
   function(ntimepoints, data, ntraitperiods=1, nzetaperiods=1,
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
-           mtheta_equiv="invar",...){
+           mtheta_equiv="invar", gamma_t_equiv="invar", 
+           manifest_thetacovariates = NULL, ...){
     
     ######## important information ############
-    nindicators <- ncol(data)/ntimepoints
+    nindicators <- (ncol(data) - length(manifest_thetacovariates)) / ntimepoints
     nyvariables <- ntimepoints*nindicators
     nyvariables_per_traitperiod <- nyvariables/ntraitperiods
     nyvariables_per_zetaperiod <- nyvariables/nzetaperiods
@@ -458,7 +530,7 @@ lst_models_es_indicator_specific_trait <-
     ntimepoints_per_epsperiod <- ntimepoints/nepsperiods
     
     ######### variable names ##############
-    y_variables <- names(data)
+    y_variables <- data %>% dplyr::select(!all_of(manifest_thetacovariates)) %>% names()
     o_variables_full <- paste0("O", rep(1:ntimepoints, each=nindicators))
     o_variables_unique <- paste0("O", 1:ntimepoints)
     zeta_variables_full <- paste0("zeta", rep(1:ntimepoints, each=nindicators))
@@ -466,6 +538,10 @@ lst_models_es_indicator_specific_trait <-
     theta_variables_full <- paste0("theta", 1:nindicators, "_", 
                                    rep(1:ntraitperiods, each=nyvariables_per_traitperiod))
     theta_variables_unique <- unique(theta_variables_full)
+    
+    # covariates
+    manifest_thetacovariates_full <- rep(manifest_thetacovariates, each=length(theta_variables_unique))
+    
     
     ############ parameter names ###########
     
@@ -592,6 +668,19 @@ lst_models_es_indicator_specific_trait <-
       vtheta <- paste0("vtheta", 1:nindicators, "_", rep(1:ntraitperiods, each=nindicators))
     }
     
+    ## gamma_t (regression coefficients for covariates explaining the latent traits)
+    if(gamma_t_equiv == "invar"){
+      gamma_t <- paste0("gamma_t", "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # okay!
+    }
+    if(gamma_t_equiv == "indicator.invar"){
+      gamma_t <- paste0("gamma_t", 1:nindicators, "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # okay i think
+    }
+    if(gamma_t_equiv == "free"){
+      gamma_t <- paste0("gamma_t", 1:nindicators, #"_", 
+                        rep(1:ntraitperiods, each=nindicators),
+                        "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # each=ntvariables?
+      
+    }
     
     
     ############# generate syntax ##################
@@ -619,12 +708,19 @@ lst_models_es_indicator_specific_trait <-
     tmp10 <- paste0(o_variables_unique[-1], " ~ ", la_s , "*", 
                     o_variables_unique[-length(o_variables_unique)], collapse="\n")
     
+    ## theta covariates
+    if(is.null(manifest_thetacovariates)){
+      tmp11 <- ""
+    }else{
+      tmp11 <- paste0(theta_variables_unique, " ~ ", gamma_t, "*", manifest_thetacovariates_full, collapse="\n")
+    }
+  
     
     ############# fit model ##################
     model <- paste0(tmp1, "\n", tmp2, "\n", tmp3, "\n",
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
-                    tmp10,
+                    tmp10, "\n", tmp11, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
@@ -633,7 +729,7 @@ lst_models_es_indicator_specific_trait <-
     ######## compute variance components ###########
     
     ## rel
-    vary_fitted <- unlist(diag(lavInspect(m1, "fitted")$cov))
+    vary_fitted <- unlist(diag(lavInspect(m1, "fitted")$cov))[y_variables]
     veps_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("veps", label), select=est))
     rel_fitted <- 1 - veps_fitted / vary_fitted
     names(rel_fitted) <- paste0("rel", y_variables)
@@ -651,12 +747,31 @@ lst_models_es_indicator_specific_trait <-
     con_fitted <- rel_fitted - spe_fitted
     names(con_fitted) <- paste0("con", y_variables)
     
+    # Pred
+    la_t_fitted <- unlist(subset(parameterEstimates(m1), 
+                                 subset=lhs %in% theta_variables_full & op=="=~", 
+                                 select=est))
+    vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
+    vtheta_per_traitperiod <- split(vtheta_fitted, ceiling(seq_along(vtheta_fitted) / nindicators))
+    vtheta_per_traitperiod <- lapply(vtheta_per_traitperiod, function(x) rep(x, times=nindicators))
+    vtheta_fitted <- unlist(vtheta_per_traitperiod)
+    pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
+    names(pred_fitted) <- paste0("pred", y_variables)
+    
+    # UPred
+    upred_fitted <- con_fitted - pred_fitted
+    upred_fitted <- round(upred_fitted, digits=10) 
+    # why round? the calculation of con and pred differ differ in the 17th or so digit, although they are by definition equal for the first value (for y_11). This may give the impression of negative values for upred. Slight rounding takes this issue away. 
+    names(upred_fitted) <- paste0("upred", y_variables)
+    
     ## summarize
     variance_components <- 
       data.frame(y=y_variables,
                  rel=rel_fitted,
                  spe=spe_fitted,
                  con=con_fitted,
+                 pred=pred_fitted,
+                 upred=upred_fitted,
                  indicator=rep(1:nindicators, times=ntimepoints),
                  timepoint=rep(1:ntimepoints, each=nindicators),
                  traitperiod=rep(1:ntraitperiods, each=nyvariables_per_traitperiod))
@@ -675,7 +790,7 @@ lst_models_es_indicator_specific_trait <-
 
 #' Dataset d_lst_es.
 #' 
-#' A simulated dataset to test experience sampling LST models. The variables are:
+#' A simulated dataset to test experience sampling LST models. The data includes 3 indicators, assessed 3 times a day on 3 days. It is based on a model with day-specific traits. The variables are:
 #' 
 #' \itemize{
 #'   \item y11 
@@ -706,7 +821,14 @@ NULL
 #' @importFrom utils capture.output read.csv read.csv2 read.table combn
 NULL
 
+############### Shiny ###############
 
-
-
-
+#' Shiny interface for lst_models_es()
+#' 
+#' This function calls a shiny interface for LST-R models with experience sampling data.
+#' @author Julia Norget
+#' 
+#' @export
+lstesGUI <- function(){  
+  shiny::runApp(system.file('lstesgui', package='lsttheory'))
+}

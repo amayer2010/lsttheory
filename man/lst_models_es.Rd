@@ -11,6 +11,7 @@ lst_models_es(
   nperiods = 1,
   equiv = "invar",
   ar = TRUE,
+  manifest_thetacovariates = NULL,
   ...
 )
 }
@@ -19,13 +20,17 @@ lst_models_es(
 
 \item{ntimepoints}{integer. Number of measurement occasions}
 
-\item{data}{data.frame.}
+\item{data}{a data.frame. This data frame contains the observed variables, sorted by time t and then 
+by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.}
 
 \item{nperiods}{integer. Number of periods (trait periods, zeta periods, and epsilon periods).}
 
 \item{equiv}{character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")}
 
 \item{ar}{logical. Should autoregressive effects be included}
+
+\item{manifest_thetacovariates}{an optional vector with variable names of manifest covariates which further explain the latent traits. 
+Must be assessed at a single occasion.}
 
 \item{...}{further arguments passed to lower level functions}
 }
@@ -41,7 +46,11 @@ lst_models_es_common_trait() and lst_models_es_indicator_specific_trait().
 \examples{
 m1 <- lst_models_es(traitmodel="singletrait", ntimepoints=9, 
 data=d_lst_es, nperiods=3, ar=FALSE, equiv="invar")
-}
-\references{
 
+print(m1)
+
+m2 <- lst_models_es(traitmodel="indicator-specific", ntimepoints=9,
+data=d_lst_es, nperiods=3, ar=FALSE, equiv="invar")
+
+print(m2)
 }

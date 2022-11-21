@@ -4,9 +4,11 @@
 \name{d_lst_es}
 \alias{d_lst_es}
 \title{Dataset d_lst_es.}
-\format{A data frame with 1000 rows and 27 variables}
+\format{
+A data frame with 1000 rows and 27 variables
+}
 \description{
-A simulated dataset to test experience sampling LST models. The variables are:
+A simulated dataset to test experience sampling LST models. The data includes 3 indicators, assessed 3 times a day on 3 days. It is based on a model with day-specific traits. The variables are:
 }
 \details{
 \itemize{

@@ -1,5 +1,6 @@
 tests
 vignettes
+julia_norget
 R/growthcomponents.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
