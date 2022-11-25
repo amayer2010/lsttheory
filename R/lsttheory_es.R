@@ -29,7 +29,8 @@
 #' @export
 lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml", 
                            la_t_equiv = NULL, la_o_equiv = NULL, la_s_equiv = NULL, vzeta_eqiv = NULL, veps_equiv = NULL, 
-                           vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, ...){
+                           vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, 
+                           gamma_t_equiv= NULL, manifest_thetacovariates = NULL, ...){
   
   userdefined <- c(la_t_equiv = la_t_equiv, la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv, vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv, 
                    vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv, alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv)
@@ -51,6 +52,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero"
     alpha_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "invar" #TODO add a default option for all models
     
   }else if(model == 2 || model == "STARinvar"){ # singletrait model with autoregression -- STARinvar
     ntraitperiods = 1
@@ -65,6 +67,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero"
     alpha_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "invar"
     
   }else if(model == 3 || model == "PTARinvar"){ # period-specific traits with autoregression -- PTARinvar
     ntraitperiods = nperiods
@@ -79,6 +82,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero"
     alpha_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "invar"
+    
   }else if(model == 4 || model == "ITARinvar"){ # indicator-specific traits with autoregression -- ITARinvar
     ntraitperiods = 1
     nzetaperiods = nperiods
@@ -91,6 +96,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     vtheta_equiv = "invar"
     nu_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "indicator.invar"
+    
   }else if(model == 5 || model == "PITARinvar"){ # period- and indicator-specific traits with autoregression -- PITARinvar
     ntraitperiods = nperiods 
     nzetaperiods = nperiods 
@@ -103,6 +110,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     vtheta_equiv = "invar"
     nu_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "indicator.invar"
+    
   }else if(model == 6 || model == "STAR2"){ # model 2 with state congenericity and measurement invariance within each period (e.g. day)
     ntraitperiods = 1
     nzetaperiods = nperiods
@@ -116,6 +125,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero" 
     alpha_equiv = "period.invar" # changed to model 2
     mtheta_equiv = "invar"
+    gamma_t_equiv = "invar"
+    
   }else if(model == 7 || model == "PTAR2"){ # model 3 with state congenericity and measurement invariance within each period (e.g. day)
     ntraitperiods = nperiods
     nzetaperiods = nperiods
@@ -129,6 +140,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero"
     alpha_equiv = "period.invar" # changed to model 3
     mtheta_equiv = "invar"
+    gamma_t_equiv = "invar"
+    
   }else if(model == 8 || model == "ITAR2"){ # model 4 with state residual congenericity and measurement invariance within each period (e.g. day)
     ntraitperiods = 1
     nzetaperiods = nperiods
@@ -141,6 +154,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     vtheta_equiv = "invar"
     nu_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "indicator.invar"
+    
   }else if(model == 9 || model == "PITAR2"){ # model 5 with state residual congenericity and measurement invariance within each period (e.g. day)
     ntraitperiods = nperiods 
     nzetaperiods = nperiods 
@@ -153,6 +168,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     vtheta_equiv = "invar"
     nu_equiv = "zero"
     mtheta_equiv = "invar"
+    gamma_t_equiv = "indicator.invar"
   }
   
   # overwrite the invariance options implied by models 1-9 if the user specifically defined these options
@@ -185,7 +201,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
       alpha_equiv=alpha_equiv,
       mtheta_equiv=mtheta_equiv, 
       gamma_t_equiv=gamma_t_equiv,
-      manifest_thetacovariates = manifest_thetacovariates, 
+      manifest_thetacovariates=manifest_thetacovariates, 
       ...)
     
   }else if(model %in% c(4,5,8,9)){
@@ -207,7 +223,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
       alpha_equiv=alpha_equiv,
       mtheta_equiv=mtheta_equiv,
       gamma_t_equiv=gamma_t_equiv,
-      manifest_thetacovariates = manifest_thetacovariates, 
+      manifest_thetacovariates=manifest_thetacovariates, 
       ...)
   }
   
