@@ -284,7 +284,7 @@ lst_models_es_common_trait <-
     if(la_s_equiv == "time.invar"){
       la_s <- rep("la_s", times=ntimepoints-1)
     }
-    if(la_s_equiv == "period.invar"){
+    if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]
@@ -589,7 +589,7 @@ lst_models_es_indicator_specific_trait <-
     if(la_s_equiv == "time.invar"){
       la_s <- rep("la_s", times=ntimepoints-1)
     }
-    if(la_s_equiv == "period.invar"){
+    if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]

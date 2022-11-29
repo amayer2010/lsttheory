@@ -45,26 +45,7 @@ shinyServer(function(input, output, session) {
         dataInput()
     })
     
-    ###### SliderInput for nperiods ######
-    
-    # observe({
-    #     updateSliderInput(session, 
-    #                   "nperiods",
-    #                   min = 1,
-    #                   max = input$ntimepoints,
-    #                   step = 1)
-    # })
-    # 
-    # output$warnmsg <- renderPrint({
-    #     number <- input$ntimepoints
-    #     all <- 1:number
-    #     possibleN <- all[number %% all == 0]
-    # 
-    #     if(!input$nperiods %in% possibleN){
-    #         cat("Warning: The number of measurement ocassions cannot be divided by the number of periods. \n Please select one of the following:", possibleN)
-    #     }
-    # })
-    
+
     ###### selectInput for nperiods ######
     
     nperiodoptions <- reactive({
@@ -84,7 +65,7 @@ shinyServer(function(input, output, session) {
     ###### Update SelectInput for equivalences ######### 
     
     implied.equivalences <- reactive({
-      if (input$lstmodel == "model1") {
+      if (input$lstmodel == 1) {
         list(
           la_t_equiv <- "one",
           la_o_equiv <- "one",
@@ -94,97 +75,115 @@ shinyServer(function(input, output, session) {
           vtheta_equiv <- "invar",
           nu_equiv <- "zero",
           alpha_equiv <- "zero",
-          mtheta_equiv <- "invar")
+          mtheta_equiv <- "invar",
+          gamma_t_equiv = "invar" )
       }
-      else if (input$lstmodel == "model2") { 
+      else if (input$lstmodel == 2) { 
         list(
           la_t_equiv <- "one",
           la_o_equiv <- "one",
-          la_s_equiv <- "period.invar",
+          la_s_equiv <- "time.invar",
           vzeta_eqiv <- "time.invar",
           veps_equiv <- "invar",
           vtheta_equiv <- "invar",
           nu_equiv <- "zero",
           alpha_equiv <- "zero",
-          mtheta_equiv <- "invar")
+          mtheta_equiv <- "invar",
+          gamma_t_equiv = "invar" )
       }
-      else if (input$lstmodel == "model3") {
+      else if (input$lstmodel == 3) {
         list(
           la_t_equiv <- "one",
           la_o_equiv <- "one",
-          la_s_equiv <- "period.invar",
+          la_s_equiv <- "time.invar",
           vzeta_eqiv <- "time.invar",
           veps_equiv <- "invar",
           vtheta_equiv <- "invar",
           nu_equiv <- "zero",
           alpha_equiv <- "zero",
-          mtheta_equiv <- "invar")
+          mtheta_equiv <- "invar",
+          gamma_t_equiv = "invar")
       }
-      else if (input$lstmodel == "model4") {
+      else if (input$lstmodel == 4) {
         list(
           la_t_equiv <- "one",
           la_o_equiv <- "one",
-          la_s_equiv <- "period.invar",
+          la_s_equiv <- "time.invar",
           vzeta_eqiv <- "time.invar",
           veps_equiv <- "invar",
           vtheta_equiv <- "invar",
           nu_equiv <- "zero",
-          alpha_equiv <- "zero", #not relevant for indicator-specific models
-          mtheta_equiv <- "invar")
+          alpha_equiv   <- NULL,
+          mtheta_equiv <- "invar",
+          gamma_t_equiv = "indicator.invar")
       }
-      else {
+      else if(input$lstmodel == 5) {
         list(
-          la_t_equiv   <- "free",
-          la_o_equiv   <- "free",
-          la_s_equiv   <- "free",
-          vzeta_eqiv   <- "free",
-          veps_equiv   <- "free",
-          vtheta_equiv <- "free",
-          nu_equiv     <- "free",
-          alpha_equiv  <- "free",
-          mtheta_equiv <- "free")
+          la_t_equiv    <- "one",
+          la_o_equiv    <- "one",
+          la_s_equiv    <- "time.invar",
+          vzeta_eqiv    <- "time.invar",
+          veps_equiv    <- "invar",
+          vtheta_equiv  <- "invar",
+          nu_equiv      <- "zero",
+          alpha_equiv   <- NULL,
+          mtheta_equiv  <- "invar",
+          gamma_t_equiv <- "indicator.invar")
+      }
+      else if(input$lstmodel == 6) {
+        list(
+          la_t_equiv <- "one",
+          la_o_equiv <- "period.invar" ,
+          la_s_equiv <- "time.invar",
+          vzeta_eqiv <- "time.invar",
+          veps_equiv <- "invar",
+          vtheta_equiv <- "invar",
+          nu_equiv      <- "zero" ,
+          alpha_equiv   <- "period.invar",
+          mtheta_equiv  <- "invar",
+          gamma_t_equiv <-  "invar"
+          )
+      }      
+      else if(input$lstmodel == 7) {
+        list(
+          la_t_equiv    <- "one",
+          la_o_equiv    <- "period.invar",
+          la_s_equiv    <- "time.invar",
+          vzeta_eqiv    <- "time.invar",
+          veps_equiv    <- "invar",
+          vtheta_equiv  <- "invar",
+          nu_equiv      <- "zero",
+          alpha_equiv   <- "period.invar" ,
+          mtheta_equiv  <- "invar",
+          gamma_t_equiv <-  "invar")
+      }
+      else if(input$lstmodel == 8) {
+        list(
+          la_t_equiv    <- "one",
+          la_o_equiv    <- "period.invar",
+          la_s_equiv    <- "time.invar",
+          vzeta_eqiv    <- "time.invar",
+          veps_equiv    <- "invar",
+          vtheta_equiv  <- "invar",
+          nu_equiv      <- "zero",
+          alpha_equiv   <- NULL,
+          mtheta_equiv  <- "invar",
+          gamma_t_equiv <- "indicator.invar")
+      } 
+      else if(input$lstmodel == 9) {
+        list(
+          la_t_equiv    <- "one",
+          la_o_equiv    <- "period.invar",
+          la_s_equiv    <- "time.invar",
+          vzeta_eqiv    <- "time.invar",
+          veps_equiv    <- "invar",
+          vtheta_equiv  <- "invar",
+          nu_equiv      <- "zero",
+          alpha_equiv   <- NULL,
+          mtheta_equiv  <- "invar",
+          gamma_t_equiv <- "indicator.invar")
       }
     })
-    
-    
-    # implied.equivalences <- reactive({
-    #     if (input$globalequivalence == "invar") {
-    #         list(
-    #             la_t_equiv <- "one",
-    #             la_o_equiv <- "one",
-    #             la_s_equiv <- "time.invar",
-    #             vzeta_eqiv <- "time.invar",
-    #             veps_equiv <- "invar",
-    #             vtheta_equiv <- "indicator.invar",
-    #             nu_equiv <- "zero",
-    #             alpha_equiv <- "zero",
-    #             mtheta_equiv <- "indicator.invar")
-    #     }
-    #     else if (input$globalequivalence == "period.invar") {
-    #         list(
-    #             la_t_equiv <- "period.invar",
-    #             la_o_equiv <- "period.invar",
-    #             la_s_equiv <- "period.invar",
-    #             vzeta_eqiv <- "period.invar",
-    #             veps_equiv <- "period.invar",
-    #             vtheta_equiv <- "indicator.invar",
-    #             nu_equiv <- "period.invar",
-    #             alpha_equiv <- "period.invar",
-    #             mtheta_equiv <- "indicator.invar")
-    #     }
-    #     else if (input$globalequivalence == "free") {
-    #         list(
-    #             la_t_equiv   <- "free",
-    #             la_o_equiv   <- "free",
-    #             la_s_equiv   <- "free",
-    #             vzeta_eqiv   <- "free",
-    #             veps_equiv   <- "free",
-    #             vtheta_equiv <- "free",
-    #             nu_equiv     <- "free",
-    #             alpha_equiv  <- "free",
-    #             mtheta_equiv <- "free")
-    #     }
-    # })
     
     observe({
         updateSelectInput(session, "la_t_equiv",   selected = implied.equivalences()[1])
@@ -194,8 +193,10 @@ shinyServer(function(input, output, session) {
         updateSelectInput(session, "veps_equiv",   selected = implied.equivalences()[5])
         updateSelectInput(session, "vtheta_equiv", selected = implied.equivalences()[6])
         updateSelectInput(session, "nu_equiv",     selected = implied.equivalences()[7])
-        updateSelectInput(session, "alpha_equiv",  selected = implied.equivalences()[8])
+        updateSelectInput(session, "alpha_equiv",  selected = implied.equivalences()[8]) #every model must have this option!
         updateSelectInput(session, "mtheta_equiv", selected = implied.equivalences()[9])
+        updateSelectInput(session, "gamma_t_equiv",selected = implied.equivalences()[10])
+        
     })
     
     ###### Variable name recognition #########  
@@ -250,19 +251,19 @@ shinyServer(function(input, output, session) {
     })
     
     # options for state covariates should not include variables which are already selected as indicators
-    choicesstatecovariates <- reactive({
-      indicators <- input$indicators
-      repeatedvariables <- varnames()[["repeated_measures"]]
-      statecovariates <- setdiff(repeatedvariables, indicators)
-      return(statecovariates)
-    })
+    # choicesstatecovariates <- reactive({
+    #   indicators <- input$indicators
+    #   repeatedvariables <- varnames()[["repeated_measures"]]
+    #   statecovariates <- setdiff(repeatedvariables, indicators)
+    #   return(statecovariates)
+    # })
     
-    output$statecovariates <- renderUI({
-        selectInput(inputId="statecov",
-                    label="What are your covariates explaining the latent states?", 
-                    choices = choicesstatecovariates(), # choices = varnames()[["repeated_measures"]], gives all repeated variables as choices
-                    multiple = TRUE)
-    })
+    # output$statecovariates <- renderUI({
+    #     selectInput(inputId="statecov",
+    #                 label="What are your covariates explaining the latent states?", 
+    #                 choices = choicesstatecovariates(), # choices = varnames()[["repeated_measures"]], gives all repeated variables as choices
+    #                 multiple = TRUE)
+    # })
     
     output$traitcovariates <- renderUI({
         selectInput(inputId="traitcov",
@@ -274,7 +275,6 @@ shinyServer(function(input, output, session) {
     #### Summary ####
     
     summarytext <- reactive({
-        #TODO implement warning if any info is missing
         validate(
             need(input$ntimepoints != "", "Please provide the number of measurement occasions in the 'Reading in Data' section."),
             need(input$indicators != "", "Please select two or more indicators in the 'variable specifics' section."),
@@ -284,43 +284,75 @@ shinyServer(function(input, output, session) {
         indicators  <- input$indicators
         nindicators <- length(indicators)
         
-        # traitmodel  <- input$traitmodel #singletrait/ day-specific/ indicator-specific/ day- and indicator-specific
         lstmodel    <- input$lstmodel
         nperiods    <- as.integer(input$nperiods)
         ar          <- ifelse(input$autoregression, "with", "without")
         equiv       <- ifelse(input$detailedequivalences, "individual", input$globalequivalence)
         
         paste0("Your model has ", nindicators, " indicators (", paste0(indicators, collapse = ", "), ") measured at ", ntimepoints, " occasions. ",
-              "You have selected ", lstmodel, "." #"traitmodel with ", nperiods, " periods, ", ar, " autoregression and the '", equiv, "' equivalence option."
+              "You have selected model ", lstmodel, "." #"traitmodel with ", nperiods, " periods, ", ar, " autoregression and the '", equiv, "' equivalence option."
               )
     })
     
     output$summary <- renderText({summarytext()})
     
+    modelrstudio <- reactive({
+      traitcov    <- input$traitcov
+      # TODO check if the detailed options differ from the implied details
+      code <- paste0("lsttheory_es(model = ", input$lstmodel, ", ntimepoints = ", input$ntimepoints,
+                     ", nperiods = ", input$nperiods, ", data = downloadeddata", 
+                     ifelse(input$includecovariates, 
+                            # yes
+                            ifelse(
+                              length(traitcov) > 1,
+                              paste0(", \n manifest_thetacovariates = c(", paste0(traitcov, collapse = ", "), ")" ), 
+                              paste0(", \n manifest_thetacovariates = ", traitcov)
+                            ),
+                            # no
+                            ""),
+                     ")"
+                     )
+      return(code)
+    })
+    
+    output$modelsyntax <- renderText({modelrstudio()})
+    
     #### RESULTS ####
     
     #### lst_models_es() call ####
 
-    model <- eventReactive(input$run, {
-        ntimepoints <- input$ntimepoints 
-        indicators  <- input$indicators
-        seperator   <- input$seperator
+    finaldata <- reactive({
+      ntimepoints <- input$ntimepoints
+      indicators  <- input$indicators
+      seperator   <- input$seperator
+       
+      vars <- as.vector(outer(indicators, 1:ntimepoints, paste, sep=seperator))
 
-        # if(!input$includecovariates){
-             vars <- as.vector(outer(indicators, 1:ntimepoints, paste, sep=seperator))
-             data <- dataInput() %>% select(vars)
-        # }
-        # else if (input$includecovariates){
-             #TODO
-        # }
+      if(!input$includecovariates){
+        data <- dataInput() %>% select(all_of(vars))
+      }
+      else if (input$includecovariates){
+        covs <- input$traitcov
+        data <- dataInput() %>% select(all_of(c(vars, covs)))
+        
+      }
+           return(data)
+    })
+    
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("data-", Sys.Date(), ".csv", sep="")
+      },
+      content = function(file) {
+        write.csv(finaldata(), file, row.names = FALSE)
+      }
+    )
+    
+    model <- eventReactive(input$run, {
         
         lstmodel             <- input$lstmodel
-        # traitmodel           <- input$traitmodel
-        #data                 <- dataInput()
+        ntimepoints          <- input$ntimepoints 
         nperiods             <- as.integer(input$nperiods)
-        # autoregression       <- input$autoregression
-        # detailedequivalences <- input$detailedequivalences
-        # globalequivalence    <- input$globalequivalence
         la_t_equiv           <- input$la_t_equiv
         la_o_equiv           <- input$la_o_equiv
         la_s_equiv           <- input$la_s_equiv
@@ -331,60 +363,51 @@ shinyServer(function(input, output, session) {
         alpha_equiv          <- input$alpha_equiv
         mtheta_equiv         <- input$mtheta_equiv
         
-        ntraitperiods <- nzetaperiods <- nepsperiods <- nperiods
-        # if (traitmodel %in% c("singletrait", "indicator-specific")) {
-        #     ntraitperiods <- 1
-        # }
+        #### TODO #####
+        if(input$includecovariates){
+          manifest_thetacovariates <- input$traitcov
+          gamma_t_equiv            <- input$gamma_t_equiv
+        }
         
-        # if(!detailedequivalences){
-            # res <- lsttheory:::lst_models_es(traitmodel = traitmodel,
-            #                      ntimepoints = ntimepoints,
-            #                      data = data, nperiods = nperiods,
-            #                      equiv = globalequivalence, ar = autoregression,
-            #                      missing = "fiml")
-          # res <- lsttheory:::lst_models_es(traitmodel = "singletrait", 
-          #                                  ntimepoints = 9,
-          #                                  data = lsttheory::d_lst_es, nperiods = nperiods, # TODO nperiods nicht richtig erkannt
-          #                                  equiv = globalequivalence, ar = autoregression,
-          #                                  missing = "fiml")
-        # }
-        # if(detailedequivalences){
-            if(lstmodel %in% c("model1", "model2", "model3")){
-                res <- lsttheory:::lst_models_es_common_trait(ntimepoints = ntimepoints,
-                                                  data = data, ntraitperiods = nperiods, nzetaperiods = nperiods,
-                                                  nepsperiods = nperiods, la_t_equiv = la_t_equiv,
-                                                  la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv,
-                                                  vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv,
-                                                  vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv,
-                                                  alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv,
-                                                  missing = "fiml")
+        ntraitperiods <- nzetaperiods <- nepsperiods <- nperiods
+        
+        if(!input$includecovariates){
+          res <- lsttheory::lsttheory_es(model = lstmodel, ntimepoints = ntimepoints, nperiods = nperiods, 
+                                       data = finaldata(), la_t_equiv = la_t_equiv, 
+                                       la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv,
+                                       vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv,
+                                       vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv,
+                                       alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv)
+        }
+        if(input$includecovariates){
+          res <- lsttheory::lsttheory_es(model = lstmodel, ntimepoints = ntimepoints, nperiods = nperiods, 
+                                       data = finaldata(), la_t_equiv = la_t_equiv, 
+                                       la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv,
+                                       vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv,
+                                       vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv,
+                                       alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv,
+                                       gamma_t_equiv = gamma_t_equiv,
+                                       manifest_thetacovariates = manifest_thetacovariates)          
+        }
 
-            }
-            else if (lstmodel %in% c("model4")){
-                res <- lsttheory:::lst_models_es_indicator_specific_trait(ntimepoints = ntimepoints, 
-                                                              data = data, ntraitperiods = nperiods, nzetaperiods = nperiods, 
-                                                              nepsperiods = nperiods, la_t_equiv = la_t_equiv, 
-                                                              la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv, 
-                                                              vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv, 
-                                                              vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv, 
-                                                              alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv,
-                                                              missing = "fiml")
-            }
-        # }
         return(res)
 
     })
         
+
     
     ##### Output variance components #####
     
     output$varcompsummary <- DT::renderDT({
-        sumtable <- model()@varcomp %>% 
-            select(rel, spe, con) %>% 
-            psych::describe(skew = FALSE) %>% 
-            round(3)
+      if(input$la_s_equiv == "zero"){
+        sumtable <- model()@varcomp %>% select(rel, spe, con) %>%
+          psych::describe(skew = FALSE) 
+      } else {
+        sumtable <- model()@varcomp %>% select(rel, spe, con, pred, upred) %>% 
+          psych::describe(skew = FALSE) 
+      }
         class(sumtable) <- "data.frame"
-        sumtable %>% select(mean, sd, min, max, range)
+        sumtable %>% select(mean, sd, min, max, range) %>% round(3)  
     })
     
     output$varcomp <- renderPrint({
@@ -399,6 +422,15 @@ shinyServer(function(input, output, session) {
         summary(model()@lavaanres, fit.measures = TRUE)
         })
     
+    ##### output download model #####
+    output$downloadModel <- downloadHandler(
+      filename = function() {
+        paste("model-", Sys.Date(), ".rds", sep="")
+      },
+      content = function(file) {
+        saveRDS(model(), file)
+      }
+    )
 
 
 })

@@ -2,32 +2,42 @@
 #' Estimate latent state-trait models for experience sampling data
 #'
 #' @author Julia Norget
-#' @param model integer or character.
+#' @param model integer or character. Can be 1-9 or one of the following: c("MSSTinvar", "STARinvar", "PTARinvar", "ITARinvar", "PITARinvar", "STAR2", "PTAR2", "ITAR2", "PITAR2"). Each model implies invariance assumptions, but details can be changed with the options below.
+#' \enumerate{
+#' \item Model 1 ("MSSTinvar") is a multistate-singletrait model (no autoregression). Models 1-5 assume state (residual)- and trait-equivalence, i.e., all factor loadings are fixed to 1 and all intercepts are fixed to 0.
+#' \item Model 2 ("STARinvar") is a singletrait model with autoregression.
+#' \item Model 3 ("PTARinvar") is a model with period-specific (usually day-specific) traits. 
+#' \item Model 4 ("ITARinvar") is a model with indicator-specific traits.
+#' \item Model 5 ("PITARinvar") is a model with period- and indicator-specific traits.
+#' \item Models 6 - 9 ("STAR2", "PTAR2", "ITAR2", "PITAR2") are the same as models 2-5, but with state (residual)-congenericity and measurement invariance within periods (usually days). 
+#'}
 #' @param ntimepoints integer. The total number of measurement occasions on which data was collected.
 #' @param nperiods integer. The number of periods (e.g. days or weeks) on which data was collected.
 #' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
 #' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
 #' @param missing lavaan Option. Default is set to "fiml" instead of the standard default option "listwise" with lavaan.
 #' See \code{\link[lavaan]{lavOptions}} for details.
-#' @param la_t_equiv Character. Factor loadings of the latent trait. 
+#' @param la_t_equiv Character. Invariance option for factor loadings of the latent trait. 
 #' Can be one of \code{c("one", "period.invar", "free")}.
-#' @param la_o_equiv Character. Factor loadings of the occasion factor (OCC). 
+#' @param la_o_equiv Character. Invariance option for factor loadings of the occasion factor (OCC). 
 #' Can be one of \code{c("one", "time.invar", "period.invar", "free")}.
 #' In models without autoregression this corresponds to the factor loadings 
 #' of the state variables (models with a single trait or period-specific traits) or state residual variables (models with indicator-specific traits).
-#' @param la_s_equiv Character. Autoregression between occasion factors. Can be one of \code{c("zero", "time.invar", "period.invar", "free")}.
-#' @param vzeta_eqiv Character. Variances of the state residual (zeta) variables. Can be one of \code{c("time.invar", "period.invar", "free")}.
-#' @param veps_equiv Character. Variances of the residual (epsilon) variables. 
+#' @param la_s_equiv Character. Invariance option for autoregression between occasion factors. Can be one of \code{c("zero", "time.invar", "interval.invar", "free")}.
+#' @param vzeta_eqiv Character. Invariance option for variances of the state residual (zeta) variables. Can be one of \code{c("time.invar", "period.invar", "free")}.
+#' @param veps_equiv Character. Invariance option for variances of the residual (epsilon) variables. 
 #' Can be one of \code{c("invar",  "time.invar", "indicator.invar", "period.invar", "free")}.
-#' @param vtheta_equiv Character. Variances of the latent trait. Can be one of \code{c("invar","indicator.invar", "free")}.
-#' @param nu_equiv Character. Intercepts of the indicators. Can be one of \code{c("zero","period.invar", "free")}.
-#' @param alpha_equiv Character. Intercepts of the latent states. 
+#' @param vtheta_equiv Character. Invariance option for variances of the latent trait. Can be one of \code{c("invar","indicator.invar", "free")}.
+#' @param nu_equiv Character. Invariance option for intercepts of the indicators. Can be one of \code{c("zero","period.invar", "free")}.
+#' @param alpha_equiv Character. Invariance option for intercepts of the latent states. 
 #' Only relevant for models with a single trait or period-specific traits.
 #' Can be one of \code{c("zero","period.invar", "free")}.
-#' @param mtheta_equiv Means of the latent traits. Character. Can be one of \code{c("invar","indicator.invar", "free")}.
+#' @param mtheta_equiv Character. Invariance option for means of the latent traits. Character. Can be one of \code{c("invar","indicator.invar", "free")}.
+#' @param gamma_t_equiv Character. Invariance option for regression coefficient from covariates to the trait variables.
+#' @param manifest_thetacovariates Vector or single character. Name or the variable (or variables) in the dataset which are covariates that further explain the trait variables in the model. 
 #' @param ... Further arguments passed to lower-level functions
 #' @export
-lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml", 
+lsttheory_es <- function(model, ntimepoints, nperiods = 1, data, missing="fiml", 
                            la_t_equiv = NULL, la_o_equiv = NULL, la_s_equiv = NULL, vzeta_eqiv = NULL, veps_equiv = NULL, 
                            vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, 
                            gamma_t_equiv= NULL, manifest_thetacovariates = NULL, ...){
@@ -52,7 +62,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
     nu_equiv = "zero"
     alpha_equiv = "zero"
     mtheta_equiv = "invar"
-    gamma_t_equiv = "invar" #TODO add a default option for all models
+    gamma_t_equiv = "invar"
     
   }else if(model == 2 || model == "STARinvar"){ # singletrait model with autoregression -- STARinvar
     ntraitperiods = 1
@@ -205,8 +215,6 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
       ...)
     
   }else if(model %in% c(4,5,8,9)){
-    message("test")
-    
     res <- lst_models_es_indicator_specific_trait(
       ntimepoints=ntimepoints, 
       data=data, 
@@ -220,7 +228,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods, data, missing="fiml",
       veps_equiv=veps_equiv,
       vtheta_equiv=vtheta_equiv, 
       nu_equiv=nu_equiv, 
-      alpha_equiv=alpha_equiv,
+      #alpha_equiv=alpha_equiv,
       mtheta_equiv=mtheta_equiv,
       gamma_t_equiv=gamma_t_equiv,
       manifest_thetacovariates=manifest_thetacovariates, 
