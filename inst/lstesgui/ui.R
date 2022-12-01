@@ -10,7 +10,6 @@
 # should models 2-5 really be "invar" for the states? Or better "indicator.invar"?
 # ! check path models
 # !! make the "detailed options" clearer by using headings/categories (autoregression, covariates, traits, state (residuals)) 
-# !!! adjust summary (before "running" the model). reactive is called: modelrstudio
 # show warning message for output if the model did not converge/ there are Heywood cases
 
 # optional TODOs
@@ -29,6 +28,8 @@
 #     + include covariates in creating the dataset
 #     + add gamma_t invariance to the detailed options if covariates are included
 #     + adjust lsttheory_es() call to include covariates
+# adjust summary (before "running" the model) for usable R-code
+
 
 
 library(shiny)
@@ -231,8 +232,7 @@ shinyUI(fluidPage(
                                                            choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free")),
                                                # vtheta_equiv = "invar", "indicator.invar", "free"
                                                selectInput("vtheta_equiv", h5("Variances of the latent trait"),
-                                                           choices = list("invar","indicator.invar", "free"),
-                                                           selected = "indicator.invar"),
+                                                           choices = list("invar","indicator.invar", "free")),
                                                # nu_equiv = "zero", "period.invar", "free"
                                                selectInput("nu_equiv", h5("Intercepts of the indicators"),
                                                            choices = list("zero","period.invar", "free")),
@@ -242,8 +242,7 @@ shinyUI(fluidPage(
                                                # mtheta_equiv = "invar", "free", "
                                                # TODO only if model =/= singletrait
                                                selectInput("mtheta_equiv", h5("Means of the latent traits"),
-                                                           choices = list("invar","indicator.invar", "free"),
-                                                           selected = "indicator.invar"),
+                                                           choices = list("invar","indicator.invar", "free")),
                                                conditionalPanel(
                                                  condition = "input.includecovariates",
                                                  selectInput("gamma_t_equiv", h5("Regression of covariates on the latent traits"),
