@@ -753,7 +753,7 @@ lst_models_es_indicator_specific_trait <-
                                  select=est))
     vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
     vtheta_per_traitperiod <- split(vtheta_fitted, ceiling(seq_along(vtheta_fitted) / nindicators))
-    vtheta_per_traitperiod <- lapply(vtheta_per_traitperiod, function(x) rep(x, times=nindicators))
+    vtheta_per_traitperiod <- lapply(vtheta_per_traitperiod, function(x) rep(x, times=ntimepoints/ntraitperiods))
     vtheta_fitted <- unlist(vtheta_per_traitperiod)
     pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
     names(pred_fitted) <- paste0("pred", y_variables)
