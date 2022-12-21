@@ -37,7 +37,7 @@
 #' @param manifest_thetacovariates Vector or single character. Name or the variable (or variables) in the dataset which are covariates that further explain the trait variables in the model. 
 #' @param ... Further arguments passed to lower-level functions
 #' @export
-lsttheory_es <- function(model, ntimepoints, nperiods = 1, data, missing="fiml", 
+lsttheory_es <- function(model, ntimepoints, nperiods = 1, data, 
                            la_t_equiv = NULL, la_o_equiv = NULL, la_s_equiv = NULL, vzeta_eqiv = NULL, veps_equiv = NULL, 
                            vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, 
                            gamma_t_equiv= NULL, manifest_thetacovariates = NULL, ...){

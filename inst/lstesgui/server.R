@@ -1,8 +1,6 @@
 #
 # This is the server logic of the LST-ES Shiny web application.
 
-#require(semPlot)
-
 if (!require(Hmisc)) install.packages("Hmisc")
 library(Hmisc)
 
@@ -31,6 +29,8 @@ shinyServer(function(input, output, session) {
       }else if(!is.null(inFile)){
         if(grepl(".csv",inFile$name)){
           return(read.csv(inFile$datapath))
+        }else if(grepl(".rds",inFile$name)){
+          return(readRDS(inFile$datapath))
         }else{
           return(spss.get(inFile$datapath))
         }
@@ -39,7 +39,7 @@ shinyServer(function(input, output, session) {
     })
     
     
-    ###### Output Data Table ######### 
+    ###### Display Data Table ######### 
 
     output$datatable1 <- DT::renderDT({
         dataInput()
@@ -113,7 +113,7 @@ shinyServer(function(input, output, session) {
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv     = "zero",
-          alpha_equiv  = NULL,
+          alpha_equiv  = "zero",
           mtheta_equiv = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = NULL,
+          alpha_equiv   = "zero",
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -166,7 +166,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = NULL,
+          alpha_equiv   = "zero",
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       } 
@@ -179,7 +179,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = NULL,
+          alpha_equiv   = "zero",
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -250,21 +250,6 @@ shinyServer(function(input, output, session) {
                     multiple = TRUE)
     })
     
-    # options for state covariates should not include variables which are already selected as indicators
-    # choicesstatecovariates <- reactive({
-    #   indicators <- input$indicators
-    #   repeatedvariables <- varnames()[["repeated_measures"]]
-    #   statecovariates <- setdiff(repeatedvariables, indicators)
-    #   return(statecovariates)
-    # })
-    
-    # output$statecovariates <- renderUI({
-    #     selectInput(inputId="statecov",
-    #                 label="What are your covariates explaining the latent states?", 
-    #                 choices = choicesstatecovariates(), # choices = varnames()[["repeated_measures"]], gives all repeated variables as choices
-    #                 multiple = TRUE)
-    # })
-    
     output$traitcovariates <- renderUI({
         selectInput(inputId="traitcov",
                     label="What are your covariates explaining the latent traits?", 
@@ -297,6 +282,10 @@ shinyServer(function(input, output, session) {
     
     modelrstudio <- reactive({
       
+      if (input$includecovariates && is.null(input$traitcov)) {
+        validate("You have indicated that you want to include covariates, but did not select any variables to be used as covariates. Please go back to the 'Variable specifics' section.")
+      }
+      
       traitcov        <- input$traitcov
       selectedoptions <- list(
         la_t_equiv    = input$la_t_equiv,
@@ -315,7 +304,7 @@ shinyServer(function(input, output, session) {
       dif <- selectedoptions[compare]
 
       if(any(compare)){
-        adjustedoptions <- paste0(",\n  ", paste0(names(dif), " = ", unlist(dif), collapse=", \n  "))
+        adjustedoptions <- paste0(",\n  ", paste0(names(dif), " = \"", unlist(dif), collapse="\", \n  "), "\"")
       }else{
         adjustedoptions <- ""
       }
@@ -369,7 +358,7 @@ shinyServer(function(input, output, session) {
       }
     )
     
-    #### lst_models_es() call ####
+    #### lsttheory_es() call ####
     
     model <- eventReactive(input$run, {
         
@@ -453,6 +442,5 @@ shinyServer(function(input, output, session) {
         saveRDS(model(), file)
       }
     )
-
 
 })
