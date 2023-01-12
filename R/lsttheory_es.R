@@ -42,6 +42,13 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
                            vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, 
                            gamma_t_equiv= NULL, manifest_thetacovariates = NULL, ...){
   
+  if(ntimepoints %% nperiods != 0){
+    stop("ntimepoints must be a multiple of nperiods")
+  }
+  if((ncol(data) - length(manifest_thetacovariates)) %% ntimepoints != 0){ 
+    stop("The number of variables (excluding covariates) is not a multiple of ntimepoints. Does your dataset include variables which are not part of the model?")
+  }
+  
   userdefined <- c(la_t_equiv = la_t_equiv, la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv, vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv, 
                    vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv, alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv)
   
