@@ -13,7 +13,7 @@
 # show warning message for output if the model did not converge/ there are Heywood cases
 
 # optional TODOs
-# pre-select number of measurement occasions for example data
+# pre-select number of measurement occasions for example data (=9)
 # model output variance components: add graphical summary (x = t, y = value (0 - 1), lines for rel, con, spe, pred, upred per indicator)
 # Output für Autoregressionen aufbereiten
 # Output für Covariaten aufbereiten

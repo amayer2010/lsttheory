@@ -320,7 +320,7 @@ shinyServer(function(input, output, session) {
                             ),
                             # without covariates
                             ""),
-                     ")"
+                     ", missing = 'ml')"
                      )
       return(code)
     })
@@ -389,7 +389,8 @@ shinyServer(function(input, output, session) {
                                        la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv,
                                        vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv,
                                        vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv,
-                                       alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv)
+                                       alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv,
+                                       missing = 'ml')
         }
         if(input$includecovariates){
           res <- lsttheory::lsttheory_es(model = lstmodel, ntimepoints = ntimepoints, nperiods = nperiods, 
@@ -399,7 +400,8 @@ shinyServer(function(input, output, session) {
                                        vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv,
                                        alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv,
                                        gamma_t_equiv = gamma_t_equiv,
-                                       manifest_thetacovariates = manifest_thetacovariates)          
+                                       manifest_thetacovariates = manifest_thetacovariates,
+                                       missing = 'ml')          
         }
 
         return(res)
