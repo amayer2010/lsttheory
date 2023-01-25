@@ -5,6 +5,7 @@
 # big TODOs
 # TODO: implement model comparison (upload several .rds files)
 # TODO: add help texts
+# TODO: add output tab for model fit
 
 # small TODOs
 # should models 2-5 really be "invar" for the states? Or better "indicator.invar"?
@@ -357,6 +358,9 @@ shinyUI(fluidPage(
                                            verbatimTextOutput("lavaansyntax")),
                                   tabPanel("lavaan results",
                                            verbatimTextOutput("lavaanresults")),
+                                  tabPanel("model fit",
+                                           helpText("The fit measures below are corrected according to the procedure by Yuan et al. (2015) for SEM with many manifest variables."),
+                                           verbatimTextOutput("correctedfit")),
                                   tabPanel("download", 
                                            helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in the second part of this application, or read into R/RStudio with the function readRDS()."),
                                            br(),

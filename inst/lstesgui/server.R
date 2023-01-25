@@ -435,6 +435,11 @@ shinyServer(function(input, output, session) {
         summary(model()@lavaanres, fit.measures = TRUE)
         })
     
+    ##### Output corrected fit #####
+    output$correctedfit <- renderPrint({
+      correctedfit(model()@lavaanres) %>% round(3)
+    })
+    
     ##### output download model #####
     output$downloadModel <- downloadHandler(
       filename = function() {
