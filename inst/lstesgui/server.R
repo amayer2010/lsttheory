@@ -7,6 +7,9 @@ library(Hmisc)
 if (!require(dplyr)) install.packages("dplyr")
 library(dplyr)
 
+if (!require(DT)) install.packages("DT")
+library(DT)
+
 if (!require(lsttheory)){
     if(!require(devtools)) install.packages("devtools")
     devtools::install_github("amayer2010/lsttheory")
@@ -432,8 +435,33 @@ shinyServer(function(input, output, session) {
     
     ##### Output lav res #####
     output$lavaanresults <- renderPrint({
-        summary(model()@lavaanres, fit.measures = TRUE)
+        summary(model()@lavaanres, standardized = TRUE, fit.measures = TRUE)
         })
+    
+    ##### Output covariate res #####
+    output$covariatesummary01 <- renderPrint({
+      parameterestimates(model()@lavaanres) %>% filter(op == "~" & rhs %in% input$traitcov)
+    })
+    output$covariatesummary02 <- renderPrint({
+      parameterestimates(model()@lavaanres, rsq = TRUE) %>% filter(op == "r2" & grepl("theta", lhs))
+    })
+    
+    # panel with covariate output only shows if covariates were included
+    observeEvent(input$includecovariates, {
+      if (input$includecovariates) {
+        insertTab(inputId = "outputpanel", 
+                  tabPanel("covariates", 
+                           h4("Regressions of covariates explaining the trait variables"),
+                           verbatimTextOutput("covariatesummary01"),
+                           h4("Proportion of trait variance explained by the covariates"),
+                           verbatimTextOutput("covariatesummary02")), 
+                  target = "lavaan results",
+                  position = "after",
+                  select = FALSE)
+      } else {
+        removeTab(inputId = "outputpanel", target = "Covariates Tab")
+      }
+    })
     
     ##### Output corrected fit #####
     output$correctedfit <- renderPrint({

@@ -5,7 +5,6 @@
 # big TODOs
 # TODO: implement model comparison (upload several .rds files)
 # TODO: add help texts
-# TODO: add output tab for model fit
 
 # small TODOs
 # should models 2-5 really be "invar" for the states? Or better "indicator.invar"?
@@ -18,7 +17,6 @@
 # model output variance components: add graphical summary (x = t, y = value (0 - 1), lines for rel, con, spe, pred, upred per indicator)
 # Output für Autoregressionen aufbereiten
 # Output für Covariaten aufbereiten
-# Yuan-Corrected Model fit
 
 # DONE
 # adjust the implied invar-options for all 9 models
@@ -32,7 +30,7 @@
 #     + add gamma_t invariance to the detailed options if covariates are included
 #     + adjust lsttheory_es() call to include covariates
 # adjust summary (before "running" the model) for usable R-code
-
+# added Yuan-corrected model fit to output
 
 
 library(shiny)
@@ -350,6 +348,7 @@ shinyUI(fluidPage(
                        tabPanel(actionButton("run", label="RUN", width = "100%"),
                     #### Model Output ####
                                 tabsetPanel(
+                                  id = "outputpanel",
                                   tabPanel("Variance components",
                                            DT::DTOutput("varcompsummary"),
                                            verbatimTextOutput("varcomp")
@@ -361,6 +360,8 @@ shinyUI(fluidPage(
                                   tabPanel("model fit",
                                            helpText("The fit measures below are corrected according to the procedure by Yuan et al. (2015) for SEM with many manifest variables."),
                                            verbatimTextOutput("correctedfit")),
+                                  
+                                 # tabPanel("trait covariates"),
                                   tabPanel("download", 
                                            helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in the second part of this application, or read into R/RStudio with the function readRDS()."),
                                            br(),
