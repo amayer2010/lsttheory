@@ -12,7 +12,6 @@
 # Look at multilevel SEM and DSEM
 
 # TODO la_s_equiv:
-#      - period.invar should be renamed e.g. interval.invar
 #      - add overnight.invar (AR paths between periods may take a different value, the rest remains invariant)
 # TODO la_t_equiv:
 #      - add time.invar option
@@ -244,7 +243,10 @@ lst_models_es_common_trait <-
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
     }
-    if(la_o_equiv == "time.invar"){
+    if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", but we keep time.invar for backwards compatibility
+      if(la_o_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_o_equiv. Please use 'invar' instead.")
+      }
       la_o <- rep("la_o", times=nyvariables)
     }
     if(la_o_equiv == "period.invar"){
@@ -268,6 +270,9 @@ lst_models_es_common_trait <-
       la_t[1,] <- "1"
       la_t <- c(la_t)
     }
+    # if(la_t_equiv == "indicator.invar"){
+    #   
+    #   }
     if(la_t_equiv == "free"){
       la_t <- paste0("la_t", rep(1:ntimepoints_per_traitperiod, times=ntraitperiods),
                      "_", rep(1:ntraitperiods, each=ntimepoints_per_traitperiod))
@@ -281,8 +286,16 @@ lst_models_es_common_trait <-
     if(la_s_equiv == "zero"){
       la_s <- rep("0", times=ntimepoints-1)
     }
-    if(la_s_equiv == "time.invar"){
+    if(la_s_equiv == "time.invar" || la_s_equiv == "invar"){
+      if(la_s_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
+      }
       la_s <- rep("la_s", times=ntimepoints-1)
+    }
+    if(la_s_equiv == "overnight"){
+      la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
+      la_s <- rep(la_s, times=nzetaperiods)
+      la_s <- la_s[-1]
     }
     if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
@@ -302,6 +315,10 @@ lst_models_es_common_trait <-
                    rep(1:nzetaperiods, each=nyvariables_per_zetaperiod))
       nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
     }
+    if(nu_equiv == "indicator.invar"){
+      nu <- rep(paste0("nu", 1:nindicators), times=ntimepoints)
+      nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
+    }
     if(nu_equiv == "free"){
       nu <- paste0("nu", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
@@ -312,8 +329,12 @@ lst_models_es_common_trait <-
       alpha <- rep("0", times=ntimepoints)
     }
     if(alpha_equiv == "period.invar"){
-      alpha <- rep(paste0("alpha", 1:ntimepoints_per_traitperiod), times=ntraitperiods)
+      alpha <- rep(paste0("alpha", 1:nindicators), times=ntimepoints)
       alpha[seq(from=1, to=ntimepoints, by=ntimepoints_per_traitperiod)] <- "0"
+    }
+    if(alpha_equiv == "indicator.invar"){
+      alpha <- rep(paste0("alpha", 1:nindicators), times=ntimepoints)
+      alpha[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
     }
     if(alpha_equiv == "free"){
       alpha <- paste0("alpha", 1:ntimepoints_per_traitperiod, "_", 
@@ -330,7 +351,10 @@ lst_models_es_common_trait <-
     }
     
     ## vzeta
-    if(vzeta_eqiv == "time.invar"){
+    if(vzeta_eqiv == "time.invar" || vzeta_equiv == "invar"){
+      if(vzeta_eqiv == "time.invar"){ #TODO add for other options where time.invar is replaced
+        message("time.invar is deprecated for vzeta_equiv. Please use 'invar' instead.")
+      }
       vzeta <- rep("vzeta", times=ntimepoints)
     }
     if(vzeta_eqiv == "period.invar"){
@@ -549,7 +573,10 @@ lst_models_es_indicator_specific_trait <-
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
     }
-    if(la_o_equiv == "time.invar"){
+    if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", time.invar is kept for compatibility
+      if(la_o_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_o_equiv. Please use 'invar' instead.")
+      }
       la_o <- rep("la_o", times=nyvariables)
     }
     if(la_o_equiv == "period.invar"){
@@ -574,6 +601,9 @@ lst_models_es_indicator_specific_trait <-
       la_t[1:nindicators,] <- "1"
       la_t <- c(la_t)
     }
+    # if(la_t_equiv == "indicator.invar"){
+    #   
+    #   }
     if(la_t_equiv == "free"){
       la_t <- paste0("la_t", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       la_t <- matrix(la_t, nrow=nyvariables_per_traitperiod)
@@ -586,8 +616,16 @@ lst_models_es_indicator_specific_trait <-
     if(la_s_equiv == "zero"){
       la_s <- rep("0", times=ntimepoints-1)
     }
-    if(la_s_equiv == "time.invar"){
+    if(la_s_equiv == "time.invar" || la_s_equiv == "invar"){ # should be "invar", time.invar is kept for compatibility
+      if(la_s_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
+      }
       la_s <- rep("la_s", times=ntimepoints-1)
+    }
+    if(la_s_equiv == "overnight"){
+      la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
+      la_s <- rep(la_s, times=nzetaperiods)
+      la_s <- la_s[-1]
     }
     if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
@@ -601,6 +639,10 @@ lst_models_es_indicator_specific_trait <-
     ## nu
     if(nu_equiv == "zero"){
       nu <- rep("0", times=nyvariables)
+    }
+    if(nu_equiv == "indicator.invar"){
+      nu <- rep(paste0("nu", 1:nindicators), times=ntimepoints)
+      nu[1:nindicators,] <- "0"
     }
     if(nu_equiv == "period.invar"){
       nu <- paste0("nu", 1:nindicators, "_", 
@@ -629,7 +671,10 @@ lst_models_es_indicator_specific_trait <-
     }
     
     ## vzeta
-    if(vzeta_eqiv == "time.invar"){
+    if(vzeta_eqiv == "time.invar" || vzeta_eqiv == "invar"){ # time.invar is kept for compatibility
+      if(vzeta_eqiv == "time.invar"){ 
+        message("time.invar is deprecated for vzeta_equiv. Please use 'invar' instead.")
+      }
       vzeta <- rep("vzeta", times=ntimepoints)
     }
     if(vzeta_eqiv == "period.invar"){
