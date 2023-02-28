@@ -4,12 +4,12 @@
 #' @author Julia Norget
 #' @param model integer or character. Can be 1-9 or one of the following: c("MSSTinvar", "STARinvar", "PTARinvar", "ITARinvar", "PITARinvar", "STAR2", "PTAR2", "ITAR2", "PITAR2"). Each model implies invariance assumptions, but details can be changed with the options below.
 #' \enumerate{
-#' \item Model 1 ("MSSTinvar") is a multistate-singletrait model (no autoregression). Models 1-5 assume state (residual)- and trait-equivalence, i.e., all factor loadings are fixed to 1 and all intercepts are fixed to 0.
+#' \item Model 1 ("STinvar" or "MSSTinvar") is a multistate-singletrait model (no autoregression). Models 1-5 assume state (residual)- and trait-equivalence, i.e., all factor loadings are fixed to 1 and all intercepts are fixed to 0.
 #' \item Model 2 ("STARinvar") is a singletrait model with autoregression.
 #' \item Model 3 ("PTARinvar") is a model with period-specific (usually day-specific) traits. 
 #' \item Model 4 ("ITARinvar") is a model with indicator-specific traits.
 #' \item Model 5 ("PITARinvar") is a model with period- and indicator-specific traits.
-#' \item Models 6 - 9 ("STAR2", "PTAR2", "ITAR2", "PITAR2") are the same as models 2-5, but with state (residual)-congenericity and measurement invariance within periods (usually days). 
+#' \item Models 6 - 9 ("STAR2", "PTAR2", "ITAR2", "PITAR2") are the same as models 2-5, but with state (residual)-congenericity and measurement invariance within periods. In experience sampling data, periods usually correspond to days. 
 #'}
 #' @param ntimepoints integer. The total number of measurement occasions on which data was collected.
 #' @param nperiods integer. The number of periods (e.g. days or weeks) on which data was collected.
@@ -20,7 +20,7 @@
 #' @param la_o_equiv Character. Invariance option for factor loadings of the occasion factor (OCC). 
 #' Can be one of \code{c("one", "time.invar", "period.invar", "free")}.
 #' In models without autoregression this corresponds to the factor loadings 
-#' of the state variables (models with a single trait or period-specific traits) or state residual variables (models with indicator-specific traits).
+#' of the state variables (for models with a single trait or period-specific traits) or state residual variables (for models with indicator-specific traits).
 #' @param la_s_equiv Character. Invariance option for autoregression between occasion factors. Can be one of \code{c("zero", "time.invar", "interval.invar", "free")}.
 #' @param vzeta_eqiv Character. Invariance option for variances of the state residual (zeta) variables. Can be one of \code{c("time.invar", "period.invar", "free")}.
 #' @param veps_equiv Character. Invariance option for variances of the residual (epsilon) variables. 
@@ -31,7 +31,7 @@
 #' Only relevant for models with a single trait or period-specific traits.
 #' Can be one of \code{c("zero","period.invar", "free")}.
 #' @param mtheta_equiv Character. Invariance option for means of the latent traits. Character. Can be one of \code{c("invar","indicator.invar", "free")}.
-#' @param gamma_t_equiv Character. Invariance option for regression coefficient from covariates to the trait variables.
+#' @param gamma_t_equiv Character. Invariance option for regression coefficient from covariates to the latent trait variables.
 #' @param manifest_thetacovariates Vector or single character. Name or the variable (or variables) in the dataset which are covariates that further explain the trait variables in the model. 
 #' @param ... Further arguments passed to lower-level functions
 #' @export
@@ -132,13 +132,13 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nzetaperiods = nperiods
     nepsperiods = nperiods
     la_t_equiv = "one"
-    la_o_equiv = "period.invar" # changed to model 2 
+    la_o_equiv = "period.invar" # change from model 2 
     la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
-    veps_equiv = "invar"
+    vzeta_eqiv = "period.invar" # change from model 2 
+    veps_equiv = "period.invar" # change from model 2 
     vtheta_equiv = "invar"
     nu_equiv = "zero" 
-    alpha_equiv = "period.invar" # changed to model 2
+    alpha_equiv = "period.invar" # change from model 2
     mtheta_equiv = "invar"
     gamma_t_equiv = "invar"
     
@@ -147,13 +147,13 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nzetaperiods = nperiods
     nepsperiods = nperiods
     la_t_equiv = "one"
-    la_o_equiv = "period.invar" # changed to model 3
+    la_o_equiv = "period.invar" # change from model 3
     la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
-    veps_equiv = "invar"
+    vzeta_eqiv = "period.invar" # change from model 3
+    veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "invar"
     nu_equiv = "zero"
-    alpha_equiv = "period.invar" # changed to model 3
+    alpha_equiv = "period.invar" # change from model 3
     mtheta_equiv = "invar"
     gamma_t_equiv = "invar"
     
@@ -162,10 +162,10 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nzetaperiods = nperiods
     nepsperiods = nperiods
     la_t_equiv = "one"
-    la_o_equiv = "period.invar" # changed to model 4
+    la_o_equiv = "period.invar" # change from model 4
     la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
-    veps_equiv = "invar"
+    vzeta_eqiv = "period.invar" # change from model 3
+    veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "invar"
     nu_equiv = "zero"
     mtheta_equiv = "invar"
@@ -176,11 +176,11 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nzetaperiods = nperiods 
     nepsperiods = nperiods 
     la_t_equiv = "one"
-    la_o_equiv = "period.invar" # changed to model 5
+    la_o_equiv = "period.invar"      # change from model 5
     la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
-    veps_equiv = "invar"
-    vtheta_equiv = "invar"
+    vzeta_eqiv = "period.invar"      # change from model 5
+    veps_equiv = "period.invar"      # change from model 5
+    vtheta_equiv = "indicator.invar" # change from model 5
     nu_equiv = "zero"
     mtheta_equiv = "invar"
     gamma_t_equiv = "indicator.invar"
