@@ -18,11 +18,11 @@
 #' @param la_t_equiv Character. Invariance option for factor loadings of the latent trait. 
 #' Can be one of \code{c("one", "period.invar", "free")}.
 #' @param la_o_equiv Character. Invariance option for factor loadings of the occasion factor (OCC). 
-#' Can be one of \code{c("one", "time.invar", "period.invar", "free")}.
+#' Can be one of \code{c("one", "invar", "period.invar", "free")}.
 #' In models without autoregression this corresponds to the factor loadings 
 #' of the state variables (for models with a single trait or period-specific traits) or state residual variables (for models with indicator-specific traits).
-#' @param la_s_equiv Character. Invariance option for autoregression between occasion factors. Can be one of \code{c("zero", "time.invar", "interval.invar", "free")}.
-#' @param vzeta_eqiv Character. Invariance option for variances of the state residual (zeta) variables. Can be one of \code{c("time.invar", "period.invar", "free")}.
+#' @param la_s_equiv Character. Invariance option for autoregression between occasion factors. Can be one of \code{c("zero", "invar", "interval.invar", "free")}.
+#' @param vzeta_eqiv Character. Invariance option for variances of the state residual (zeta) variables. Can be one of \code{c("invar", "period.invar", "free")}.
 #' @param veps_equiv Character. Invariance option for variances of the residual (epsilon) variables. 
 #' Can be one of \code{c("invar",  "time.invar", "indicator.invar", "period.invar", "free")}.
 #' @param vtheta_equiv Character. Invariance option for variances of the latent trait. Can be one of \code{c("invar","indicator.invar", "free")}.
@@ -61,7 +61,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     la_t_equiv = "one"
     la_o_equiv = "one"
     la_s_equiv = "zero"
-    vzeta_eqiv = "time.invar"
+    vzeta_eqiv = "invar"
     veps_equiv = "invar"
     vtheta_equiv = "invar"
     nu_equiv = "zero"
@@ -75,8 +75,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "one"
-    la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
+    la_s_equiv = "invar"
+    vzeta_eqiv = "invar"
     veps_equiv = "invar"
     vtheta_equiv = "invar"
     nu_equiv = "zero"
@@ -90,8 +90,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "one"
-    la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
+    la_s_equiv = "invar"
+    vzeta_eqiv = "invar"
     veps_equiv = "invar"
     vtheta_equiv = "invar"
     nu_equiv = "zero"
@@ -105,8 +105,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "one"
-    la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
+    la_s_equiv = "invar"
+    vzeta_eqiv = "invar"
     veps_equiv = "invar"
     vtheta_equiv = "invar"
     nu_equiv = "zero"
@@ -119,8 +119,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods 
     la_t_equiv = "one"
     la_o_equiv = "one"
-    la_s_equiv = "time.invar"
-    vzeta_eqiv = "time.invar"
+    la_s_equiv = "invar"
+    vzeta_eqiv = "invar"
     veps_equiv = "invar"
     vtheta_equiv = "invar"
     nu_equiv = "zero"
@@ -133,7 +133,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "period.invar" # change from model 2 
-    la_s_equiv = "time.invar"
+    la_s_equiv = "invar"
     vzeta_eqiv = "period.invar" # change from model 2 
     veps_equiv = "period.invar" # change from model 2 
     vtheta_equiv = "invar"
@@ -148,7 +148,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "period.invar" # change from model 3
-    la_s_equiv = "time.invar"
+    la_s_equiv = "invar"
     vzeta_eqiv = "period.invar" # change from model 3
     veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "invar"
@@ -163,7 +163,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods
     la_t_equiv = "one"
     la_o_equiv = "period.invar" # change from model 4
-    la_s_equiv = "time.invar"
+    la_s_equiv = "invar"
     vzeta_eqiv = "period.invar" # change from model 3
     veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "invar"
@@ -177,7 +177,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     nepsperiods = nperiods 
     la_t_equiv = "one"
     la_o_equiv = "period.invar"      # change from model 5
-    la_s_equiv = "time.invar"
+    la_s_equiv = "invar"
     vzeta_eqiv = "period.invar"      # change from model 5
     veps_equiv = "period.invar"      # change from model 5
     vtheta_equiv = "indicator.invar" # change from model 5
