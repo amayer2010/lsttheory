@@ -351,9 +351,9 @@ lst_models_es_common_trait <-
     }
     
     ## vzeta
-    if(vzeta_eqiv == "time.invar" || vzeta_equiv == "invar"){
+    if(vzeta_eqiv == "time.invar" || vzeta_eqiv == "invar"){
       if(vzeta_eqiv == "time.invar"){ #TODO add for other options where time.invar is replaced
-        message("time.invar is deprecated for vzeta_equiv. Please use 'invar' instead.")
+        message("time.invar is deprecated for vzeta_eqiv. Please use 'invar' instead.")
       }
       vzeta <- rep("vzeta", times=ntimepoints)
     }
@@ -673,7 +673,7 @@ lst_models_es_indicator_specific_trait <-
     ## vzeta
     if(vzeta_eqiv == "time.invar" || vzeta_eqiv == "invar"){ # time.invar is kept for compatibility
       if(vzeta_eqiv == "time.invar"){ 
-        message("time.invar is deprecated for vzeta_equiv. Please use 'invar' instead.")
+        message("time.invar is deprecated for vzeta_eqiv. Please use 'invar' instead.")
       }
       vzeta <- rep("vzeta", times=ntimepoints)
     }
