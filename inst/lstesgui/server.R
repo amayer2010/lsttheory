@@ -73,7 +73,7 @@ shinyServer(function(input, output, session) {
           la_t_equiv = "one",
           la_o_equiv = "one",
           la_s_equiv = "zero",
-          vzeta_eqiv = "time.invar",
+          vzeta_eqiv = "invar",
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv    = "zero",
@@ -85,8 +85,8 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv = "one",
           la_o_equiv = "one",
-          la_s_equiv = "time.invar",
-          vzeta_eqiv = "time.invar",
+          la_s_equiv = "invar",
+          vzeta_eqiv = "invar",
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv    = "zero",
@@ -98,8 +98,8 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv = "one",
           la_o_equiv = "one",
-          la_s_equiv = "time.invar",
-          vzeta_eqiv = "time.invar",
+          la_s_equiv = "invar",
+          vzeta_eqiv = "invar",
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv    = "zero",
@@ -111,12 +111,12 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv = "one",
           la_o_equiv = "one",
-          la_s_equiv = "time.invar",
-          vzeta_eqiv = "time.invar",
+          la_s_equiv = "invar",
+          vzeta_eqiv = "invar",
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv     = "zero",
-          alpha_equiv  = "zero",
+          alpha_equiv  = "zero", # does nothing but should stay
           mtheta_equiv = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -124,12 +124,12 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv    = "one",
           la_o_equiv    = "one",
-          la_s_equiv    = "time.invar",
-          vzeta_eqiv    = "time.invar",
+          la_s_equiv    = "invar",
+          vzeta_eqiv    = "invar",
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero",
+          alpha_equiv   = "zero", # does nothing but should stay here. I later refer to the index of these arguments
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -137,9 +137,9 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv = "one",
           la_o_equiv = "period.invar" ,
-          la_s_equiv = "time.invar",
-          vzeta_eqiv = "time.invar",
-          veps_equiv = "invar",
+          la_s_equiv = "invar",
+          vzeta_eqiv = "period.invar",
+          veps_equiv = "period.invar",
           vtheta_equiv = "invar",
           nu_equiv      = "zero" ,
           alpha_equiv   = "period.invar",
@@ -151,9 +151,9 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv    = "one",
           la_o_equiv    = "period.invar",
-          la_s_equiv    = "time.invar",
-          vzeta_eqiv    = "time.invar",
-          veps_equiv    = "invar",
+          la_s_equiv    = "invar",
+          vzeta_eqiv    = "period.invar",
+          veps_equiv    = "period.invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
           alpha_equiv   = "period.invar" ,
@@ -164,12 +164,12 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv    = "one",
           la_o_equiv    = "period.invar",
-          la_s_equiv    = "time.invar",
-          vzeta_eqiv    = "time.invar",
-          veps_equiv    = "invar",
-          vtheta_equiv  = "invar",
+          la_s_equiv    = "invar",
+          vzeta_eqiv    = "period.invar",
+          veps_equiv    = "period.invar",
+          vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero",
+          alpha_equiv   = "zero", # should stay here
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       } 
@@ -177,12 +177,12 @@ shinyServer(function(input, output, session) {
         list(
           la_t_equiv    = "one",
           la_o_equiv    = "period.invar",
-          la_s_equiv    = "time.invar",
-          vzeta_eqiv    = "time.invar",
-          veps_equiv    = "invar",
-          vtheta_equiv  = "invar",
+          la_s_equiv    = "invar",
+          vzeta_eqiv    = "period.invar",
+          veps_equiv    = "period.invar",
+          vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero",
+          alpha_equiv   = "zero", # should stay here
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
