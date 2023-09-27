@@ -461,7 +461,7 @@ lst_models_es_common_trait <-
     la_t_fitted <- rep(la_t_fitted, each=nindicators)
     vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
     vtheta_fitted <- rep(vtheta_fitted, each=nyvariables_per_traitperiod)
-    pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
+    pred_fitted <- la_o_fitted^2 * la_t_fitted^2 * vtheta_fitted / vary_fitted
     names(pred_fitted) <- paste0("pred", y_variables)
     
     # UPred
