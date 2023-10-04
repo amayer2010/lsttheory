@@ -111,6 +111,8 @@ NULL
 #' @name multistate
 NULL
 
+
+
 #' Dataset happy
 #' 
 #' Restructured wide-format data from Weiss et al. (2021), containing the items 
@@ -135,6 +137,8 @@ NULL
 #' @format A data frame with 425 rows and 50 variables
 #' @name happy
 NULL
+
+
 
 #' Dataset happybig5
 #' 
@@ -167,3 +171,5 @@ NULL
 #' @format A data frame with 425 rows and 55 variables
 #' @name happybig5
 NULL
+
+
