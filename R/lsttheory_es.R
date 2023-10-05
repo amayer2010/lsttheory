@@ -168,7 +168,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "indicator.invar"
     nu_equiv = "zero"
-    mtheta_equiv = "invar"
+    mtheta_equiv = "indicator.invar"
     gamma_t_equiv = "indicator.invar"
     
   }else if(model == 9 || model == "PITAR2"){ # model 5 with state residual congenericity and measurement invariance within each period (e.g. day)
@@ -182,7 +182,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     veps_equiv = "period.invar"      # change from model 5
     vtheta_equiv = "indicator.invar" # change from model 5
     nu_equiv = "zero"
-    mtheta_equiv = "invar"
+    mtheta_equiv = "indicator.invar"
     gamma_t_equiv = "indicator.invar"
   }
   
