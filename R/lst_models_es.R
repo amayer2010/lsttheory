@@ -3,7 +3,6 @@
 ## A General Framework and Software for LST-R Models for Experience Sampling Data
 
 
-
 # Maybe do different steps as in testing measurement invariance...
 # traitmodel <- c("singletrait", "day-specific", "indicator-specific", "day-and-indicator-specific")
 # equiv <- c("invar", "period.invar", "free")
@@ -11,10 +10,6 @@
 # Test Stan version or Jags version using blavaan
 # Look at multilevel SEM and DSEM
 
-# TODO la_s_equiv:
-#      - add overnight.invar (AR paths between periods may take a different value, the rest remains invariant)
-# TODO la_t_equiv:
-#      - add time.invar option
 
 ############ class definitions and show method ####################
 
@@ -258,12 +253,7 @@ lst_models_es_common_trait <-
     
     
     ## la_t
-    
-    # if(la_t_equiv == "indicator.invar"){
-    #   
-    #   }
-    
-    if(la_t_equiv == "one"){
+    if(la_t_equiv == "one" || la_t_equiv == "indicator.invar"){
       la_t <- rep("1", times=ntimepoints)
     } else if(la_t_equiv == "period.invar"){
       la_t <- paste0("la_t", rep(1:ntimepoints_per_traitperiod, times=ntraitperiods))
@@ -276,7 +266,7 @@ lst_models_es_common_trait <-
       la_t <- matrix(la_t, nrow=ntimepoints_per_traitperiod)
       la_t[1,] <- "1"
       la_t <- c(la_t)
-    } else{stop("the argument la_t_equiv must have one of the following options: 'one', 'period.invar', 'indicator.invar', 'free'")}
+    } else{stop("the argument la_t_equiv must have one of the following options: 'one', 'period.invar', 'free'")}
     
     
     ## la_s
@@ -317,12 +307,9 @@ lst_models_es_common_trait <-
     
     
     ## alpha
-    if(alpha_equiv == "zero"){
+    if(alpha_equiv == "zero" || alpha_equiv == "indicator.invar"){
       alpha <- rep("0", times=ntimepoints)
-    } else if(alpha_equiv == "period.invar"){ # this is actually indicator.invar (invariance within indicators)
-      alpha <- rep(paste0("alpha", 1:ntimepoints_per_traitperiod), times=ntraitperiods)
-      alpha[seq(from=1, to=ntimepoints, by=ntimepoints_per_traitperiod)] <- "0"
-    } else if(alpha_equiv == "indicator.invar"){
+    } else if(alpha_equiv == "period.invar"){
       alpha <- rep(paste0("alpha", 1:ntimepoints_per_traitperiod), times=ntraitperiods)
       alpha[seq(from=1, to=ntimepoints, by=ntimepoints_per_traitperiod)] <- "0"
     } else if(alpha_equiv == "free"){
@@ -575,9 +562,10 @@ lst_models_es_indicator_specific_trait <-
     
     
     ## la_t
-        # else if(la_t_equiv == "indicator.invar"){
-    #   
-    #   }
+
+    } else if(la_t_equiv == "indicator.invar"){
+      la_t <- rep(paste0("la_t", 1:nindicators), times=ntimepoints)
+      la_t[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
     if(la_t_equiv == "one"){
       la_t <- rep("1", times=nyvariables)
     } else if(la_t_equiv == "period.invar"){

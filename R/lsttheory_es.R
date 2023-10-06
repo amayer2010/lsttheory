@@ -50,8 +50,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
   userdefined <- c(la_t_equiv = la_t_equiv, la_o_equiv = la_o_equiv, la_s_equiv = la_s_equiv, vzeta_eqiv = vzeta_eqiv, veps_equiv = veps_equiv, 
                    vtheta_equiv = vtheta_equiv, nu_equiv = nu_equiv, alpha_equiv = alpha_equiv, mtheta_equiv = mtheta_equiv)
   
-  if(!is.null(alpha_equiv) & model %in% c(4,5,8,9)){
-    message("alpha_equiv option will be ignored. Indicator-specific LST-R models are formulated as bi-factor models and do not include intercepts for the latent states.")
+  if(!is.null(alpha_equiv) & model %in% c(4,5,8,9, "ITARinvar", "PITARinvar", "ITAR2", "PITAR2")){
+    message("alpha_equiv option will be ignored. Indicator-specific LST-R models are formulated as first-order models and do not include intercepts for the latent states.")
   }
   
   if(model == 1 || model == "base" || model == "MSSTinvar" || model == "STinvar"){ # singletrait model, no autoregression
@@ -199,7 +199,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     if(!is.na(userdefined["mtheta_equiv"])){mtheta_equiv = unname(userdefined["mtheta_equiv"])}    
   }
   
-  if(model %in% c(1,2,3,6,7)){
+  if(model %in% c(1,2,3,6,7, "base", "MSSTinvar", "STinvar", "STARinvar", "PTARinvar", "STAR2", "PTAR2")){
     res <- lst_models_es_common_trait(
       ntimepoints=ntimepoints, 
       data=data, 
@@ -219,7 +219,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
       manifest_thetacovariates=manifest_thetacovariates, 
       ...)
     
-  }else if(model %in% c(4,5,8,9)){
+  }else if(model %in% c(4,5,8,9, "ITARinvar", "PITARinvar", "ITAR2", "PITAR2")){
     res <- lst_models_es_indicator_specific_trait(
       ntimepoints=ntimepoints, 
       data=data, 

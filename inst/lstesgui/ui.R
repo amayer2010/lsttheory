@@ -170,7 +170,18 @@ shinyUI(fluidPage(
                                   ),
                                   tabPanel("More Info", 
                                            h2("LST-R Models"),
-                                           tags$div("Details of each model are explained in Norget & Mayer (202x). The supplementary material will be linked here, summarized details about each model will be added.")#,
+                                           tags$div("Details of each model are explained in Norget, Weiss & Mayer (202x). The supplementary material can be found on the OSF: https://osf.io/vd9br/"),
+                                           tags$ul(
+                                             tags$li("model 1"),
+                                             tags$li("model 2"),
+                                             tags$li("model 3"),
+                                             tags$li("model 4"),
+                                             tags$li("model 5"),
+                                             tags$li("model 6"),
+                                             tags$li("model 7"),
+                                             tags$li("model 8"),
+                                             tags$li("model 9")
+                                           )
                                            # h2("Number of periods"),
                                            # tags$div("If you have collected data several times a day, the number of periods may refer to the number of days. 
                                                                 # If you have collected data several times a week or month, indicate the number of weeks/ months etc. 
@@ -223,20 +234,17 @@ shinyUI(fluidPage(
                                            br(),
                                            helpText("The LST-R model you selected implies the following equivalences. You can adjust each assumption individually. Click 'More Info' for details."),
                                            br(),
-                                           # checkboxInput("detailedequivalences", "Set more detailed equivalence assumptions", value = FALSE),
-                                           
-                                               #TODO why can these not be time.invar??
                                                selectInput("la_t_equiv", h5("Factor loadings of the latent trait variable(s)"),
-                                                           choices = list("one", "period.invar", "free")),
+                                                           choices = list("one", "indicator.invar", "period.invar", "free")),
                                                # la_o_equiv = "one", "time.invar", "period.invar", "free"
                                                selectInput("la_o_equiv", h5("Factor loadings of the latent state variables; for models with indicator-specific traits: factor loadings of the occasion factor (OCC)"),
                                                            choices = list("one", "time.invar", "period.invar", "free")),
                                                # la_s_equiv
                                                selectInput("la_s_equiv", h5("Autoregression between occasion factors"),
-                                                          choices = list("zero", "time.invar", "interval.invar", "free")), # TODO add overnight.invar
+                                                          choices = list("zero", "invar", "overnight", "interval.invar", "free")), 
                                                # vzeta_eqiv = "time.invar", "period.invar", "free"
                                                selectInput("vzeta_eqiv", h5("Variances of the state residual (zeta)"),
-                                                           choices = list("time.invar", "period.invar", "free")),
+                                                           choices = list("invar", "period.invar", "free")),
                                                # veps_equiv = "invar",  "time.invar", "indicator.invar", "period.invar", "free"
                                                selectInput("veps_equiv", h5("Variances of the residual/ error term (epsilon)"),
                                                            choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free")),
@@ -247,7 +255,7 @@ shinyUI(fluidPage(
                                                selectInput("nu_equiv", h5("Intercepts of the indicators"),
                                                            choices = list("zero","period.invar", "free")),
                                                # alpha_equiv = "zero", "period.invar", "free"
-                                               selectInput("alpha_equiv", h5("Intercepts of the latent states"), #TODO: nur das singletrait und day-specific sind als Higher-Order modell formuliert und haben daher intercepts fuer die latent states. Die indikatorspezifischen (Bifaktor) Modelle haben kein alpha. Muss dann also auch nicht angezeigt werden
+                                               selectInput("alpha_equiv", h5("Intercepts of the latent states (only for second-order models, i.e. models without indicator-specific traits)"), #TODO: nur das singletrait und day-specific sind als Higher-Order modell formuliert und haben daher intercepts fuer die latent states. Die indikatorspezifischen (first-order/ Bifaktor) Modelle haben kein alpha. Muss dann also auch nicht angezeigt werden
                                                            choices = list("zero","period.invar", "free")),
                                                # mtheta_equiv = "invar", "free", "
                                                # TODO only if model =/= singletrait
@@ -262,7 +270,15 @@ shinyUI(fluidPage(
                                   ),
                                   tabPanel("More Info",
                                            h2("Detailed Equivalences"),
-                                           tags$span("More Info will follow soon - stay tuned!")
+                                           tags$span("More Info will follow soon - stay tuned!"),
+                                            tags$div("text here and some more"),
+                                            br(),
+                                           tags$div("here's some text"),
+                                                    tags$ul(
+                                                      tags$li("a bullet point"),
+                                                      tags$li("another bullet point"),
+                                                      tags$li("a third bullet point")
+                                                    ),
                                            # h2("Equivalence assumptions"),
                                            # tags$div(
                                            #   h4("invariant"),
@@ -358,12 +374,12 @@ shinyUI(fluidPage(
                                   tabPanel("lavaan results",
                                            verbatimTextOutput("lavaanresults")),
                                   tabPanel("model fit",
-                                           helpText("The fit measures below are corrected according to the procedure by Yuan et al. (2015) for SEM with many manifest variables."),
+                                           helpText("The fit measures below are corrected according to the procedure by Yuan et al. (2015) for SEM with many manifest variables. Uncorrected fit indices are provided with the lavaan results."),
                                            verbatimTextOutput("correctedfit")),
                                   
                                  # tabPanel("trait covariates"),
                                   tabPanel("download", 
-                                           helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in the second part of this application, or read into R/RStudio with the function readRDS()."),
+                                           helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in R/RStudio. Read the file into R with the function readRDS(). Compare with anova(model1@lavaanres, model2@lavaanres)."),
                                            br(),
                                            downloadButton("downloadModel", "Download fitted model")
                                            ),
@@ -373,8 +389,8 @@ shinyUI(fluidPage(
                     ),
                    
              ),
-               tabPanel("Model comparison", helpText("TODO: let users download their fitted model in the Model tab. Then here in this tab let them upload several models to compare them with anova(). Make the model comparison informative, i.e. provide some information on the interpretation.")),
-               tabPanel("Info", helpText("This shiny app has two parts: one for fitting an LST-R model and one for comparing fitted models."))
+               # tabPanel("Model comparison", helpText("TODO: let users download their fitted model in the Model tab. Then here in this tab let them upload several models to compare them with anova(). Make the model comparison informative, i.e. provide some information on the interpretation.")),
+               tabPanel("Info", helpText("This shiny app is a tool for fitting LST-R models, especially with experience sampling or other intensive longitudinal data. It is part of the R-package lsttheory. Details of the software are explained in Norget, Weiss & Mayer (202x). The supplementary material can be found on the OSF: https://osf.io/vd9br"))
     )
 
 )

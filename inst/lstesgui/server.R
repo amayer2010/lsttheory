@@ -116,7 +116,7 @@ shinyServer(function(input, output, session) {
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv     = "zero",
-          alpha_equiv  = "zero", # does nothing but should stay
+          alpha_equiv  = "", # does nothing but should stay
           mtheta_equiv = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -129,7 +129,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero", # does nothing but should stay here. I later refer to the index of these arguments
+          alpha_equiv   = "", # does nothing but should stay here. I later refer to the index of these arguments
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -169,8 +169,8 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "period.invar",
           vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero", # should stay here
-          mtheta_equiv  = "invar",
+          alpha_equiv   = "", # should stay here
+          mtheta_equiv  = "indicator.invar",
           gamma_t_equiv = "indicator.invar")
       } 
       else if(input$lstmodel == 9) {
@@ -182,23 +182,23 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "period.invar",
           vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "zero", # should stay here
-          mtheta_equiv  = "invar",
+          alpha_equiv   = "", # should stay here
+          mtheta_equiv  = "indicator.invar",
           gamma_t_equiv = "indicator.invar")
       }
     })
     
     observe({
-        updateSelectInput(session, "la_t_equiv",   selected = implied.equivalences()[1])
-        updateSelectInput(session, "la_o_equiv",   selected = implied.equivalences()[2])
-        updateSelectInput(session, "la_s_equiv",   selected = implied.equivalences()[3])
-        updateSelectInput(session, "vzeta_eqiv",   selected = implied.equivalences()[4])
-        updateSelectInput(session, "veps_equiv",   selected = implied.equivalences()[5])
-        updateSelectInput(session, "vtheta_equiv", selected = implied.equivalences()[6])
-        updateSelectInput(session, "nu_equiv",     selected = implied.equivalences()[7])
-        updateSelectInput(session, "alpha_equiv",  selected = implied.equivalences()[8]) # every list must have this option!
-        updateSelectInput(session, "mtheta_equiv", selected = implied.equivalences()[9])
-        updateSelectInput(session, "gamma_t_equiv",selected = implied.equivalences()[10])
+        updateSelectInput(session, "la_t_equiv",   selected = implied.equivalences()["la_t_equiv"])
+        updateSelectInput(session, "la_o_equiv",   selected = implied.equivalences()["la_o_equiv"])
+        updateSelectInput(session, "la_s_equiv",   selected = implied.equivalences()["la_s_equiv"])
+        updateSelectInput(session, "vzeta_eqiv",   selected = implied.equivalences()["vzeta_eqiv"])
+        updateSelectInput(session, "veps_equiv",   selected = implied.equivalences()["veps_equiv"])
+        updateSelectInput(session, "vtheta_equiv", selected = implied.equivalences()["vtheta_equiv"])
+        updateSelectInput(session, "nu_equiv",     selected = implied.equivalences()["nu_equiv"])
+        updateSelectInput(session, "alpha_equiv",  selected = implied.equivalences()["alpha_equiv"])
+        updateSelectInput(session, "mtheta_equiv", selected = implied.equivalences()["mtheta_equiv"])
+        updateSelectInput(session, "gamma_t_equiv",selected = implied.equivalences()["gamma_t_equiv"])
         
     })
     
