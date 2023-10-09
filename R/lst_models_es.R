@@ -562,12 +562,12 @@ lst_models_es_indicator_specific_trait <-
     
     
     ## la_t
-
+    
+    if(la_t_equiv == "one"){
+      la_t <- rep("1", times=nyvariables)
     } else if(la_t_equiv == "indicator.invar"){
       la_t <- rep(paste0("la_t", 1:nindicators), times=ntimepoints)
       la_t[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
-    if(la_t_equiv == "one"){
-      la_t <- rep("1", times=nyvariables)
     } else if(la_t_equiv == "period.invar"){
       la_t <- paste0("la_t", 1:nindicators, "_", 
                      rep(rep(1:ntimepoints_per_traitperiod, each=nindicators), times=ntraitperiods))
