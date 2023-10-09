@@ -152,19 +152,71 @@ shinyUI(fluidPage(
                                                               selected = 1,
                                                        width = "80%"),
                                            conditionalPanel("input.lstmodel == 1",
+                                                            helpText("Singletrait model with eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time"),
                                                             shiny::img(src = "1_multistate-singletrait.png", height="900") # alternative: height="70%", but it weirdly adjusts between small and maximized window size
                                            ),
                                            conditionalPanel("input.lstmodel == 2",
+                                                            helpText("The same as model 1, but with autoregression. Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "2_multistate-singletraitAR.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 3",
+                                                            helpText("Model with period-specific trait variables and eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "3_dayspecifictrait_mitAR.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 4",
+                                                            helpText("Model with indicator-specific trait variables. 
+                                                                     The model makes eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "4_indicatorspecific_mitAR.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 5",
+                                                            helpText("Model with day- and period-specific trait variables. 
+                                                                     The model makes eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "5_day-and-indicatorspecific_mitAR.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 6",
+                                                            helpText("Same as model 2 (singletrait), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ), 
+                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period."),
+                                                            shiny::img(src = "6_multistate-singletraitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 7",
+                                                            helpText("Same as model 3 (period-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ), 
+                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period.
+                                                                     Mean and variance of the latent traits are invariant"),
+                                                            shiny::img(src = "7_dayspecifictrait_mitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 8",
+                                                            helpText("Same as model 3 (indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ), 
+                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period."),
+                                                            shiny::img(src = "8_indicatorspecific_mitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 9",
+                                                            helpText("Same as model 3 (period- and indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ), 
+                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period.
+                                                                     Mean and variance of the latent traits are invariant for traits of the same indicator."),
+                                                            shiny::img(src = "9_day-and-indicatorspecific_mitAR_2.png", height="1000")
                                            )
                                                             
                                   ),
