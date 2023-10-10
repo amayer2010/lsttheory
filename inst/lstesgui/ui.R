@@ -290,7 +290,7 @@ shinyUI(fluidPage(
                                                            choices = list("one", "indicator.invar", "period.invar", "free")),
                                                # la_o_equiv = "one", "time.invar", "period.invar", "free"
                                                selectInput("la_o_equiv", h5("Factor loadings of the latent state variables; for models with indicator-specific traits: factor loadings of the occasion factor (OCC)"),
-                                                           choices = list("one", "time.invar", "period.invar", "free")),
+                                                           choices = list("one", "invar", "period.invar", "free")),
                                                # la_s_equiv
                                                selectInput("la_s_equiv", h5("Autoregression between occasion factors"),
                                                           choices = list("zero", "invar", "overnight", "interval.invar", "free")), 
@@ -325,14 +325,19 @@ shinyUI(fluidPage(
                                   ),
                                   tabPanel("More Info",
                                            h2("Detailed Equivalences"),
-                                           tags$span("More Info will follow soon - stay tuned!"),
-                                            tags$div("text here and some more"),
-                                            br(),
-                                           tags$div("here's some text"),
+                                           # tags$span("More Info will follow soon - stay tuned!"),
+                                           # tags$div("text here and some more"),
+                                            # br(),
+                                           tags$div("Details about the options you can choose:"),
                                                     tags$ul(
-                                                      tags$li("a bullet point"),
-                                                      tags$li("another bullet point"),
-                                                      tags$li("a third bullet point")
+                                                      tags$li("zero: the parameter is set to 0 for all timepoints. Applies to intercepts or autoregressive paths."),
+                                                      tags$li("one: the parameter is set to 1 for all timepoints. Applies to factor loadings."),
+                                                      tags$li("invar: the parameter is set to the same value for all timepoints. Applies to variances, means of latent traits, regression paths for covariates."),
+                                                      tags$li("time.invar: the parameter is invariant within the same timepoint. Applies only to residual variances (epsilon)"),
+                                                      tags$li("indicator.invar: the parameter is invariant within the same period."),
+                                                      tags$li("period.invar: the parameter is invariant within the same indicator."),
+                                                      tags$li("free: parameter has no invariance contraints."),
+                                                      tags$li("overnight: Autoregression is invariant over time, but may take a different value for the time gap between periods.")
                                                     ),
                                            # h2("Equivalence assumptions"),
                                            # tags$div(
@@ -409,11 +414,7 @@ shinyUI(fluidPage(
                                            br(),
                                            helpText("Please be patient. Running the model may take several minutes, depending on your model and data."),
                                            #TODO implement a warning if only one indicator was selected
-                                           ),
-                                           
-                                           
-                                           
-                                  tabPanel("More Info")
+                                           )
                                 )
                     ),
                        tabPanel(actionButton("run", label="RUN", width = "100%"),
@@ -434,11 +435,21 @@ shinyUI(fluidPage(
                                   
                                  # tabPanel("trait covariates"),
                                   tabPanel("download", 
-                                           helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in R/RStudio. Read the file into R with the function readRDS(). Compare with anova(model1@lavaanres, model2@lavaanres)."),
+                                           helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in R/RStudio."),
                                            br(),
                                            downloadButton("downloadModel", "Download fitted model")
                                            ),
-                                  tabPanel("More Info")
+                                  tabPanel("More Info",
+                                           h2("How to continue in R/RStudio with the downloaded model"),
+                                           tags$ul(
+                                             tags$li("Read the .rds file into R/ RStudio with the function readRDS(), e.g. as model1 <- readRDS('downloadeddata.rds')"),
+                                             tags$li("Printing the object gives the variance components"),
+                                             tags$li("The fittet lavaan object is available as model1@lavaanres. Refer to the lavaan help or tutorial (lavaan.ugent.be) to retrieve specific information from the fitted object."),
+                                             tags$li("The lavaan syntax is included in model1@lavaansyntax"),
+                                             tags$li("summary(model1@lavaanres, fit.measures = TRUE) gives the lavaan results"),
+                                             tags$li("Compare several models with anova(model1@lavaanres, model2@lavaanres)")
+                                                  )
+                                           )
                                 ),
                                 )
                     ),

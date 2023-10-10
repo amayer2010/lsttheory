@@ -231,8 +231,9 @@ shinyServer(function(input, output, session) {
     varnames <- reactive({
         validate(
             need(!is.null(dataInput()), "Please select a dataset under 'Reading in data file'."),
-            need(input$ntimepoints !="", "Please provide the number of measurement occasions under 'Reading in data file'.")
+            need(input$ntimepoints !="", "Please provide the number of measurement occasions under 'Reading in data file'."),
         )
+      
         data <- dataInput()
         ntimepoints <- input$ntimepoints
         sep <- input$seperator
@@ -266,6 +267,7 @@ shinyServer(function(input, output, session) {
         validate(
             need(input$ntimepoints != "", "Please provide the number of measurement occasions in the 'Reading in Data' section."),
             need(input$indicators != "", "Please select two or more indicators in the 'variable specifics' section."),
+            need(length(input$indicators) != 1, "Please select two or more indicators in the 'variable specifics' section.")
         )        
         
         ntimepoints <- input$ntimepoints
