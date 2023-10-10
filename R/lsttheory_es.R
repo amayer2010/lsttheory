@@ -15,6 +15,7 @@
 #' @param nperiods integer. The number of periods (e.g. days or weeks) on which data was collected.
 #' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
 #' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
+#' @param addsyntax character string. Will be added to generated lavaan syntax. 
 #' @param la_t_equiv Character. Invariance option for factor loadings of the latent trait. 
 #' Can be one of \code{c("one", "period.invar", "free")}.
 #' @param la_o_equiv Character. Invariance option for factor loadings of the occasion factor (OCC). 
@@ -35,7 +36,7 @@
 #' @param manifest_thetacovariates Vector or single character. Name or the variable (or variables) in the dataset which are covariates that further explain the trait variables in the model. 
 #' @param ... Further arguments passed to lower-level functions
 #' @export
-lsttheory_es <- function(model, ntimepoints, nperiods = 1, data, 
+lsttheory_es <- function(model, ntimepoints, nperiods = 1, data, addsyntax = "",
                            la_t_equiv = NULL, la_o_equiv = NULL, la_s_equiv = NULL, vzeta_eqiv = NULL, veps_equiv = NULL, 
                            vtheta_equiv = NULL, nu_equiv = NULL, alpha_equiv = NULL, mtheta_equiv = NULL, 
                            gamma_t_equiv= NULL, manifest_thetacovariates = NULL, ...){
@@ -137,8 +138,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     vzeta_eqiv = "period.invar" # change from model 2 
     veps_equiv = "period.invar" # change from model 2 
     vtheta_equiv = "invar"
-    nu_equiv = "zero" 
-    alpha_equiv = "period.invar" # change from model 2
+    nu_equiv = "period.invar" # change from model 2 
+    alpha_equiv = "zero"
     mtheta_equiv = "invar"
     gamma_t_equiv = "invar"
     
@@ -152,8 +153,8 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     vzeta_eqiv = "period.invar" # change from model 3
     veps_equiv = "period.invar" # change from model 3
     vtheta_equiv = "invar"
-    nu_equiv = "zero"
-    alpha_equiv = "period.invar" # change from model 3
+    nu_equiv = "period.invar" # change from model 2
+    alpha_equiv = "zero"
     mtheta_equiv = "invar"
     gamma_t_equiv = "invar"
     
@@ -203,6 +204,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     res <- lst_models_es_common_trait(
       ntimepoints=ntimepoints, 
       data=data, 
+      addsyntax=addsyntax,
       ntraitperiods=ntraitperiods, 
       nzetaperiods=nzetaperiods,
       nepsperiods=nepsperiods, 
@@ -223,6 +225,7 @@ lsttheory_es <- function(model, ntimepoints, nperiods = 1, data,
     res <- lst_models_es_indicator_specific_trait(
       ntimepoints=ntimepoints, 
       data=data, 
+      addsyntax=addsyntax,
       ntraitperiods=ntraitperiods, 
       nzetaperiods=nzetaperiods,
       nepsperiods=nepsperiods, 

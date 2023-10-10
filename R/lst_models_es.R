@@ -52,6 +52,7 @@ setMethod ("show", "lstmodel",
 #' @param ntimepoints integer. Number of measurement occasions
 #' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
 #' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
+#' @param addsyntax character string. Will be added to generated lavaan syntax.
 #' @param nperiods integer. Number of periods (trait periods, zeta periods, and epsilon periods).
 #' @param equiv character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")
 #' @param ar logical. Should autoregressive effects be included
@@ -202,7 +203,7 @@ lst_models_es <-
 # ## TODO maybe cov_equiv
 
 lst_models_es_common_trait <- 
-  function(ntimepoints, data, ntraitperiods=1, nzetaperiods=1,
+  function(ntimepoints, data, addsyntax = "", ntraitperiods=1, nzetaperiods=1,
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
@@ -415,7 +416,7 @@ lst_models_es_common_trait <-
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
                     tmp10, "\n", tmp11, "\n", tmp12, "\n",
-                    tmp13, "\n",
+                    tmp13, "\n", addsyntax, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
@@ -508,7 +509,7 @@ lst_models_es_common_trait <-
 
 
 lst_models_es_indicator_specific_trait <- 
-  function(ntimepoints, data, ntraitperiods=1, nzetaperiods=1,
+  function(ntimepoints, data, addsyntax = "", ntraitperiods=1, nzetaperiods=1,
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
@@ -720,7 +721,7 @@ lst_models_es_indicator_specific_trait <-
     model <- paste0(tmp1, "\n", tmp2, "\n", tmp3, "\n",
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
-                    tmp10, "\n", tmp11, "\n",
+                    tmp10, "\n", tmp11, "\n", addsyntax, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
