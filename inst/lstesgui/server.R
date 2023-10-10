@@ -116,7 +116,7 @@ shinyServer(function(input, output, session) {
           veps_equiv = "invar",
           vtheta_equiv = "invar",
           nu_equiv     = "zero",
-          alpha_equiv  = "", # does nothing but should stay
+          alpha_equiv  = "zero", # does nothing but should stay
           mtheta_equiv = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -129,7 +129,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "invar",
           vtheta_equiv  = "invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "", # does nothing but should stay here. I later refer to the index of these arguments
+          alpha_equiv   = "zero", # does nothing but should stay here. I later refer to the index of these arguments
           mtheta_equiv  = "invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -169,7 +169,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "period.invar",
           vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "", # should stay here
+          alpha_equiv   = "zero", # should stay here
           mtheta_equiv  = "indicator.invar",
           gamma_t_equiv = "indicator.invar")
       } 
@@ -182,7 +182,7 @@ shinyServer(function(input, output, session) {
           veps_equiv    = "period.invar",
           vtheta_equiv  = "indicator.invar",
           nu_equiv      = "zero",
-          alpha_equiv   = "", # should stay here
+          alpha_equiv   = "zero", # should stay here
           mtheta_equiv  = "indicator.invar",
           gamma_t_equiv = "indicator.invar")
       }
@@ -318,12 +318,12 @@ shinyServer(function(input, output, session) {
                             # with covariates
                             ifelse(
                               length(traitcov) > 1,
-                              paste0(", \n  manifest_thetacovariates = c(", paste0(traitcov, collapse = ", "), ")" ), 
-                              paste0(", \n  manifest_thetacovariates = ", traitcov)
+                              paste0(", \n  manifest_thetacovariates = c(", paste0("'", traitcov, "'", collapse = ", "), ")" ), 
+                              paste0(", \n  manifest_thetacovariates = '", traitcov, "'")
                             ),
                             # without covariates
                             ""),
-                     ", missing = 'ml')"
+                     ", \n  missing = 'ml')"
                      )
       return(code)
     })

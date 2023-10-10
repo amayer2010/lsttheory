@@ -190,30 +190,30 @@ shinyUI(fluidPage(
                                            ),
                                            conditionalPanel("input.lstmodel == 6",
                                                             helpText("Same as model 2 (singletrait), but with state congenericity 
-                                                                     (factor loadings and intercepts for the state variables may differ), 
-                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
                                                                      the latent state residual and residual variables within each period."),
                                                             shiny::img(src = "6_multistate-singletraitAR_2.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 7",
                                                             helpText("Same as model 3 (period-specific traits), but with state congenericity 
-                                                                     (factor loadings and intercepts for the state variables may differ), 
-                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
                                                                      the latent state residual and residual variables within each period.
                                                                      Mean and variance of the latent traits are invariant"),
                                                             shiny::img(src = "7_dayspecifictrait_mitAR_2.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 8",
-                                                            helpText("Same as model 3 (indicator-specific traits), but with state congenericity 
-                                                                     (factor loadings and intercepts for the state variables may differ), 
-                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                            helpText("Same as model 4 (indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
                                                                      the latent state residual and residual variables within each period."),
                                                             shiny::img(src = "8_indicatorspecific_mitAR_2.png", height="1000")
                                            ),
                                            conditionalPanel("input.lstmodel == 9",
-                                                            helpText("Same as model 3 (period- and indicator-specific traits), but with state congenericity 
-                                                                     (factor loadings and intercepts for the state variables may differ), 
-                                                                     and invariance assumptions for factor loadings, intercepts, variances of 
+                                                            helpText("Same as model 5 (period- and indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
                                                                      the latent state residual and residual variables within each period.
                                                                      Mean and variance of the latent traits are invariant for traits of the same indicator."),
                                                             shiny::img(src = "9_day-and-indicatorspecific_mitAR_2.png", height="1000")
@@ -307,8 +307,11 @@ shinyUI(fluidPage(
                                                selectInput("nu_equiv", h5("Intercepts of the indicators"),
                                                            choices = list("zero","period.invar", "free")),
                                                # alpha_equiv = "zero", "period.invar", "free"
-                                               selectInput("alpha_equiv", h5("Intercepts of the latent states (only for second-order models, i.e. models without indicator-specific traits)"), #TODO: nur das singletrait und day-specific sind als Higher-Order modell formuliert und haben daher intercepts fuer die latent states. Die indikatorspezifischen (first-order/ Bifaktor) Modelle haben kein alpha. Muss dann also auch nicht angezeigt werden
-                                                           choices = list("zero","period.invar", "free")),
+                                               conditionalPanel(
+                                                  condition = "input.lstmodel == 1 || input.lstmodel == 2 || input.lstmodel == 3 || input.lstmodel == 6 || input.lstmodel == 7",
+                                                  selectInput("alpha_equiv", h5("Intercepts of the latent states (only for second-order models, i.e. models without indicator-specific traits)"), 
+                                                              choices = list("zero","period.invar", "free")),
+                                                ),    
                                                # mtheta_equiv = "invar", "free", "
                                                # TODO only if model =/= singletrait
                                                selectInput("mtheta_equiv", h5("Means of the latent traits"),
