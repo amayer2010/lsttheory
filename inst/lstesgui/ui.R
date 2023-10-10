@@ -64,7 +64,11 @@ shinyUI(fluidPage(
                                              fileInput("file1", "Upload data (SPSS, csv or rds file)", accept=c('.sav', '.csv', '.rds')),
                                     
                                              selectInput("exdata", "Select Example Data", 
-                                                c("none","d_lst_es (example with day-specific traits)"), selected="none"),
+                                                c("none","d_lst_es (example with day-specific traits)", 
+                                                  "happy (empirical dataset from Weiss et al., 2021)", 
+                                                  "happybig5 (empirical dataset with covariates)"), 
+                                                selected="none",
+                                                width= "400px"),
                                              numericInput("ntimepoints", "What is the number of measurement occasions?", value=""),
                                              conditionalPanel(
                                                condition = "typeof input.ntimepoints !== 'undefined' && input.ntimepoints > 0",
@@ -150,7 +154,7 @@ shinyUI(fluidPage(
                                                                              "9: model 5 with state residual congenericity and measurement invariance within each period (e.g. day)"  = 9
                                                                              ),
                                                               selected = 1,
-                                                       width = "80%"),
+                                                       width = "90%"),
                                            conditionalPanel("input.lstmodel == 1",
                                                             helpText("Singletrait model with eta-equivalence and theta-equivalence 
                                                                      assumptions, that is, the most restrictive equivalence assumptions. 
@@ -287,39 +291,49 @@ shinyUI(fluidPage(
                                            helpText("The LST-R model you selected implies the following equivalences. You can adjust each assumption individually. Click 'More Info' for details."),
                                            br(),
                                                selectInput("la_t_equiv", h5("Factor loadings of the latent trait variable(s)"),
-                                                           choices = list("one", "indicator.invar", "period.invar", "free")),
+                                                           choices = list("one", "indicator.invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # la_o_equiv = "one", "time.invar", "period.invar", "free"
                                                selectInput("la_o_equiv", h5("Factor loadings of the latent state variables; for models with indicator-specific traits: factor loadings of the occasion factor (OCC)"),
-                                                           choices = list("one", "invar", "period.invar", "free")),
+                                                           choices = list("one", "invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # la_s_equiv
                                                selectInput("la_s_equiv", h5("Autoregression between occasion factors"),
-                                                          choices = list("zero", "invar", "overnight", "interval.invar", "free")), 
+                                                          choices = list("zero", "invar", "overnight", "interval.invar", "free"),
+                                                          width = "500px"), 
                                                # vzeta_eqiv = "time.invar", "period.invar", "free"
                                                selectInput("vzeta_eqiv", h5("Variances of the state residual (zeta)"),
-                                                           choices = list("invar", "period.invar", "free")),
+                                                           choices = list("invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # veps_equiv = "invar",  "time.invar", "indicator.invar", "period.invar", "free"
                                                selectInput("veps_equiv", h5("Variances of the residual/ error term (epsilon)"),
-                                                           choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free")),
+                                                           choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # vtheta_equiv = "invar", "indicator.invar", "free"
                                                selectInput("vtheta_equiv", h5("Variances of the latent trait"),
-                                                           choices = list("invar","indicator.invar", "free")),
+                                                           choices = list("invar","indicator.invar", "free"),
+                                                           width = "500px"),
                                                # nu_equiv = "zero", "period.invar", "free"
-                                               selectInput("nu_equiv", h5("Intercepts of the indicators"),
-                                                           choices = list("zero","period.invar", "free")),
+                                               selectInput("nu_equiv", h5("Intercepts of the indicators (nu)"),
+                                                           choices = list("zero","period.invar", "free"),
+                                                           width = "500px"),
                                                # alpha_equiv = "zero", "period.invar", "free"
                                                conditionalPanel(
                                                   condition = "input.lstmodel == 1 || input.lstmodel == 2 || input.lstmodel == 3 || input.lstmodel == 6 || input.lstmodel == 7",
-                                                  selectInput("alpha_equiv", h5("Intercepts of the latent states (only for second-order models, i.e. models without indicator-specific traits)"), 
-                                                              choices = list("zero","period.invar", "free")),
+                                                  selectInput("alpha_equiv", h5("Intercepts of the latent states (alpha)"), 
+                                                              choices = list("zero","period.invar", "free"),
+                                                              width = "500px"),
                                                 ),    
                                                # mtheta_equiv = "invar", "free", "
                                                # TODO only if model =/= singletrait
                                                selectInput("mtheta_equiv", h5("Means of the latent traits"),
-                                                           choices = list("invar","indicator.invar", "free")),
+                                                           choices = list("invar","indicator.invar", "free"),
+                                                           width = "500px"),
                                                conditionalPanel(
                                                  condition = "input.includecovariates",
                                                  selectInput("gamma_t_equiv", h5("Regression of covariates on the latent traits"),
-                                                             choices = list("invar","indicator.invar", "free")),
+                                                             choices = list("invar","indicator.invar", "free"),
+                                                             width = "500px"),
                                                )
                                             
                                   ),

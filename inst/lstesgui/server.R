@@ -29,6 +29,10 @@ shinyServer(function(input, output, session) {
         return(NULL)
       }else if(is.null(inFile) & exdata == "d_lst_es (example with day-specific traits)"){
         return(d_lst_es)
+      }else if(is.null(inFile) & exdata == "happy (empirical dataset from Weiss et al., 2021)"){
+        return(happy)
+      }else if(is.null(inFile) & exdata == "happybig5 (empirical dataset with covariates)"){
+        return(happybig5)
       }else if(!is.null(inFile)){
         if(grepl(".csv",inFile$name)){
           return(read.csv(inFile$datapath))
