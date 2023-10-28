@@ -1,6 +1,6 @@
 Package: lsttheory
 Title: Latent State-Trait Theory
-Version: 0.3-1.001
+Version: 0.3-1.002
 Authors@R: c(
     person("Axel", "Mayer", email = "amayer2010@gmail.com", role = "cre"),
     person("Julia", "Norget", role = "ctb"))
@@ -20,4 +20,4 @@ Encoding: UTF-8
 LazyLoad: yes
 LazyData: yes
 Packaged: 2022-11-21
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

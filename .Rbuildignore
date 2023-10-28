@@ -1,4 +1,5 @@
 tests
+private
 vignettes
 julia_norget
 R/growthcomponents.R

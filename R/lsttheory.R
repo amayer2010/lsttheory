@@ -28,7 +28,7 @@
 #' @references 
 #' Steyer, R., Mayer, A., Geiser, C., & Cole, D. A. (2015). A theory of states and traits - revised. Annual Review of Clinical Psychology. 
 #' @examples 
-#' m1 <- lsttheory(neta=4, ntheta=2, data=multitraitmultistate, 
+#' m1 <- lsttheory(neta=4, ntheta=2, data=d_multitraitmultistate, 
 #'  equiv.assumption=list(tau="cong", theta="cong"), 
 #'  scale.invariance=list(lait0=TRUE,lait1=TRUE,lat0=TRUE,lat1=TRUE))
 #'  

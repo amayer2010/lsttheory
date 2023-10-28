@@ -8,6 +8,7 @@
 bin/
 tmp/
 julia_norget
+private
 *.tmp
 *.bak
 *.swp

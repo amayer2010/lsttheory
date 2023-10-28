@@ -28,24 +28,24 @@ model <- '
   eta1 + eta2 + eta3 ~ 0*1
 '
 
-m1 <- sem(model, data=multistate)
-summary(m1)
+m1.lav <- sem(model, data=d_multistate02)
+# summary(m1.lav)
 
 
 ## Demo
 
-contrasts <- matrix(c(1,0,0, -1,1,0, -1,0,1), byrow=T, nrow=3)
+# contrasts <- matrix(c(1,0,0, -1,1,0, -1,0,1), byrow=T, nrow=3)
+# 
+# m1 <- growthcomponents(3, d_multistate02, contrasts)
+# summary(m1)
+# cat(m1)
 
-m1 <- growthcomponents(3,multistate,contrasts)
-summary(m1)
-cat(m1)
 
 
-
-library(semPlot)
-semPaths(m1)
-
-semPaths(m1, style="lisrel", intercepts=F, 
-         layout="tree2", rotation=4, nCharNodes=4, nCharEdges=4,
-         optimizeLatRes=F, residScale=10)
+# library(semPlot)
+# semPaths(m1)
+# 
+# semPaths(m1, style="lisrel", intercepts=F, 
+#          layout="tree2", rotation=4, nCharNodes=4, nCharEdges=4,
+#          optimizeLatRes=F, residScale=10)
 

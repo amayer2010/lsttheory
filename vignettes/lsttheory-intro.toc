@@ -1,17 +1,17 @@
-\select@language {english}
-\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
-\contentsline {section}{\numberline {2}Installation}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}Windows Installation}{3}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Linux Installation}{3}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Loading the Package}{3}{subsection.2.3}
-\contentsline {section}{\numberline {3}Multistate Models}{5}{section.3}
-\contentsline {subsection}{\numberline {3.1}Multistate Model with $\eta _t$-Congenericity}{5}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Multistate Model with Essential $\eta _t$-Equivalence}{8}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Multistate Model with $\eta _t$-Equivalence}{8}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Multistate Models with Scale Invariance}{9}{subsection.3.4}
-\contentsline {section}{\numberline {4}Multistate-Singletrait Models}{10}{section.4}
-\contentsline {subsection}{\numberline {4.1}Multistate-Singletrait Models with $\theta $-Congenericity}{10}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Multistate-Singletrait Models with $\theta $-Equivalence}{11}{subsection.4.2}
-\contentsline {section}{\numberline {5}Multistate-Doubletrait Models}{13}{section.5}
-\contentsline {subsection}{\numberline {5.1}Multistate-Doubletrait Models with $\theta _1,\theta _2$-Congenericity}{13}{subsection.5.1}
-\contentsline {section}{\numberline {6}Plot LST-R Theory Models with \texttt {semPlot}}{15}{section.6}
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Installation}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Windows Installation}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Linux Installation}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Loading the Package}{3}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Multistate Models}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Multistate Model with $\eta _t$-Congenericity}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Multistate Model with Essential $\eta _t$-Equivalence}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Multistate Model with $\eta _t$-Equivalence}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Multistate Models with Scale Invariance}{9}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Multistate-Singletrait Models}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Multistate-Singletrait Models with $\theta $-Congenericity}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Multistate-Singletrait Models with $\theta $-Equivalence}{12}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Multistate-Doubletrait Models}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Multistate-Doubletrait Models with $\theta _1,\theta _2$-Congenericity}{14}{subsection.5.1}%
+\contentsline {section}{\numberline {6}Plot LST-R Theory Models with \texttt {semPlot}}{16}{section.6}%

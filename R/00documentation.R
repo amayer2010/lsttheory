@@ -1,12 +1,21 @@
 
 ## These "global" variables are used in subset() or dplyr commands and are
-## mistakenly classified as gloabal variables by R CMD Check. Therefore they
+## mistakenly classified as global variables by R CMD Check. Therefore they
 ## are added here as "global" variables to avoid the NOTE.
-utils::globalVariables(c("est", "gamma_t_equiv", "label", "lhs", 
-                         "manifest_thetacovariates", "op")) 
+utils::globalVariables(c("est", "gamma_t_equiv", "label", "lhs",
+                         "manifest_thetacovariates", "op"))
+
+#' lsttheory
+#' 
+#' Compute several models of latent state-trait theory..
+#'
+#' @name lsttheory
+#' @aliases lsttheory-package
+#' @docType package
+NULL
 
 
-#' Dataset taucong.
+#' Dataset d_taucong.
 #' 
 #' A simulated dataset. The variables are:
 #' 
@@ -19,11 +28,11 @@ utils::globalVariables(c("est", "gamma_t_equiv", "label", "lhs",
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 300 rows and 3 variables
-#' @name taucong
+#' @name d_taucong
 NULL
 
 
-#' Dataset multitraitmultistate02.
+#' Dataset d_multitraitmultistate02.
 #' 
 #' A simulated dataset. The variables are:
 #' 
@@ -42,12 +51,12 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 1000 rows and 9 variables
-#' @name multitraitmultistate02
+#' @name d_multitraitmultistate02
 NULL
 
 
 
-#' Dataset multitraitmultistate.
+#' Dataset d_multitraitmultistate.
 #' 
 #' A simulated dataset. The variables are:
 #' 
@@ -65,12 +74,12 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 1000 rows and 8 variables
-#' @name multitraitmultistate
+#' @name d_multitraitmultistate
 NULL
 
 
 
-#' Dataset multistate02.
+#' Dataset d_multistate02.
 #' 
 #' A simulated dataset. The variables are:
 #' 
@@ -89,12 +98,12 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 1000 rows and 9 variables
-#' @name multistate02
+#' @name d_multistate02
 NULL
 
 
 
-#' Dataset multistate.
+#' Dataset d_multistate.
 #' 
 #' A simulated dataset. The variables are:
 #' 
@@ -108,7 +117,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 400 rows and 4 variables
-#' @name multistate
+#' @name d_multistate
 NULL
 
 

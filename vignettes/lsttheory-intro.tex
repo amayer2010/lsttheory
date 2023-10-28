@@ -1,6 +1,6 @@
-\documentclass[10pt]{article}\usepackage{graphicx, color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\documentclass[10pt]{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
 \def\maxwidth{ %
   \ifdim\Gin@nat@width>\linewidth
@@ -11,21 +11,17 @@
 }
 \makeatother
 
-\definecolor{fgcolor}{rgb}{0.2, 0.2, 0.2}
-\newcommand{\hlnumber}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlfunctioncall}[1]{\textcolor[rgb]{0.501960784313725,0,0.329411764705882}{\textbf{#1}}}%
-\newcommand{\hlstring}[1]{\textcolor[rgb]{0.6,0.6,1}{#1}}%
-\newcommand{\hlkeyword}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
-\newcommand{\hlargument}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
-\newcommand{\hlcomment}[1]{\textcolor[rgb]{0.180392156862745,0.6,0.341176470588235}{#1}}%
-\newcommand{\hlroxygencomment}[1]{\textcolor[rgb]{0.43921568627451,0.47843137254902,0.701960784313725}{#1}}%
-\newcommand{\hlformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
-\newcommand{\hleqformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
-\newcommand{\hlassignement}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
-\newcommand{\hlpackage}[1]{\textcolor[rgb]{0.588235294117647,0.709803921568627,0.145098039215686}{#1}}%
-\newcommand{\hlslot}[1]{\textit{#1}}%
-\newcommand{\hlsymbol}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlprompt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
 
 \usepackage{framed}
 \makeatletter
@@ -74,8 +70,6 @@ pdfstartview=Fit,%
 pdfview={XYZ null null null}%
 }
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-
-
 \begin{document}
 
 %\SweaveOpts{concordance=TRUE}
@@ -92,7 +86,7 @@ pdfview={XYZ null null null}%
 
 \author{
   Axel Mayer\\
-  Ghent University
+  Bielefeld University
 }
 
 \date{\today}
@@ -135,24 +129,22 @@ For a Windows installation (without Rtools) we suggest installing the dependenci
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{install.packages}(\hlstring{"lavaan"})  ## for lsttheory
-\hlfunctioncall{install.packages}(\hlstring{"shiny"})  ## for user Interface
-\hlfunctioncall{install.packages}(\hlstring{"semPlot"})  ## for plots
+\hlkwd{install.packages}\hlstd{(}\hlstr{"lavaan"}\hlstd{)}  \hlcom{## for lsttheory}
+\hlkwd{install.packages}\hlstd{(}\hlstr{"shiny"}\hlstd{)}  \hlcom{## for user Interface}
+\hlkwd{install.packages}\hlstd{(}\hlstr{"semPlot"}\hlstd{)}  \hlcom{## for plots}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-
 %
 in the console and then selecting a mirror next to you. After that, the \textsf{R} package \texttt{lsttheory} can be installed using the Windows binary file (with file ending .zip) as follows:
 %
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{install.packages}(\hlstring{"D:/workspace/lsttheory_0.1-1.zip"})
+\hlkwd{install.packages}\hlstd{(}\hlstr{"D:/workspace/lsttheory_0.1-1.zip"}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-
 %
 Please adjust the file path and version number accordingly. 
 
@@ -167,29 +159,26 @@ After having succesfully installed the package, we need to load them:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{library}(\hlstring{"lsttheory"})
+\hlkwd{library}\hlstd{(}\hlstr{"lsttheory"}\hlstd{)}
 \end{alltt}
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: lavaan}}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Lade nötiges Paket: lavaan}}
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# This is lavaan 0.5-16}}
-
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# lavaan is BETA software! Please report any bugs.}}\end{kframe}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# This is lavaan 0.6-15\\\#\# lavaan is FREE software! Please report any bugs.}}\end{kframe}
 \end{knitrout}
-
 %
 
 \newpage
 \section{Multistate Models}
 
-The lsttheory pacakge contains several simulated example datasets. The first one that we use is the dataset \texttt{multistate}. It contains 4 manifest variables $Y_{it}$, where the index refers to the $i$th manifest variable assessed at occasion $t$. This dataset has been used in Supplement C of Steyer, Mayer, Geiser \& Cole (in press) to describe software input for \texttt{lavaan} for LST-R models.
+The lsttheory pacakge contains several simulated example datasets. The first one that we use is the dataset \texttt{d_multistate}. It contains 4 manifest variables $Y_{it}$, where the index refers to the $i$th manifest variable assessed at occasion $t$. This dataset has been used in Supplement C of Steyer, Mayer, Geiser \& Cole (in press) to describe software input for \texttt{lavaan} for LST-R models.
 %
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{data}(multistate)
-\hlfunctioncall{head}(\hlfunctioncall{round}(multistate, 2))
+\hlkwd{data}\hlstd{(d_multistate)}
+\hlkwd{head}\hlstd{(}\hlkwd{round}\hlstd{(d_multistate,}\hlnum{2}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ##     y11   y21   y12   y22
@@ -202,7 +191,6 @@ The lsttheory pacakge contains several simulated example datasets. The first one
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 \subsection{Multistate Model with $\eta_t$-Congenericity}
@@ -214,8 +202,8 @@ First, we use this dataset to fit a multistate model with $\eta_t$-congenericity
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate)
-\hlfunctioncall{print}(m1)
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate)}
+\hlkwd{print}\hlstd{(m1)}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -231,7 +219,6 @@ m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 The lsttheory function just requires two mandatory arguments: The number of common state variables $\eta_t$ and the dataset to use. In the current version of our package, the dataset may only include the manifest variables $Y_{it}$ and these should be ordered by occasion $t$ and indicator $i$, i.e., $Y_{11}, Y_{21}, \ldots, Y_{12}, Y_{22}, \ldots, Y_{13}, Y_{23}, \ldots$. The lsttheory function returns an object of class lsttheory for which several methods are available. \texttt{print(m1)} shows reliability, occasion specificity, and consistency coefficients (see Box 3.1 of SMGC). For the multistate model only reliability coefficients are available, because traits are not modeled.
@@ -241,7 +228,7 @@ The function lsttheory has automatically generated lavaan input syntax:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{cat}(m1@lavaansyntax)
+\hlkwd{cat}\hlstd{(m1}\hlopt{@}\hlkwc{lavaansyntax}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 ## eta1 =~ 1*y11
@@ -277,60 +264,69 @@ The function lsttheory has automatically generated lavaan input syntax:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 and the lavaan output can be seen by calling:
 %
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{summary}(m1@lavaanres)
+\hlkwd{summary}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-## lavaan (0.5-16) converged normally after  38 iterations
+## lavaan 0.6.15 ended normally after 42 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of model parameters                        13
 ## 
 ##   Number of observations                           400
 ## 
-##   Estimator                                         ML
-##   Minimum Function Test Statistic                0.894
+## Model Test User Model:
+##                                                       
+##   Test statistic                                 0.894
 ##   Degrees of freedom                                 1
 ##   P-value (Chi-square)                           0.344
 ## 
-## Parameter estimates:
+## Parameter Estimates:
 ## 
+##   Standard errors                             Standard
 ##   Information                                 Expected
-##   Standard Errors                             Standard
+##   Information saturated (h1) model          Structured
 ## 
-##                    Estimate  Std.err  Z-value  P(>|z|)
-## Latent variables:
-##   eta1 =~
-##     y11               1.000
-##     y21    (l211)     0.968    0.030   32.385    0.000
-##   eta2 =~
-##     y12               1.000
-##     y22    (l221)     0.952    0.029   33.020    0.000
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(>|z|)
+##   eta1 =~                                             
+##     y11               1.000                           
+##     y21     (l211)    0.968    0.030   32.385    0.000
+##   eta2 =~                                             
+##     y12               1.000                           
+##     y22     (l221)    0.952    0.029   33.020    0.000
 ## 
 ## Covariances:
-##   eta1 ~~
+##                    Estimate  Std.Err  z-value  P(>|z|)
+##   eta1 ~~                                             
 ##     eta2              2.240    0.208   10.794    0.000
 ## 
 ## Intercepts:
-##     y11               0.000
-##     y21    (l210)     0.518    0.038   13.504    0.000
-##     y12               0.000
-##     y22    (l220)     0.732    0.045   16.215    0.000
-##     eta1   (ga10)     0.466    0.092    5.076    0.000
-##     eta2   (ga20)     0.952    0.095    9.989    0.000
+##                    Estimate  Std.Err  z-value  P(>|z|)
+##    .y11               0.000                           
+##    .y21     (l210)    0.518    0.038   13.504    0.000
+##    .y12               0.000                           
+##    .y22     (l220)    0.732    0.045   16.215    0.000
+##     eta1    (ga10)    0.466    0.092    5.076    0.000
+##     eta2    (ga20)    0.952    0.095    9.989    0.000
 ## 
 ## Variances:
-##     y11    (ep11)     0.261    0.074
-##     y21    (ep21)     0.265    0.070
-##     y12    (ep12)     0.254    0.079
-##     y22    (ep22)     0.285    0.072
-##     eta1   (psi1)     3.103    0.248
-##     eta2   (psi2)     3.380    0.268
+##                    Estimate  Std.Err  z-value  P(>|z|)
+##    .y11     (ep11)    0.261    0.074    3.527    0.000
+##    .y21     (ep21)    0.265    0.070    3.792    0.000
+##    .y12     (ep12)    0.254    0.079    3.226    0.001
+##    .y22     (ep22)    0.285    0.072    3.941    0.000
+##     eta1    (psi1)    3.103    0.248   12.523    0.000
+##     eta2    (psi2)    3.380    0.268   12.633    0.000
 ## 
-## Defined parameters:
+## Defined Parameters:
+##                    Estimate  Std.Err  z-value  P(>|z|)
 ##     vareta1           3.103    0.248   12.523    0.000
 ##     vareta2           3.380    0.268   12.633    0.000
 ##     vary11            3.365    0.238   14.142    0.000
@@ -344,7 +340,6 @@ and the lavaan output can be seen by calling:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 The slot lavaanres in the m1 object contains the fitted lavaan object of class lavaan. See \texttt{?"lavaan-class"} for more information and available methods.
 
@@ -356,25 +351,22 @@ The default setting of the lsttheory function is to assume $\eta_t$-congenericit
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate, equiv.assumption = \hlfunctioncall{list}(tau = \hlstring{"ess"}, 
-    theta = \hlstring{"equi"}))
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate,}
+                \hlkwc{equiv.assumption}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{tau}\hlstd{=}\hlstr{"ess"}\hlstd{,} \hlkwc{theta}\hlstd{=}\hlstr{"equi"}\hlstd{))}
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##  eta1=~y11  eta1=~y21  eta2=~y12  eta2=~y22      y11~1      la210 
-##      1.000      1.000      1.000      1.000      0.000      0.503 
-##      y12~1      la220       ga10       ga20      eps11      eps21 
-##      0.000      0.687      0.466      0.952      0.313      0.217 
-##      eps12      eps22       psi1       psi2 eta1~~eta2    vareta1 
-##      0.343      0.204      2.997      3.198      2.132      2.997 
-##    vareta2     vary11     vary21     vary12     vary22     rely11 
-##      3.198      3.310      3.214      3.541      3.402      0.906 
-##     rely21     rely12     rely22 
-##      0.933      0.903      0.940
+##  eta1=~y11  eta1=~y21  eta2=~y12  eta2=~y22      y11~1      la210      y12~1 
+##      1.000      1.000      1.000      1.000      0.000      0.503      0.000 
+##      la220       ga10       ga20      eps11      eps21      eps12      eps22 
+##      0.687      0.466      0.952      0.313      0.217      0.343      0.204 
+##       psi1       psi2 eta1~~eta2    vareta1    vareta2     vary11     vary21 
+##      2.997      3.198      2.132      2.997      3.198      3.310      3.214 
+##     vary12     vary22     rely11     rely21     rely12     rely22 
+##      3.541      3.402      0.906      0.933      0.903      0.940
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 
@@ -386,25 +378,22 @@ Similarly, if we want to assume $\eta_t$-equivalence, we specify the equivalence
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate, equiv.assumption = \hlfunctioncall{list}(tau = \hlstring{"equi"}, 
-    theta = \hlstring{"equi"}))
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate,}
+                \hlkwc{equiv.assumption}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{tau}\hlstd{=}\hlstr{"equi"}\hlstd{,} \hlkwc{theta}\hlstd{=}\hlstr{"equi"}\hlstd{))}
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##  eta1=~y11  eta1=~y21  eta2=~y12  eta2=~y22      y11~1      y21~1 
-##      1.000      1.000      1.000      1.000      0.000      0.000 
-##      y12~1      y22~1       ga10       ga20      eps11      eps21 
-##      0.000      0.000      0.762      1.383      0.462      0.320 
-##      eps12      eps22       psi1       psi2 eta1~~eta2    vareta1 
-##      0.639      0.379      2.936      3.088      2.132      2.936 
-##    vareta2     vary11     vary21     vary12     vary22     rely11 
-##      3.088      3.398      3.256      3.727      3.467      0.864 
-##     rely21     rely12     rely22 
-##      0.902      0.829      0.891
+##  eta1=~y11  eta1=~y21  eta2=~y12  eta2=~y22      y11~1      y21~1      y12~1 
+##      1.000      1.000      1.000      1.000      0.000      0.000      0.000 
+##      y22~1       ga10       ga20      eps11      eps21      eps12      eps22 
+##      0.000      0.762      1.383      0.462      0.320      0.639      0.379 
+##       psi1       psi2 eta1~~eta2    vareta1    vareta2     vary11     vary21 
+##      2.936      3.088      2.132      2.936      3.088      3.398      3.256 
+##     vary12     vary22     rely11     rely21     rely12     rely22 
+##      3.727      3.467      0.864      0.902      0.829      0.891
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 
@@ -417,38 +406,34 @@ In order to add scale invariance assumptions over time, we need to specify the s
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate, scale.invariance = \hlfunctioncall{list}(lait0 = TRUE, 
-    lait1 = TRUE, lat0 = TRUE, lat1 = TRUE))
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate,}
+                \hlkwc{scale.invariance}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lait0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lait1}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat1}\hlstd{=}\hlnum{TRUE}\hlstd{))}
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##  eta1=~y11      la211  eta2=~y12      la211      y11~1      la210 
-##      1.000      0.979      1.000      0.979      0.000      0.608 
-##      y12~1      la210       ga10       ga20      eps11      eps21 
-##      0.000      0.608      0.415      1.007      0.282      0.254 
-##      eps12      eps22       psi1       psi2 eta1~~eta2    vareta1 
-##      0.310      0.243      3.068      3.280      2.194      3.068 
-##    vareta2     vary11     vary21     vary12     vary22     rely11 
-##      3.280      3.350      3.193      3.590      3.385      0.916 
-##     rely21     rely12     rely22 
-##      0.920      0.914      0.928
+##  eta1=~y11      la211  eta2=~y12      la211      y11~1      la210      y12~1 
+##      1.000      0.979      1.000      0.979      0.000      0.608      0.000 
+##      la210       ga10       ga20      eps11      eps21      eps12      eps22 
+##      0.608      0.415      1.007      0.282      0.254      0.310      0.243 
+##       psi1       psi2 eta1~~eta2    vareta1    vareta2     vary11     vary21 
+##      3.068      3.280      2.194      3.068      3.280      3.350      3.193 
+##     vary12     vary22     rely11     rely21     rely12     rely22 .p2.==.p4. 
+##      3.590      3.385      0.916      0.920      0.914      0.928      0.000 
+## .p6.==.p8. 
+##      0.000
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 Of course, the scale invariance argument can also be used for a multistate model with essential $\eta_t$-equivalence. Then, the lait1 entry is ignored.
 %
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 2, data = multistate, equiv.assumption = \hlfunctioncall{list}(tau = \hlstring{"ess"}, 
-    theta = \hlstring{"equi"}), scale.invariance = \hlfunctioncall{list}(lait0 = TRUE, lait1 = TRUE, lat0 = TRUE, 
-    lat1 = TRUE))
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate,} \hlkwc{equiv.assumption}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{tau}\hlstd{=}\hlstr{"ess"}\hlstd{,} \hlkwc{theta}\hlstd{=}\hlstr{"equi"}\hlstd{),} \hlkwc{scale.invariance}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lait0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lait1}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat1}\hlstd{=}\hlnum{TRUE}\hlstd{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-
 %
 For a multistate model with $\eta_t$-equivalence, all scale invariance settings are ignored.
 
@@ -469,8 +454,8 @@ The same function lsttheory can also be used to fit multistate-singletrait model
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 3, ntheta = 1, data = multistate02)
-\hlfunctioncall{print}(m1)
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{3}\hlstd{,} \hlkwc{ntheta}\hlstd{=}\hlnum{1}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate02)}
+\hlkwd{print}\hlstd{(m1)}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -491,52 +476,44 @@ m1 <- \hlfunctioncall{lsttheory}(neta = 3, ntheta = 1, data = multistate02)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 Note that we use the \texttt{multistate02} data set for this model -- it contains three indicators at three occasions of measurement. We now also get estimates for the occasion specificity and consistency coefficents in addition to the reliability coefficients. To see all parameters of the model:
 %
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##    eta1=~y11        la211        la311    eta2=~y12        la221 
-##        1.000        1.221        0.801        1.000        1.211 
-##        la321    eta3=~y13        la231        la331        y11~1 
-##        0.772        1.000        1.233        0.828        0.000 
-##        la210        la310        y12~1        la220        la320 
-##        0.217        0.570        0.000        0.212        0.578 
-##        y13~1        la230        la330       eta1~1         ga20 
-##        0.000        0.262        0.574        0.000        0.400 
-##         ga30        eps11        eps21        eps31        eps12 
-##       -0.115        1.070        0.874        1.029        0.932 
-##        eps22        eps32        eps13        eps23        eps33 
-##        1.036        0.956        1.028        1.146        0.944 
-##         psi1         psi2         psi3 theta1=~eta1         ga21 
-##        0.988        0.792        1.014        1.000        1.099 
-##         ga31    vartheta1      mtheta1      vareta1      vareta2 
-##        0.999        1.857        0.611        2.845        3.035 
-##      vareta3       vary11       vary21       vary31       vary12 
-##        2.869        3.914        5.116        2.853        3.967 
-##       vary22       vary32       vary13       vary23       vary33 
-##        5.483        2.765        3.897        5.511        2.912 
-##       rely11       rely21       rely31       rely12       rely22 
-##        0.727        0.829        0.639        0.765        0.811 
-##       rely32       rely13       rely23       rely33       spey11 
-##        0.654        0.736        0.792        0.676        0.252 
-##       spey21       spey31       spey12       spey22       spey32 
-##        0.288        0.222        0.200        0.212        0.171 
-##       spey13       spey23       spey33       cony11       cony21 
-##        0.260        0.280        0.239        0.474        0.541 
-##       cony31       cony12       cony22       cony32       cony13 
-##        0.417        0.565        0.599        0.483        0.476 
-##       cony23       cony33 
-##        0.512        0.437
+##    eta1=~y11        la211        la311    eta2=~y12        la221        la321 
+##        1.000        1.221        0.801        1.000        1.211        0.772 
+##    eta3=~y13        la231        la331        y11~1        la210        la310 
+##        1.000        1.233        0.828        0.000        0.217        0.570 
+##        y12~1        la220        la320        y13~1        la230        la330 
+##        0.000        0.212        0.578        0.000        0.262        0.574 
+##       eta1~1         ga20         ga30        eps11        eps21        eps31 
+##        0.000        0.400       -0.115        1.070        0.874        1.029 
+##        eps12        eps22        eps32        eps13        eps23        eps33 
+##        0.932        1.036        0.956        1.028        1.146        0.944 
+##         psi1         psi2         psi3 theta1=~eta1         ga21         ga31 
+##        0.988        0.792        1.014        1.000        1.099        0.999 
+##    vartheta1      mtheta1      vareta1      vareta2      vareta3       vary11 
+##        1.857        0.611        2.845        3.035        2.869        3.914 
+##       vary21       vary31       vary12       vary22       vary32       vary13 
+##        5.116        2.853        3.967        5.483        2.765        3.897 
+##       vary23       vary33       rely11       rely21       rely31       rely12 
+##        5.511        2.912        0.727        0.829        0.639        0.765 
+##       rely22       rely32       rely13       rely23       rely33       spey11 
+##        0.811        0.654        0.736        0.792        0.676        0.252 
+##       spey21       spey31       spey12       spey22       spey32       spey13 
+##        0.288        0.222        0.200        0.212        0.171        0.260 
+##       spey23       spey33       cony11       cony21       cony31       cony12 
+##        0.280        0.239        0.474        0.541        0.417        0.565 
+##       cony22       cony32       cony13       cony23       cony33 
+##        0.599        0.483        0.476        0.512        0.437
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 
@@ -556,48 +533,43 @@ We don't show all possible combinations of assumptions. We just give one more ex
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 3, ntheta = 1, data = multistate02, equiv.assumption = \hlfunctioncall{list}(tau = \hlstring{"ess"}, 
-    theta = \hlstring{"equi"}), scale.invariance = \hlfunctioncall{list}(lait0 = TRUE, lait1 = TRUE, lat0 = TRUE, 
-    lat1 = TRUE))
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{3}\hlstd{,} \hlkwc{ntheta}\hlstd{=}\hlnum{1}\hlstd{,} \hlkwc{data}\hlstd{=d_multistate02,}
+                \hlkwc{equiv.assumption}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{tau}\hlstd{=}\hlstr{"ess"}\hlstd{,} \hlkwc{theta}\hlstd{=}\hlstr{"equi"}\hlstd{),}
+                \hlkwc{scale.invariance}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lait0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lait1}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat0}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{lat1}\hlstd{=}\hlnum{TRUE}\hlstd{))}
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##    eta1=~y11    eta1=~y21    eta1=~y31    eta2=~y12    eta2=~y22 
-##        1.000        1.000        1.000        1.000        1.000 
-##    eta2=~y32    eta3=~y13    eta3=~y23    eta3=~y33        y11~1 
-##        1.000        1.000        1.000        1.000        0.000 
-##        la210        la310        y12~1        la210        la310 
-##        0.385        0.421        0.000        0.385        0.421 
-##        y13~1        la210        la310       eta1~1       eta2~1 
-##        0.000        0.385        0.421        0.000        0.000 
-##       eta3~1        eps11        eps21        eps31        eps12 
-##        0.000        1.064        1.381        0.961        1.004 
-##        eps22        eps32        eps13        eps23        eps33 
-##        1.591        0.878        1.090        1.673        0.831 
-##         psi1         psi2         psi3 theta1=~eta1 theta1=~eta2 
-##        0.861        0.939        0.963        1.000        1.000 
-## theta1=~eta3    vartheta1      mtheta1      vareta1      vareta2 
-##        1.000        1.855        0.727        2.716        2.794 
-##      vareta3       vary11       vary21       vary31       vary12 
-##        2.817        3.780        4.097        3.677        3.797 
-##       vary22       vary32       vary13       vary23       vary33 
-##        4.384        3.672        3.908        4.490        3.648 
-##       rely11       rely21       rely31       rely12       rely22 
-##        0.719        0.663        0.739        0.736        0.637 
-##       rely32       rely13       rely23       rely33       spey11 
-##        0.761        0.721        0.627        0.772        0.228 
-##       spey21       spey31       spey12       spey22       spey32 
-##        0.210        0.234        0.247        0.214        0.256 
-##       spey13       spey23       spey33       cony11       cony21 
-##        0.246        0.214        0.264        0.491        0.453 
-##       cony31       cony12       cony22       cony32       cony13 
-##        0.504        0.488        0.423        0.505        0.475 
-##       cony23       cony33 
-##        0.413        0.508
+##    eta1=~y11    eta1=~y21    eta1=~y31    eta2=~y12    eta2=~y22    eta2=~y32 
+##        1.000        1.000        1.000        1.000        1.000        1.000 
+##    eta3=~y13    eta3=~y23    eta3=~y33        y11~1        la210        la310 
+##        1.000        1.000        1.000        0.000        0.385        0.421 
+##        y12~1        la210        la310        y13~1        la210        la310 
+##        0.000        0.385        0.421        0.000        0.385        0.421 
+##       eta1~1       eta2~1       eta3~1        eps11        eps21        eps31 
+##        0.000        0.000        0.000        1.064        1.381        0.961 
+##        eps12        eps22        eps32        eps13        eps23        eps33 
+##        1.004        1.591        0.878        1.090        1.673        0.831 
+##         psi1         psi2         psi3 theta1=~eta1 theta1=~eta2 theta1=~eta3 
+##        0.861        0.939        0.963        1.000        1.000        1.000 
+##    vartheta1      mtheta1      vareta1      vareta2      vareta3       vary11 
+##        1.855        0.727        2.716        2.794        2.817        3.779 
+##       vary21       vary31       vary12       vary22       vary32       vary13 
+##        4.097        3.677        3.797        4.384        3.672        3.908 
+##       vary23       vary33       rely11       rely21       rely31       rely12 
+##        4.490        3.648        0.719        0.663        0.739        0.736 
+##       rely22       rely32       rely13       rely23       rely33       spey11 
+##        0.637        0.761        0.721        0.627        0.772        0.228 
+##       spey21       spey31       spey12       spey22       spey32       spey13 
+##        0.210        0.234        0.247        0.214        0.256        0.246 
+##       spey23       spey33       cony11       cony21       cony31       cony12 
+##        0.214        0.264        0.491        0.453        0.504        0.488 
+##       cony22       cony32       cony13       cony23       cony33 .p11.==.p14. 
+##        0.423        0.505        0.475        0.413        0.508        0.000 
+## .p11.==.p17. .p12.==.p15. .p12.==.p18. 
+##        0.000        0.000        0.000
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 
@@ -611,8 +583,8 @@ For the mulistate doubletrait models, we need to use a different data set, becau
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{data}(multitraitmultistate)
-\hlfunctioncall{head}(\hlfunctioncall{round}(multitraitmultistate, 2))
+\hlkwd{data}\hlstd{(d_multitraitmultistate)}
+\hlkwd{head}\hlstd{(}\hlkwd{round}\hlstd{(d_multitraitmultistate,}\hlnum{2}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ##     y11   y21   y12   y22   y13   y23   y14   y24
@@ -625,7 +597,6 @@ For the mulistate doubletrait models, we need to use a different data set, becau
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 
@@ -649,8 +620,8 @@ The model syntax is:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-m1 <- \hlfunctioncall{lsttheory}(neta = 4, ntheta = 2, data = multitraitmultistate)
-\hlfunctioncall{coef}(m1@lavaanres, type = \hlstring{"user"})
+\hlstd{m1} \hlkwb{<-} \hlkwd{lsttheory}\hlstd{(}\hlkwc{neta}\hlstd{=}\hlnum{4}\hlstd{,} \hlkwc{ntheta}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{data}\hlstd{=d_multitraitmultistate)}
+\hlkwd{coef}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{type}\hlstd{=}\hlstr{"user"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 ##      eta1=~y11          la211      eta2=~y12          la221      eta3=~y13 
@@ -688,7 +659,6 @@ m1 <- \hlfunctioncall{lsttheory}(neta = 4, ntheta = 2, data = multitraitmultista
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
 %
 
 \newpage
@@ -701,13 +671,13 @@ The package \texttt{semPlot} by Sacha Epskamp can be used to plot such LST-R mod
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlfunctioncall{library}(semPlot)
-\hlfunctioncall{semPaths}(m1@lavaanres, style = \hlstring{"lisrel"}, intercepts = F, layout = \hlstring{"tree2"}, rotation = 4, 
-    nCharNodes = 4, nCharEdges = 4, optimizeLatRes = F, residScale = 10)
+\hlkwd{library}\hlstd{(semPlot)}
+\hlkwd{semPaths}\hlstd{(m1}\hlopt{@}\hlkwc{lavaanres}\hlstd{,} \hlkwc{style}\hlstd{=}\hlstr{"lisrel"}\hlstd{,} \hlkwc{intercepts}\hlstd{=F,}
+         \hlkwc{layout}\hlstd{=}\hlstr{"tree2"}\hlstd{,} \hlkwc{rotation}\hlstd{=}\hlnum{4}\hlstd{,} \hlkwc{nCharNodes}\hlstd{=}\hlnum{4}\hlstd{,} \hlkwc{nCharEdges}\hlstd{=}\hlnum{4}\hlstd{,}
+         \hlkwc{optimizeLatRes}\hlstd{=F,} \hlkwc{residScale}\hlstd{=}\hlnum{10}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-
 %
 
 which gives the figure shown in Figure \ref{fig:semplot01}.
