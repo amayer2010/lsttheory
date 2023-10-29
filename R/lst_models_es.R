@@ -3,7 +3,6 @@
 ## A General Framework and Software for LST-R Models for Experience Sampling Data
 
 
-
 # Maybe do different steps as in testing measurement invariance...
 # traitmodel <- c("singletrait", "day-specific", "indicator-specific", "day-and-indicator-specific")
 # equiv <- c("invar", "period.invar", "free")
@@ -11,11 +10,6 @@
 # Test Stan version or Jags version using blavaan
 # Look at multilevel SEM and DSEM
 
-# TODO la_s_equiv:
-#      - period.invar should be renamed e.g. interval.invar
-#      - add overnight.invar (AR paths between periods may take a different value, the rest remains invariant)
-# TODO la_t_equiv:
-#      - add time.invar option
 
 ############ class definitions and show method ####################
 
@@ -58,6 +52,7 @@ setMethod ("show", "lstmodel",
 #' @param ntimepoints integer. Number of measurement occasions
 #' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
 #' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
+#' @param addsyntax character string. Will be added to generated lavaan syntax.
 #' @param nperiods integer. Number of periods (trait periods, zeta periods, and epsilon periods).
 #' @param equiv character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")
 #' @param ar logical. Should autoregressive effects be included
@@ -208,7 +203,7 @@ lst_models_es <-
 # ## TODO maybe cov_equiv
 
 lst_models_es_common_trait <- 
-  function(ntimepoints, data, ntraitperiods=1, nzetaperiods=1,
+  function(ntimepoints, data, addsyntax = "", ntraitperiods=1, nzetaperiods=1,
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
@@ -243,136 +238,139 @@ lst_models_es_common_trait <-
     ## la_o
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
-    }
-    if(la_o_equiv == "time.invar"){
+    } else if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", but we keep time.invar for backwards compatibility
+      if(la_o_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_o_equiv. Please use 'invar' instead.")
+      }
       la_o <- rep("la_o", times=nyvariables)
-    }
-    if(la_o_equiv == "period.invar"){
+    } else if(la_o_equiv == "period.invar"){
       la_o <- paste0("la_o", 1:nindicators, "_", 
                      rep(1:nzetaperiods, each=nyvariables_per_zetaperiod))
       la_o[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
-    }
-    if(la_o_equiv == "free"){
+    } else if(la_o_equiv == "free"){
       la_o <- paste0("la_o", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       la_o[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
-    }
+    } else{stop("the argument la_o_equiv must have one of the following options: 'one', 'invar', 'period.invar', 'free'")}
     
     
     ## la_t
-    if(la_t_equiv == "one"){
+    if(la_t_equiv == "one" || la_t_equiv == "indicator.invar"){
       la_t <- rep("1", times=ntimepoints)
-    }
-    if(la_t_equiv == "period.invar"){
+    } else if(la_t_equiv == "period.invar"){
       la_t <- paste0("la_t", rep(1:ntimepoints_per_traitperiod, times=ntraitperiods))
       la_t <- matrix(la_t, nrow=ntimepoints_per_traitperiod)
       la_t[1,] <- "1"
       la_t <- c(la_t)
-    }
-    if(la_t_equiv == "free"){
+    } else if(la_t_equiv == "free"){
       la_t <- paste0("la_t", rep(1:ntimepoints_per_traitperiod, times=ntraitperiods),
                      "_", rep(1:ntraitperiods, each=ntimepoints_per_traitperiod))
       la_t <- matrix(la_t, nrow=ntimepoints_per_traitperiod)
       la_t[1,] <- "1"
       la_t <- c(la_t)
-    }
+    } else{stop("the argument la_t_equiv must have one of the following options: 'one', 'period.invar', 'free'")}
     
     
     ## la_s
     if(la_s_equiv == "zero"){
       la_s <- rep("0", times=ntimepoints-1)
-    }
-    if(la_s_equiv == "time.invar"){
+    } else if(la_s_equiv == "time.invar" || la_s_equiv == "invar"){
+      if(la_s_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
+      }
       la_s <- rep("la_s", times=ntimepoints-1)
-    }
-    if(la_s_equiv == "period.invar"){
+    } else if(la_s_equiv == "overnight"){
+      la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
+      la_s <- rep(la_s, times=nzetaperiods)
+      la_s <- la_s[-1]
+    } else if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]
-    }
-    if(la_s_equiv == "free"){
+    } else if(la_s_equiv == "free"){
       la_s <- paste0("la_s", 2:ntimepoints)
-    }
+    } else{stop("the argument la_s_equiv must have one of the following options: 'zero', 'invar', 'overnight', 'interval.invar', 'free'")}
+    
     
     ## nu
     if(nu_equiv == "zero"){
       nu <- rep("0", times=nyvariables)
-    }
-    if(nu_equiv == "period.invar"){
+    } else if(nu_equiv == "period.invar"){
       nu <- paste0("nu", 1:nindicators, "_",
                    rep(1:nzetaperiods, each=nyvariables_per_zetaperiod))
       nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
-    }
-    if(nu_equiv == "free"){
+    } else if(nu_equiv == "indicator.invar"){
+      nu <- rep(paste0("nu", 1:nindicators), times=ntimepoints)
+      nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
+    } else if(nu_equiv == "free"){
       nu <- paste0("nu", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       nu[seq(from=1, to=nyvariables, by=nindicators)] <- "0"
-    }
+    } else{stop("the argument nu_equiv must have one of the following options: 'zero', 'period.invar', 'indicator.invar', 'free'")}
+    
     
     ## alpha
-    if(alpha_equiv == "zero"){
+    if(alpha_equiv == "zero" || alpha_equiv == "indicator.invar"){
       alpha <- rep("0", times=ntimepoints)
-    }
-    if(alpha_equiv == "period.invar"){
+    } else if(alpha_equiv == "period.invar"){
       alpha <- rep(paste0("alpha", 1:ntimepoints_per_traitperiod), times=ntraitperiods)
       alpha[seq(from=1, to=ntimepoints, by=ntimepoints_per_traitperiod)] <- "0"
-    }
-    if(alpha_equiv == "free"){
+    } else if(alpha_equiv == "free"){
       alpha <- paste0("alpha", 1:ntimepoints_per_traitperiod, "_", 
                       rep(1:ntraitperiods, each=ntimepoints_per_traitperiod))
       alpha[seq(from=1, to=ntimepoints, by=ntimepoints_per_traitperiod)] <- "0"
-    }
+    } else{stop("the argument alpha_equiv must have one of the following options: 'zero', 'indicator.invar', 'free'")}
+    
     
     ## mtheta
     if(mtheta_equiv == "invar" || mtheta_equiv == "indicator.invar"){
       mtheta <- rep("mtheta", times=ntvariables)
-    }
-    if(mtheta_equiv == "free"){
+    } else if(mtheta_equiv == "free"){
       mtheta <- paste0("mtheta", 1:ntvariables)
-    }
+    } else{stop("the argument nu_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     ## vzeta
-    if(vzeta_eqiv == "time.invar"){
+    if(vzeta_eqiv == "time.invar" || vzeta_eqiv == "invar"){
+      if(vzeta_eqiv == "time.invar"){ #TODO add for other options where time.invar is replaced
+        message("time.invar is deprecated for vzeta_eqiv. Please use 'invar' instead.")
+      }
       vzeta <- rep("vzeta", times=ntimepoints)
-    }
-    if(vzeta_eqiv == "period.invar"){
+    } else if(vzeta_eqiv == "period.invar"){
       vzeta <- rep(paste0("vzeta", 1:nzetaperiods), each=ntimepoints_per_zetaperiod)
-    }
-    if(vzeta_eqiv == "free"){
+    } else if(vzeta_eqiv == "free"){
       vzeta <- paste0("vzeta", 1:ntimepoints)   
-    }
+    } else{stop("the argument vzeta_eqiv must have one of the following options: 'invar', 'period.invar', 'free'")}
+    
     
     ## veps
     if(veps_equiv == "invar"){
       veps <- rep("veps", times=nyvariables)
-    }
-    if(veps_equiv == "time.invar"){
+    } else if(veps_equiv == "time.invar"){
       veps <- rep(paste0("veps", 1:ntimepoints), each=nindicators)
-    }
-    if(veps_equiv == "indicator.invar"){
+    } else if(veps_equiv == "indicator.invar"){
       veps <- rep(paste0("veps", 1:nindicators), times=ntimepoints)
-    }
-    if(veps_equiv == "period.invar"){
+    } else if(veps_equiv == "period.invar"){
       veps <- rep(paste0("veps", 1:nepsperiods), each=nyvariables_per_epsperiod)
-    }
-    if(veps_equiv == "free"){
+    } else if(veps_equiv == "free"){
       veps <- paste0("veps", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
-    }
+    } else{stop("the argument veps_equiv must have one of the following options: 'invar', 'time.invar', 'period.invar', 'indicator.invar', 'free'")}
+    
     
     ## vtheta
     if(vtheta_equiv == "invar" || vtheta_equiv == "indicator.invar"){
       vtheta <- rep("vtheta", times=ntvariables)
-    }
-    if(vtheta_equiv == "free"){
+    } else if(vtheta_equiv == "free"){
       vtheta <- paste0("vtheta", 1:ntvariables)
-    }
+    } else{stop("the argument vtheta_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     ## gamma_t (regression coefficients for covariates explaining the latent traits)
     if(gamma_t_equiv == "invar" || gamma_t_equiv == "indicator.invar"){
       gamma_t <- paste0("gamma_t", "c", rep(1:length(manifest_thetacovariates), each=ntraitperiods))
-    }
-    if(gamma_t_equiv == "free"){
+    } else if(gamma_t_equiv == "free"){
       gamma_t <- paste0("gamma_t", rep(1:ntraitperiods, length(manifest_thetacovariates)),
                         "c", rep(1:length(manifest_thetacovariates), each=ntraitperiods))
-    }
+    } else{warning("the argument gamma_t_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     ############# generate syntax ##################
     
@@ -418,7 +416,7 @@ lst_models_es_common_trait <-
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
                     tmp10, "\n", tmp11, "\n", tmp12, "\n",
-                    tmp13, "\n",
+                    tmp13, "\n", addsyntax, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
@@ -451,7 +449,7 @@ lst_models_es_common_trait <-
     la_t_fitted <- rep(la_t_fitted, each=nindicators)
     vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
     vtheta_fitted <- rep(vtheta_fitted, each=nyvariables_per_traitperiod)
-    pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
+    pred_fitted <- la_o_fitted^2 * la_t_fitted^2 * vtheta_fitted / vary_fitted
     names(pred_fitted) <- paste0("pred", y_variables)
     
     # UPred
@@ -511,7 +509,7 @@ lst_models_es_common_trait <-
 
 
 lst_models_es_indicator_specific_trait <- 
-  function(ntimepoints, data, ntraitperiods=1, nzetaperiods=1,
+  function(ntimepoints, data, addsyntax = "", ntraitperiods=1, nzetaperiods=1,
            nepsperiods=1, la_t_equiv="one", la_o_equiv="one",
            la_s_equiv="zero", vzeta_eqiv="time.invar", veps_equiv="invar",
            vtheta_equiv="invar", nu_equiv="zero", alpha_equiv="zero",
@@ -548,139 +546,142 @@ lst_models_es_indicator_specific_trait <-
     ## la_o
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
-    }
-    if(la_o_equiv == "time.invar"){
+    } else if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", time.invar is kept for compatibility
+      if(la_o_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_o_equiv. Please use 'invar' instead.")
+      }
       la_o <- rep("la_o", times=nyvariables)
-    }
-    if(la_o_equiv == "period.invar"){
+    } else if(la_o_equiv == "period.invar"){
       la_o <- paste0("la_o", 1:nindicators, "_", 
                      rep(1:nzetaperiods, each=nyvariables_per_zetaperiod))
       la_o[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
-    }
-    if(la_o_equiv == "free"){
+    } else if(la_o_equiv == "free"){
       la_o <- paste0("la_o", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       la_o[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
-    }
+    } else{stop("the argument la_o_equiv must have one of the following options: 'one', 'invar', 'period.invar', 'free'")}
+    
     
     
     ## la_t
+    
     if(la_t_equiv == "one"){
       la_t <- rep("1", times=nyvariables)
-    }
-    if(la_t_equiv == "period.invar"){
+    } else if(la_t_equiv == "indicator.invar"){
+      la_t <- rep(paste0("la_t", 1:nindicators), times=ntimepoints)
+      la_t[seq(from=1, to=nyvariables, by=nindicators)] <- "1"
+    } else if(la_t_equiv == "period.invar"){
       la_t <- paste0("la_t", 1:nindicators, "_", 
                      rep(rep(1:ntimepoints_per_traitperiod, each=nindicators), times=ntraitperiods))
       la_t <- matrix(la_t, nrow=nyvariables_per_traitperiod)
       la_t[1:nindicators,] <- "1"
       la_t <- c(la_t)
-    }
-    if(la_t_equiv == "free"){
+    } else if(la_t_equiv == "free"){
       la_t <- paste0("la_t", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       la_t <- matrix(la_t, nrow=nyvariables_per_traitperiod)
       la_t[1:nindicators,] <- "1"
       la_t <- c(la_t)
-    }
+    } else{stop("the argument la_t_equiv must have one of the following options: 'one', 'period.invar', 'indicator.invar', 'free'")}
     
     
     ## la_s
     if(la_s_equiv == "zero"){
       la_s <- rep("0", times=ntimepoints-1)
-    }
-    if(la_s_equiv == "time.invar"){
+    } else if(la_s_equiv == "time.invar" || la_s_equiv == "invar"){ # should be "invar", time.invar is kept for compatibility
+      if(la_s_equiv == "time.invar"){ 
+        message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
+      }
       la_s <- rep("la_s", times=ntimepoints-1)
-    }
-    if(la_s_equiv == "period.invar"){
+    } else if(la_s_equiv == "overnight"){
+      la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
+      la_s <- rep(la_s, times=nzetaperiods)
+      la_s <- la_s[-1]
+    } else if(la_s_equiv == "period.invar" || la_s_equiv == "interval.invar"){
       la_s <- paste0("la_s", 1:ntimepoints_per_zetaperiod)
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]
-    }
-    if(la_s_equiv == "free"){
+    } else if(la_s_equiv == "free"){
       la_s <- paste0("la_s", 2:ntimepoints)
-    }
+    } else{stop("the argument la_s_equiv must have one of the following options: 'zero', 'invar', 'overnight', 'interval.invar', 'free'")}
+    
     
     ## nu
     if(nu_equiv == "zero"){
       nu <- rep("0", times=nyvariables)
-    }
-    if(nu_equiv == "period.invar"){
+    } else if(nu_equiv == "indicator.invar"){
+      nu <- rep(paste0("nu", 1:nindicators), times=ntimepoints)
+      nu[1:nindicators,] <- "0"
+    } else if(nu_equiv == "period.invar"){
       nu <- paste0("nu", 1:nindicators, "_", 
                    rep(rep(1:ntimepoints_per_traitperiod, each=nindicators), times=ntraitperiods))
       nu <- matrix(nu, nrow=nyvariables_per_traitperiod)
       nu[1:nindicators,] <- "0"
       nu <- c(nu)
-    }
-    if(nu_equiv == "free"){
+    } else if(nu_equiv == "free"){
       nu <- paste0("nu", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
       nu <- matrix(nu, nrow=nyvariables_per_traitperiod)
       nu[1:nindicators,] <- "0"
       nu <- c(nu)
-    }
+    } else{stop("the argument nu_equiv must have one of the following options: 'zero', 'period.invar', 'indicator.invar', 'free'")}
     
     
     ## mtheta
     if(mtheta_equiv == "invar"){
       mtheta <- rep("mtheta", times=ntvariables)
-    }
-    if(mtheta_equiv == "indicator.invar"){
+    } else if(mtheta_equiv == "indicator.invar"){
       mtheta <- rep(paste0("mtheta", 1:nindicators), times=ntraitperiods)
-    }
-    if(mtheta_equiv == "free"){
+    } else if(mtheta_equiv == "free"){
       mtheta <- paste0("mtheta", 1:nindicators, "_", rep(1:ntraitperiods, each=nindicators))
-    }
+    } else{stop("the argument mtheta_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     ## vzeta
-    if(vzeta_eqiv == "time.invar"){
+    if(vzeta_eqiv == "time.invar" || vzeta_eqiv == "invar"){ # time.invar is kept for compatibility
+      if(vzeta_eqiv == "time.invar"){ 
+        message("time.invar is deprecated for vzeta_eqiv. Please use 'invar' instead.")
+      }
       vzeta <- rep("vzeta", times=ntimepoints)
-    }
-    if(vzeta_eqiv == "period.invar"){
+    } else if(vzeta_eqiv == "period.invar"){
       vzeta <- rep(paste0("vzeta", 1:nzetaperiods), each=ntimepoints_per_zetaperiod)
-    }
-    if(vzeta_eqiv == "free"){
+    } else if(vzeta_eqiv == "free"){
       vzeta <- paste0("vzeta", 1:ntimepoints)   
-    }
+    } else{stop("the argument vzeta_eqiv must have one of the following options: 'invar', 'period.invar', 'free'")}
+    
     
     ## veps
     if(veps_equiv == "invar"){
       veps <- rep("veps", times=nyvariables)
-    }
-    if(veps_equiv == "time.invar"){
+    } else if(veps_equiv == "time.invar"){
       veps <- rep(paste0("veps", 1:ntimepoints), each=nindicators)
-    }
-    if(veps_equiv == "indicator.invar"){
+    } else if(veps_equiv == "indicator.invar"){
       veps <- rep(paste0("veps", 1:nindicators), times=ntimepoints)
-    }
-    if(veps_equiv == "period.invar"){
+    } else if(veps_equiv == "period.invar"){
       veps <- rep(paste0("veps", 1:nepsperiods), each=nyvariables_per_epsperiod)
-    }
-    if(veps_equiv == "free"){
+    } else if(veps_equiv == "free"){
       veps <- paste0("veps", 1:nindicators, "_", rep(1:ntimepoints, each=nindicators))
-    }
+    } else{stop("the argument veps_equiv must have one of the following options: 'invar', 'time.invar', 'period.invar', 'indicator.invar', 'free'")}
     
     
     ## vtheta
     if(vtheta_equiv == "invar"){
       vtheta <- rep("vtheta", times=ntvariables)
-    }
-    if(vtheta_equiv == "indicator.invar"){
+    } else if(vtheta_equiv == "indicator.invar"){
       vtheta <- rep(paste0("vtheta", 1:nindicators), times=ntraitperiods)
-    }
-    if(vtheta_equiv == "free"){
+    } else if(vtheta_equiv == "free"){
       vtheta <- paste0("vtheta", 1:nindicators, "_", rep(1:ntraitperiods, each=nindicators))
-    }
+    } else{stop("the argument vtheta_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     ## gamma_t (regression coefficients for covariates explaining the latent traits)
     if(gamma_t_equiv == "invar"){
       gamma_t <- paste0("gamma_t", "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # okay!
-    }
-    if(gamma_t_equiv == "indicator.invar"){
+    } else if(gamma_t_equiv == "indicator.invar"){
       gamma_t <- paste0("gamma_t", 1:nindicators, "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # okay i think
-    }
-    if(gamma_t_equiv == "free"){
+    } else if(gamma_t_equiv == "free"){
       gamma_t <- paste0("gamma_t", 1:nindicators, #"_", 
                         rep(1:ntraitperiods, each=nindicators),
                         "c", rep(1:length(manifest_thetacovariates), each=ntvariables)) # each=ntvariables?
-      
-    }
+    } else{warning("the argument gamma_t_equiv must have one of the following options: 'invar', 'indicator.invar', 'free'")}
+    
     
     
     ############# generate syntax ##################
@@ -720,7 +721,7 @@ lst_models_es_indicator_specific_trait <-
     model <- paste0(tmp1, "\n", tmp2, "\n", tmp3, "\n",
                     tmp4, "\n", tmp5, "\n", tmp6, "\n",
                     tmp7, "\n", tmp8, "\n", tmp9, "\n",
-                    tmp10, "\n", tmp11, "\n",
+                    tmp10, "\n", tmp11, "\n", addsyntax, "\n",
                     collapse="\n")
     
     m1 <- lavaan(model, data=data, ...)
@@ -753,7 +754,7 @@ lst_models_es_indicator_specific_trait <-
                                  select=est))
     vtheta_fitted <- unlist(subset(parameterEstimates(m1), subset=grepl("vtheta", label), select=est))
     vtheta_per_traitperiod <- split(vtheta_fitted, ceiling(seq_along(vtheta_fitted) / nindicators))
-    vtheta_per_traitperiod <- lapply(vtheta_per_traitperiod, function(x) rep(x, times=nindicators))
+    vtheta_per_traitperiod <- lapply(vtheta_per_traitperiod, function(x) rep(x, times=ntimepoints/ntraitperiods))
     vtheta_fitted <- unlist(vtheta_per_traitperiod)
     pred_fitted <- la_t_fitted^2 * vtheta_fitted / vary_fitted
     names(pred_fitted) <- paste0("pred", y_variables)

@@ -1,0 +1,11 @@
+name: lstesgui
+title: lstesgui
+username:
+account: jnorget
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8642602
+bundleId: 7678931
+url: https://jnorget.shinyapps.io/lstesgui/
+asMultiple: FALSE
+asStatic: FALSE

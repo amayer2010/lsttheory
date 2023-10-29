@@ -121,3 +121,64 @@ NULL
 NULL
 
 
+
+#' Dataset happy
+#' 
+#' Restructured wide-format data from Weiss et al. (2021), containing the items 
+#' happiness ("How happy do you feel at the moment") and 
+#' life satisfaction ("How satisfied are you with your life at the moment?") on five-point Likert scales.
+#' Data was assessed 5 times a day on 5 days during an experience-sampling study.
+#' The original dataset is available online at: https://osf.io/kwp6n/ 
+#' The variables are:
+#' 
+#' \itemize{
+#'   \item happy_1.
+#'   \item satisfaction_1.
+#'   \item happy_2.
+#'   \item satisfaction_2.
+#'   \item \cdot
+#'   \item happy_25.
+#'   \item satisfaction_25.
+#' }
+#' 
+#' @docType data
+#' @keywords datasets
+#' @format A data frame with 425 rows and 50 variables
+#' @name happy
+NULL
+
+
+
+#' Dataset happybig5
+#' 
+#' Restructured wide-format data from Weiss et al. (2021), containing the items 
+#' happiness ("How happy do you feel at the moment") and 
+#' life satisfaction ("How satisfied are you with your life at the moment?") on five-point Likert scales.
+#' Data was assessed 5 times a day on 5 days during an experience-sampling study.
+#' Additionally, this dataset contains measures of the Big Five personality dimensions from an intake session before the experience sampling phase.
+#' This dataset can be used to demonstrate how covariates (Big Five) contribute to trait components of Latent State-Trait models. 
+#' The original dataset is available online at: https://osf.io/kwp6n/ 
+#' The variables are:
+#' 
+#' \itemize{
+#'   \item happy_1.
+#'   \item satisfaction_1.
+#'   \item happy_2.
+#'   \item satisfaction_2.
+#'   \item \cdot
+#'   \item happy_25.
+#'   \item satisfaction_25.
+#'   \item Big5_OE_M
+#'   \item Big5_CO_M
+#'   \item Big5_EX_M
+#'   \item Big5_AG_M
+#'   \item Big5_ES_M
+#' }
+#' 
+#' @docType data
+#' @keywords datasets
+#' @format A data frame with 425 rows and 55 variables
+#' @name happybig5
+NULL
+
+

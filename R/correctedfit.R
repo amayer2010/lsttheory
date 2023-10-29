@@ -47,5 +47,6 @@ correctedfit <- function(model){
   }
   names(fit) <- c("chisq.corrected", "df", "p-value", "rmsea.corrected")
   
-  return(fit)
+  print(round(fit,3))
+  invisible(fit)
 }

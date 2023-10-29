@@ -1,31 +1,74 @@
 #
 # This is the user-interface definition of the LST-ES Shiny web application. 
 
-# TODO: implement model comparison
-# TODO: show warning message for output if the model did not converge/ there are Heywood cases
+
+# big TODOs
+# TODO: implement model comparison (upload several .rds files)
+# TODO: add help texts
+
+# small TODOs
+# should models 2-5 really be "invar" for the states? Or better "indicator.invar"?
+# ! check path models
+# !! make the "detailed options" clearer by using headings/categories (autoregression, covariates, traits, state (residuals)) 
+# show warning message for output if the model did not converge/ there are Heywood cases
+
+# optional TODOs
+# pre-select number of measurement occasions for example data (=9)
+# model output variance components: add graphical summary (x = t, y = value (0 - 1), lines for rel, con, spe, pred, upred per indicator)
+# Output für Autoregressionen aufbereiten
+# Output für Covariaten aufbereiten
+
+# DONE
+# adjust the implied invar-options for all 9 models
+# add download option for re-structured data
+# add download option for the fitted model (as .rds)
+# change fitting function to new lstmodels_es() function 
+# variance components summary table: add summary of pred and upred
+# adjust covariate integration
+#     + only trait covariates (delete everything for state covariates)
+#     + include covariates in creating the dataset
+#     + add gamma_t invariance to the detailed options if covariates are included
+#     + adjust lsttheory_es() call to include covariates
+# adjust summary (before "running" the model) for usable R-code
+# added Yuan-corrected model fit to output
+
 
 library(shiny)
 
-# Define UI for application that draws a histogram
+# Define UI
 shinyUI(fluidPage(
+  
+  tags$head(
+    tags$style(HTML("
+      .shiny-output-error-validation {
+        color: #ff0000;
+        font-weight: bold;
+      }
+    "))
+  ),
     
     navbarPage("LST-R Models for Experience Sampling Data",
                tabPanel("Model",
 
-                ###### Menu Panel: Data #########  
+                #### Menu Panel: Data #########  
                         
                     navlistPanel(
                        "Data",
+                ##### Reading in data file #########  
                        tabPanel("Reading in data file",
                                 
                                 tabsetPanel(
                                     tabPanel("Select data",
                                              h2("Reading in data file"),
                                              br(),
-                                             fileInput("file1", "Upload data (SPSS or csv file)", accept=c('.sav', '.csv')),
+                                             fileInput("file1", "Upload data (SPSS, csv or rds file)", accept=c('.sav', '.csv', '.rds')),
                                     
                                              selectInput("exdata", "Select Example Data", 
-                                                c("none","d_lst_es (example with day-specific traits)"), selected="none"),
+                                                c("none","d_lst_es (example with day-specific traits)", 
+                                                  "happy (empirical dataset from Weiss et al., 2021)", 
+                                                  "happybig5 (empirical dataset with covariates)"), 
+                                                selected="none",
+                                                width= "400px"),
                                              numericInput("ntimepoints", "What is the number of measurement occasions?", value=""),
                                              conditionalPanel(
                                                condition = "typeof input.ntimepoints !== 'undefined' && input.ntimepoints > 0",
@@ -33,9 +76,17 @@ shinyUI(fluidPage(
                                              )
                                     ),
                                     tabPanel("Print data", DT::DTOutput("datatable1")),
-                                    tabPanel("More Info", helpText("Data files are accepted in .csv or .sav format. Please provide a dataset in wide format. That means, there should be a seperate row in the dataset for each variable measured at each occasion."))
+                                    tabPanel("More Info", 
+                                             h2("Data Files"),
+                                             tags$div("Data files are accepted in .csv or .sav format. Please provide a dataset in wide format. That means, there should be a single row in the dataset for each participants and columns for each variable measured at each occasion.
+                                                                   For correct variable recognition, all repeated measures should end on a number indicating the measurement occasion. Variables which were assessed only once can be included as covariates explaining the trait(s)."),
+                                             h2("Number of periods"),
+                                             tags$div("If you have collected data several times a day, the number of periods may refer to the number of days. 
+                                                                If you have collected data several times a week or month, indicate the number of weeks/ months etc. 
+                                                                In this case, the 'day-specific' traits will in fact be week- or month-specific."))
                                 )
                        ),
+                ##### Variable specifics #########  
                        tabPanel("Variable specifics",
                                 tabsetPanel(
                                   tabPanel("Variable specifics",
@@ -47,31 +98,31 @@ shinyUI(fluidPage(
                                            verbatimTextOutput("variables"),
                                            uiOutput("indicatorselect"),
                                            checkboxInput("includecovariates", 
-                                                         "include manifest covariates",
+                                                         "include manifest trait-covariates",
                                                          value=FALSE),
                                            conditionalPanel(
                                              condition = "input.includecovariates",
-                                             helpText("Warning: Covariate inclusion is not yet implemented in the model estimation. For now, your model will run without covariates."),
-                                             uiOutput("statecovariates"),
                                              uiOutput("traitcovariates")
                                            )
                                            ),
                                   tabPanel("More Info",
-                                           h2("automatic variable recognition"),
+                                           h2("Automatic Variable Recognition"),
                                            tags$div("The names under $repeated_measures are recognized as variables assessed at each occasion. The indicators for the construct of interest have to be two or more of these variables. The names under $single_measures are recognized as variables measured only once. If there are no such variables in the dataset, the application will give the output 'character(0)'."),
                                            br(),
                                            tags$div("If your variables were not recognized correctly, you can try one of the following:",
                                              tags$ul(
                                                tags$li("make sure the number of measurement occasions (in the tab 'reading in data file') is correct"),
-                                               tags$li("add a seperator between variable name and the number indicating the measurement occasion (e.g. firstvar_1, secondvar_1 etc.)")
+                                               tags$li("make sure all variable names (of repeated measures) end with the number indicating the measurement occasion"),
+                                               tags$li("add a seperator between variable name and the number indicating the measurement occasion (e.g. firstvar_1, secondvar_1 etc.). This is usually relevant if the variable name ends on a number.")
                                                ),
                                            br(),
-                                           h2("covariates"),
-                                           tags$div("You may include manifest covariates which were measured one time during the study to further explain the trait aspect(s), 
-                                                     or covariates which were measured at each occasion to further explain the state residuals. 
+                                           h2("Covariates"),
+                                           tags$div("You may include manifest covariates which were measured once during the study to further explain the trait aspect(s). 
                                                      Please focus on few covariates. With more variables in the model, there is a higher chance that your model may not converge,
                                                      i.e. that it is not possible to estimate the parameters of interest.
-                                                     Latent covariates are not supported for the same reason.")
+                                                     Latent covariates are not supported for the same reason.
+                                                     If you cannot select a variable for the covariates explaining the latent traits, the dataset does not contain any variables 
+                                                     which were measured only once, or the software did not recognize any such variables.")
                                              
                                            ),
                                            
@@ -80,10 +131,11 @@ shinyUI(fluidPage(
                                 
                        ),
                        
-                    ###### Menu Panel: Model Specifics ###########  
+                    #### Menu Panel: Model Specifics ###########  
                        
                        "Model specifics",
                        tabPanel("Model",
+                    ##### Model ####            
                                 tabsetPanel(
                                   tabPanel("Model",
                                            h2("Model"),
@@ -91,50 +143,105 @@ shinyUI(fluidPage(
                                            selectInput("lstmodel", #before: traitmodel 
                                                         label = "Please choose a model.",
                                                               #h3("radio"), 
-                                                              choices = list("1: singletrait model, no autoregression"  = "model1",
-                                                                             "2: singletrait model with autoregression"  = "model2",
-                                                                             "3: period-specific traits with autoregression"  = "model3",
-                                                                             "4: indicator-specific traits with autoregression"  = "model4",
-                                                                             "5: period- and indicator-specific traits with autoregression"  = "model5",
-                                                                             "6: model 2 with state congenericity and measurement invariance within each period (e.g. day)"  = "model6",
-                                                                             "7: model 3 with state congenericity and measurement invariance within each period (e.g. day)"  = "model7",
-                                                                             "8: model 4 with state residual congenericity and measurement invariance within each period (e.g. day)"  = "model8",
-                                                                             "9: model 5 with state residual congenericity and measurement invariance within each period (e.g. day)"  = "model9"#,
-                                                                             # "10: model 2 with intervall-invariant autoregression (less restrictive)" = "model10",
-                                                                             # "11: model 3 with intervall-invariant autoregression (less restrictive)" = "model11",
-                                                                             # "12: model 4 with intervall-invariant autoregression (less restrictive)" = "model12",
-                                                                             # "13: model 5 with intervall-invariant autoregression (less restrictive)" = "model13",
-                                                                             # "14: model 6 with intervall-invariant autoregression (less restrictive)" = "model14",
-                                                                             # "15: model 7 with intervall-invariant autoregression (less restrictive)" = "model15",
-                                                                             # "16: model 8 with intervall-invariant autoregression (less restrictive)" = "model16",
-                                                                             # "17: model 9 with intervall-invariant autoregression (less restrictive)" = "model17"
+                                                              choices = list("1: singletrait model, no autoregression"  = 1,
+                                                                             "2: singletrait model with autoregression"  = 2,
+                                                                             "3: period-specific traits with autoregression"  = 3,
+                                                                             "4: indicator-specific traits with autoregression"  = 4,
+                                                                             "5: period- and indicator-specific traits with autoregression"  = 5,
+                                                                             "6: model 2 with state congenericity and measurement invariance within each period (e.g. day)"  = 6,
+                                                                             "7: model 3 with state congenericity and measurement invariance within each period (e.g. day)"  = 7,
+                                                                             "8: model 4 with state residual congenericity and measurement invariance within each period (e.g. day)"  = 8,
+                                                                             "9: model 5 with state residual congenericity and measurement invariance within each period (e.g. day)"  = 9
                                                                              ),
-                                                              selected = "model1",
-                                                       width = "80%"),
-                                           conditionalPanel("input.lstmodel == 'model1'",
+                                                              selected = 1,
+                                                       width = "90%"),
+                                           conditionalPanel("input.lstmodel == 1",
+                                                            helpText("Singletrait model with eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time"),
                                                             shiny::img(src = "1_multistate-singletrait.png", height="900") # alternative: height="70%", but it weirdly adjusts between small and maximized window size
                                            ),
-                                           conditionalPanel("input.lstmodel == 'model2'",
+                                           conditionalPanel("input.lstmodel == 2",
+                                                            helpText("The same as model 1, but with autoregression. Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "2_multistate-singletraitAR.png", height="1000")
                                            ),
-                                           conditionalPanel("input.lstmodel == 'model3'",
+                                           conditionalPanel("input.lstmodel == 3",
+                                                            helpText("Model with period-specific trait variables and eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "3_dayspecifictrait_mitAR.png", height="1000")
                                            ),
-                                           conditionalPanel("input.lstmodel == 'model4'",
+                                           conditionalPanel("input.lstmodel == 4",
+                                                            helpText("Model with indicator-specific trait variables. 
+                                                                     The model makes eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "4_indicatorspecific_mitAR.png", height="1000")
                                            ),
-                                           conditionalPanel("input.lstmodel == 'model5'",
+                                           conditionalPanel("input.lstmodel == 5",
+                                                            helpText("Model with day- and period-specific trait variables. 
+                                                                     The model makes eta-equivalence and theta-equivalence 
+                                                                     assumptions, that is, the most restrictive equivalence assumptions. 
+                                                                     All factor loadings are fixed at 1, intercepts at zero, variances 
+                                                                     of latent state residual and residual variables are invariant over time.
+                                                                     Autoregressive parameters are invariant over time."),
                                                             shiny::img(src = "5_day-and-indicatorspecific_mitAR.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 6",
+                                                            helpText("Same as model 2 (singletrait), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period."),
+                                                            shiny::img(src = "6_multistate-singletraitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 7",
+                                                            helpText("Same as model 3 (period-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period.
+                                                                     Mean and variance of the latent traits are invariant"),
+                                                            shiny::img(src = "7_dayspecifictrait_mitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 8",
+                                                            helpText("Same as model 4 (indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period."),
+                                                            shiny::img(src = "8_indicatorspecific_mitAR_2.png", height="1000")
+                                           ),
+                                           conditionalPanel("input.lstmodel == 9",
+                                                            helpText("Same as model 5 (period- and indicator-specific traits), but with state congenericity 
+                                                                     (factor loadings and intercepts for the state variables may differ between timepoints), 
+                                                                     and invariance of factor loadings, intercepts, variances of 
+                                                                     the latent state residual and residual variables within each period.
+                                                                     Mean and variance of the latent traits are invariant for traits of the same indicator."),
+                                                            shiny::img(src = "9_day-and-indicatorspecific_mitAR_2.png", height="1000")
                                            )
                                                             
                                   ),
                                   tabPanel("More Info", 
                                            h2("LST-R Models"),
-                                           tags$div("Details of each model are explained in Norget & Mayer (202x). The supplementary material will be linked here, summarized details about each model will be added."),
-                                           h2("Number of periods"),
-                                           tags$div("If you have collected data several times a day, the number of periods may refer to the number of days. 
-                                                                If you have collected data several times a week or month, indicate the number of weeks/ months etc. 
-                                                                In this case, the 'day-specific' traits will in fact be week- or month-specific.")
+                                           tags$div("Details of each model are explained in Norget, Weiss & Mayer (202x). The supplementary material can be found on the OSF: https://osf.io/vd9br/"),
+                                           tags$ul(
+                                             tags$li("model 1"),
+                                             tags$li("model 2"),
+                                             tags$li("model 3"),
+                                             tags$li("model 4"),
+                                             tags$li("model 5"),
+                                             tags$li("model 6"),
+                                             tags$li("model 7"),
+                                             tags$li("model 8"),
+                                             tags$li("model 9")
+                                           )
+                                           # h2("Number of periods"),
+                                           # tags$div("If you have collected data several times a day, the number of periods may refer to the number of days. 
+                                                                # If you have collected data several times a week or month, indicate the number of weeks/ months etc. 
+                                                                # In this case, the 'day-specific' traits will in fact be week- or month-specific.")
                                            # tags$div("You must specifiy the number of periods if at least one of the following applies",
                                            #          tags$ul(
                                            #            tags$li("your traitmodel is day-specific or day-and-indicator-specific"),
@@ -175,60 +282,77 @@ shinyUI(fluidPage(
                                    )
                                 )
                                 ),
+                ##### Details ####
                        tabPanel("Details", # before: Equivalence assumptions
                                 tabsetPanel(
                                   tabPanel("Details",
                                            h2("Model Details"),
                                            br(),
                                            helpText("The LST-R model you selected implies the following equivalences. You can adjust each assumption individually. Click 'More Info' for details."),
-                                           # radioButtons("globalequivalence",
-                                           #              "global equivalence option",
-                                           #              #choices = list("invar", "period.invar", "free"),
-                                           #              choiceNames = list("invariant (most restrictive)", "invariant within each period", "free (no invariance)"),
-                                           #              choiceValues = list("invar", "period.invar", "free"),
-                                           #              selected = "invar"
-                                           # ),
                                            br(),
-                                           # checkboxInput("detailedequivalences", "Set more detailed equivalence assumptions", value = FALSE),
-                                           
-                                           # conditionalPanel("input.detailedequivalences",
-                                                            
-                                               # la_t_equiv = "one", "period.invar", "free"
-                                               #TODO why can these not be time.invar??
-                                               selectInput("la_t_equiv", h5("Factor loadings of the latent trait"),
-                                                           choices = list("one", "period.invar", "free")),
+                                               selectInput("la_t_equiv", h5("Factor loadings of the latent trait variable(s)"),
+                                                           choices = list("one", "indicator.invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # la_o_equiv = "one", "time.invar", "period.invar", "free"
-                                               selectInput("la_o_equiv", h5("Factor loadings of the occasion factor (OCC)"),
-                                                           choices = list("one", "time.invar", "period.invar", "free")),
+                                               selectInput("la_o_equiv", h5("Factor loadings of the latent state variables; for models with indicator-specific traits: factor loadings of the occasion factor (OCC)"),
+                                                           choices = list("one", "invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # la_s_equiv
                                                selectInput("la_s_equiv", h5("Autoregression between occasion factors"),
-                                                          choices = list("zero", "time.invar", "period.invar", "free")), # TODO period.invar should be renamed e.g. interval.invar, add overnight.invar
+                                                          choices = list("zero", "invar", "overnight", "interval.invar", "free"),
+                                                          width = "500px"), 
                                                # vzeta_eqiv = "time.invar", "period.invar", "free"
                                                selectInput("vzeta_eqiv", h5("Variances of the state residual (zeta)"),
-                                                           choices = list("time.invar", "period.invar", "free")),
+                                                           choices = list("invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # veps_equiv = "invar",  "time.invar", "indicator.invar", "period.invar", "free"
                                                selectInput("veps_equiv", h5("Variances of the residual/ error term (epsilon)"),
-                                                           choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free")),
+                                                           choices = list("invar",  "time.invar", "indicator.invar", "period.invar", "free"),
+                                                           width = "500px"),
                                                # vtheta_equiv = "invar", "indicator.invar", "free"
                                                selectInput("vtheta_equiv", h5("Variances of the latent trait"),
                                                            choices = list("invar","indicator.invar", "free"),
-                                                           selected = "indicator.invar"),
+                                                           width = "500px"),
                                                # nu_equiv = "zero", "period.invar", "free"
-                                               selectInput("nu_equiv", h5("Intercepts of the indicators"),
-                                                           choices = list("zero","period.invar", "free")),
+                                               selectInput("nu_equiv", h5("Intercepts of the indicators (nu)"),
+                                                           choices = list("zero","period.invar", "free"),
+                                                           width = "500px"),
                                                # alpha_equiv = "zero", "period.invar", "free"
-                                               selectInput("alpha_equiv", h5("Intercepts of the latent states"), #TODO: nur das singletrait und day-specific sind als Higher-Order modell formuliert und haben daher intercepts fuer die latent states. Die indikatorspezifischen (Bifaktor) Modelle haben kein alpha. Muss dann also auch nicht angezeigt werden
-                                                           choices = list("zero","period.invar", "free")),
+                                               conditionalPanel(
+                                                  condition = "input.lstmodel == 1 || input.lstmodel == 2 || input.lstmodel == 3 || input.lstmodel == 6 || input.lstmodel == 7",
+                                                  selectInput("alpha_equiv", h5("Intercepts of the latent states (alpha)"), 
+                                                              choices = list("zero","period.invar", "free"),
+                                                              width = "500px"),
+                                                ),    
                                                # mtheta_equiv = "invar", "free", "
                                                # TODO only if model =/= singletrait
                                                selectInput("mtheta_equiv", h5("Means of the latent traits"),
                                                            choices = list("invar","indicator.invar", "free"),
-                                                           selected = "indicator.invar")
-                                            # )
+                                                           width = "500px"),
+                                               conditionalPanel(
+                                                 condition = "input.includecovariates",
+                                                 selectInput("gamma_t_equiv", h5("Regression of covariates on the latent traits"),
+                                                             choices = list("invar","indicator.invar", "free"),
+                                                             width = "500px"),
+                                               )
+                                            
                                   ),
                                   tabPanel("More Info",
                                            h2("Detailed Equivalences"),
-                                           tags$span("More Info will follow soon - stay tuned!")
+                                           # tags$span("More Info will follow soon - stay tuned!"),
+                                           # tags$div("text here and some more"),
+                                            # br(),
+                                           tags$div("Details about the options you can choose:"),
+                                                    tags$ul(
+                                                      tags$li("zero: the parameter is set to 0 for all timepoints. Applies to intercepts or autoregressive paths."),
+                                                      tags$li("one: the parameter is set to 1 for all timepoints. Applies to factor loadings."),
+                                                      tags$li("invar: the parameter is set to the same value for all timepoints. Applies to variances, means of latent traits, regression paths for covariates."),
+                                                      tags$li("time.invar: the parameter is invariant within the same timepoint. Applies only to residual variances (epsilon)"),
+                                                      tags$li("indicator.invar: the parameter is invariant within the same period."),
+                                                      tags$li("period.invar: the parameter is invariant within the same indicator."),
+                                                      tags$li("free: parameter has no invariance contraints."),
+                                                      tags$li("overnight: Autoregression is invariant over time, but may take a different value for the time gap between periods.")
+                                                    ),
                                            # h2("Equivalence assumptions"),
                                            # tags$div(
                                            #   h4("invariant"),
@@ -290,110 +414,27 @@ shinyUI(fluidPage(
                        #          )
                        #          ),
                        "-----",
+                #### Summary ####
                        tabPanel("Summary",
                                 tabsetPanel(
                                   tabPanel("Summary",
                                            h2("Summary of your model"),
                                            br(),
                                            textOutput("summary"),
+                                           br(),
+                                           helpText("You can also run this model directly in R/ RStudio with the syntax and data file provided below."),
+                                           verbatimTextOutput("modelsyntax"),
+                                           downloadButton("downloadData", "Download Data"),
+                                           br(),
+                                           helpText("Please be patient. Running the model may take several minutes, depending on your model and data."),
                                            #TODO implement a warning if only one indicator was selected
-                                           # conditionalPanel("!input.detailedequivalences && !input.indicators=='' ",
-                                           #    h4("Simplified Path model"),
-                                           #    helpText("The path model below shows a simplified version of your model, with 2 indicators and 6 measurement occasions (2 periods)."),
-                                           #    
-                                           #    # singletrait 
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "Singletrait_mitAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "Singletrait_mitAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "Singletrait_mitAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && !input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "Singletrait_ohneAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && !input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "Singletrait_ohneAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'singletrait' && !input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "Singletrait_ohneAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    
-                                           #    #daypecific
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "dayspecific_mitAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "dayspecific_mitAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "dayspecific_mitAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && !input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "dayspecific_ohneAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && !input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "dayspecific_ohneAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-specific' && !input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "dayspecific_ohneAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    
-                                           #    #indicator-specific
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "indicatorspecific_mitAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "indicatorspecific_mitAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "indicatorspecific_mitAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && !input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "indicatorspecific_ohneAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && !input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "indicatorspecific_ohneAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'indicator-specific' && !input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "indicatorspecific_ohneAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    
-                                           #    #day-and-indicator-specific
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_mitAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_mitAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_mitAR_free.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && !input.autoregression && input.globalequivalence == 'invar'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_ohneAR_invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && !input.autoregression && input.globalequivalence == 'period.invar'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_ohneAR_period.invariant.png", width="600", height="800")
-                                           #    ),
-                                           #    conditionalPanel("input.traitmodel == 'day-and-indicator-specific' && !input.autoregression && input.globalequivalence == 'free'",
-                                           #                     shiny::img(src = "day-and-indicatorspecific_ohneAR_free.png", width="600", height="800")
-                                           #    )
-                                           #    
-                                           #    #TODO include the lst_models_es() call
-                                           # 
-                                           # )
-                                           
-                                  ),
-                                           
-                                           
-                                           
-                                  tabPanel("More Info")
+                                           )
                                 )
                     ),
                        tabPanel(actionButton("run", label="RUN", width = "100%"),
+                    #### Model Output ####
                                 tabsetPanel(
+                                  id = "outputpanel",
                                   tabPanel("Variance components",
                                            DT::DTOutput("varcompsummary"),
                                            verbatimTextOutput("varcomp")
@@ -402,15 +443,34 @@ shinyUI(fluidPage(
                                            verbatimTextOutput("lavaansyntax")),
                                   tabPanel("lavaan results",
                                            verbatimTextOutput("lavaanresults")),
-                                  tabPanel("download", helpText("TODO: let users download (1) the fitted lsttheory object for model comparisons and (2) model output, knitted with RMarkdown")),
-                                  tabPanel("More Info")
+                                  tabPanel("model fit",
+                                           helpText("The fit measures below are corrected according to the procedure by Yuan et al. (2015) for SEM with many manifest variables. Uncorrected fit indices are provided with the lavaan results."),
+                                           verbatimTextOutput("correctedfit")),
+                                  
+                                 # tabPanel("trait covariates"),
+                                  tabPanel("download", 
+                                           helpText("The fitted model can be downloaded below. The .rds file can be used for model comparisons in R/RStudio."),
+                                           br(),
+                                           downloadButton("downloadModel", "Download fitted model")
+                                           ),
+                                  tabPanel("More Info",
+                                           h2("How to continue in R/RStudio with the downloaded model"),
+                                           tags$ul(
+                                             tags$li("Read the .rds file into R/ RStudio with the function readRDS(), e.g. as model1 <- readRDS('downloadeddata.rds')"),
+                                             tags$li("Printing the object gives the variance components"),
+                                             tags$li("The fittet lavaan object is available as model1@lavaanres. Refer to the lavaan help or tutorial (lavaan.ugent.be) to retrieve specific information from the fitted object."),
+                                             tags$li("The lavaan syntax is included in model1@lavaansyntax"),
+                                             tags$li("summary(model1@lavaanres, fit.measures = TRUE) gives the lavaan results"),
+                                             tags$li("Compare several models with anova(model1@lavaanres, model2@lavaanres)")
+                                                  )
+                                           )
                                 ),
                                 )
                     ),
                    
              ),
-               tabPanel("Model comparison", helpText("TODO: let users download their fitted model in the Model tab. Then here in this tab let them upload several models to compare them with anova(). Make the model comparison informative, i.e. provide some information on the interpretation.")),
-               tabPanel("Info", helpText("This shiny app has two parts: one for fitting an LST-R model and one for comparing fitted models."))
+               # tabPanel("Model comparison", helpText("TODO: let users download their fitted model in the Model tab. Then here in this tab let them upload several models to compare them with anova(). Make the model comparison informative, i.e. provide some information on the interpretation.")),
+               tabPanel("Info", helpText("This shiny app is a tool for fitting LST-R models, especially with experience sampling or other intensive longitudinal data. It is part of the R-package lsttheory. Details of the software are explained in Norget, Weiss & Mayer (202x). The supplementary material can be found on the OSF: https://osf.io/vd9br"))
     )
 
 )
