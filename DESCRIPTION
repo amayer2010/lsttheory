@@ -1,6 +1,6 @@
 Package: lsttheory
 Title: Latent State-Trait Theory
-Version: 0.3-1.002
+Version: 0.3-1.003
 Authors@R: c(
     person("Axel", "Mayer", email = "amayer2010@gmail.com", role = "cre"),
     person("Julia", "Norget", role = "ctb"))
