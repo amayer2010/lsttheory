@@ -33,6 +33,8 @@ by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc
 Must be assessed at a single occasion.}
 
 \item{...}{further arguments passed to lower level functions}
+
+\item{addsyntax}{character string. Will be added to generated lavaan syntax.}
 }
 \value{
 object of class lstmodel

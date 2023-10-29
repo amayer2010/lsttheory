@@ -9,6 +9,7 @@ lsttheory_es(
   ntimepoints,
   nperiods = 1,
   data,
+  addsyntax = "",
   la_t_equiv = NULL,
   la_o_equiv = NULL,
   la_s_equiv = NULL,
@@ -40,6 +41,8 @@ lsttheory_es(
 
 \item{data}{a data.frame. This data frame contains the observed variables, sorted by time t and then 
 by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.}
+
+\item{addsyntax}{character string. Will be added to generated lavaan syntax.}
 
 \item{la_t_equiv}{Character. Invariance option for factor loadings of the latent trait. 
 Can be one of \code{c("one", "period.invar", "free")}.}
