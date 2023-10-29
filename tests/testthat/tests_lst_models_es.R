@@ -6,13 +6,14 @@ require(lsttheory)
 ## more advanced tests of the lower level functions
 ## lst_models_es_common_trait and lst_models_es_indicator_specific_trait
 
-d <- readRDS("private/d2conflict.rds") ## conflict scale FIML
+# d <- readRDS("private/d2conflict.rds") ## conflict scale FIML
 
 ############ models with common trait with d2conflict data ###################
 
+expect_warning(
 mtest <- lsttheory:::lst_models_es_common_trait(
   ntimepoints=14, data=d[,1:28], ntraitperiods=1, nzetaperiods=2, nepsperiods=1, 
-  la_s_equiv="period.invar", missing="fiml")
+  la_s_equiv="period.invar", missing="fiml"))
 
 actual_coefs <- c(mtest@varcomp$rel[[1]],
                   mtest@varcomp$spe[[2]],
