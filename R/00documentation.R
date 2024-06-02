@@ -132,13 +132,13 @@ NULL
 #' The variables are:
 #' 
 #' \itemize{
-#'   \item happy_1.
-#'   \item satisfaction_1.
-#'   \item happy_2.
-#'   \item satisfaction_2.
+#'   \item happy_1. Self-reported happiness on occasion 1. 
+#'   \item satisfaction_1. Self-reported life satisfaction on occasion 1.
+#'   \item happy_2. Self-reported happiness on occasion 2.
+#'   \item satisfaction_2. Self-reported life satisfaction on occasion 2.
 #'   \item \cdot
-#'   \item happy_25.
-#'   \item satisfaction_25.
+#'   \item happy_25. Self-reported happiness on occasion 25.
+#'   \item satisfaction_25. Self-reported life satisfaction on occasion 25.
 #' }
 #' 
 #' @docType data
@@ -156,23 +156,24 @@ NULL
 #' life satisfaction ("How satisfied are you with your life at the moment?") on five-point Likert scales.
 #' Data was assessed 5 times a day on 5 days during an experience-sampling study.
 #' Additionally, this dataset contains measures of the Big Five personality dimensions from an intake session before the experience sampling phase.
+#' The Big Five personality dimensions reflect mean values of 2 items each, one of which reverse coded (Gosling et al., 2003; Muck et al., 2007)
 #' This dataset can be used to demonstrate how covariates (Big Five) contribute to trait components of Latent State-Trait models. 
-#' The original dataset is available online at: https://osf.io/kwp6n/ 
+#' The original dataset (including codebooks) is available online at: https://osf.io/kwp6n/ 
 #' The variables are:
 #' 
 #' \itemize{
-#'   \item happy_1.
-#'   \item satisfaction_1.
-#'   \item happy_2.
-#'   \item satisfaction_2.
+#'   \item happy_1. Self-reported happiness on occasion 1. 
+#'   \item satisfaction_1. Self-reported life satisfaction on occasion 1.
+#'   \item happy_2. Self-reported happiness on occasion 2.
+#'   \item satisfaction_2. Self-reported life satisfaction on occasion 2.
 #'   \item \cdot
-#'   \item happy_25.
-#'   \item satisfaction_25.
-#'   \item Big5_OE_M
-#'   \item Big5_CO_M
-#'   \item Big5_EX_M
-#'   \item Big5_AG_M
-#'   \item Big5_ES_M
+#'   \item happy_25. Self-reported happiness on occasion 25.
+#'   \item satisfaction_25. Self-reported life satisfaction on occasion 25.
+#'   \item Big5_OE_M. Openness.
+#'   \item Big5_CO_M. Conscientiousness.
+#'   \item Big5_EX_M. Extraversion.
+#'   \item Big5_AG_M. Agreeableness.
+#'   \item Big5_ES_M. Emotional Stability.
 #' }
 #' 
 #' @docType data
