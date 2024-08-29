@@ -2,15 +2,11 @@
 # This is the user-interface definition of the LST-ES Shiny web application. 
 
 
-# big TODOs
+# TODOs
+# TODO *IMPORTANT* show warning message in output if the model did not converge/ there are Heywood cases
 # TODO: implement model comparison (upload several .rds files)
-# TODO: add help texts
-
-# small TODOs
-# should models 2-5 really be "invar" for the states? Or better "indicator.invar"?
-# ! check path models
-# !! make the "detailed options" clearer by using headings/categories (autoregression, covariates, traits, state (residuals)) 
-# show warning message for output if the model did not converge/ there are Heywood cases
+# TODO: add more help texts
+# make the "detailed options" clearer by using headings/categories (autoregression, covariates, traits, state (residuals)) 
 
 # optional TODOs
 # pre-select number of measurement occasions for example data (=9)
@@ -31,6 +27,7 @@
 #     + adjust lsttheory_es() call to include covariates
 # adjust summary (before "running" the model) for usable R-code
 # added Yuan-corrected model fit to output
+# path models adjusted
 
 
 library(shiny)
@@ -436,6 +433,7 @@ shinyUI(fluidPage(
                                 tabsetPanel(
                                   id = "outputpanel",
                                   tabPanel("Variance components",
+                                           textOutput("heywoodwarning"),
                                            DT::DTOutput("varcompsummary"),
                                            verbatimTextOutput("varcomp")
                                            ),

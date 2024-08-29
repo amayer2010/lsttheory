@@ -79,6 +79,8 @@ lst_models_es <-
            manifest_thetacovariates = NULL, 
            ...){
     
+    .Deprecated("lsttheory_es") # the new function provides more detailed functionality
+    
     res <- NULL
     
     if(ntimepoints %% nperiods != 0){
@@ -236,6 +238,7 @@ lst_models_es_common_trait <-
     ############ parameter names ###########
     
     ## la_o
+    # TODO: add indicator.invar
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
     } else if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", but we keep time.invar for backwards compatibility
@@ -278,7 +281,7 @@ lst_models_es_common_trait <-
         message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
       }
       la_s <- rep("la_s", times=ntimepoints-1)
-    } else if(la_s_equiv == "overnight"){
+    } else if(la_s_equiv == "overnight" || la_s_equiv == "betweenperiods"){
       la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]
@@ -544,6 +547,7 @@ lst_models_es_indicator_specific_trait <-
     ############ parameter names ###########
     
     ## la_o
+    # TODO: add indicator.invar
     if(la_o_equiv == "one"){
       la_o <- rep("1", times=nyvariables)
     } else if(la_o_equiv == "time.invar" || la_o_equiv == "invar"){ # should be "invar", time.invar is kept for compatibility
@@ -591,7 +595,7 @@ lst_models_es_indicator_specific_trait <-
         message("time.invar is deprecated for la_s_equiv. Please use 'invar' instead.")
       }
       la_s <- rep("la_s", times=ntimepoints-1)
-    } else if(la_s_equiv == "overnight"){
+    } else if(la_s_equiv == "overnight" || la_s_equiv == "betweenperiods"){
       la_s <- paste0("la_s", c(1, rep(2, ntimepoints_per_zetaperiod-1)))
       la_s <- rep(la_s, times=nzetaperiods)
       la_s <- la_s[-1]

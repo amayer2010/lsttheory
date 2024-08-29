@@ -420,6 +420,48 @@ shinyServer(function(input, output, session) {
 
     ##### Output variance components #####
     
+    # TODO: implement a warning if heywood cases occur
+
+    heywooddetect_cor <- reactive({
+      fitcorrelations <- parameterestimates(model()@lavaanres, standardized = TRUE) %>%
+        filter(op == "~~") %>%
+        filter(lhs != rhs) %>%
+        dplyr::select(std.all)
+      largecorrelations <- any(fitcorrelations > 1 | fitcorrelations < -1) # TRUE or FALSE
+      return(largecorrelations)
+    })
+
+    heywooddetect_var <- reactive({
+      fitvariances <- parameterestimates(model()@lavaanres, standardized = TRUE) %>%
+        filter(op == "~~") %>%
+        filter(lhs == rhs) %>%
+        dplyr::select(std.all)
+      negvariances <- any(fitvariances < 0) # TRUE or FALSE
+      return(negvariances)
+    })
+
+    heywoodwarningtext <- reactive({
+      warnings <- c()
+      
+      if (heywooddetect_cor()) {
+        warnings <- c(warnings, "Warning: There seem to be correlations between latent trait variables > 1 or < -1.")
+      }
+
+      if (heywooddetect_var()) {
+        warnings <- c(warnings, "Warning: There seem to be negative variances for some latent variables.")
+      }
+
+      if (length(warnings) > 0) {
+        return(paste0(paste(warnings, collapse = " "),
+                      "This model might be problematic. Please check the lavaan results and consider using a different model."
+                      ))
+      }
+      
+      return(warnings)
+    })
+    
+    output$heywoodwarning <- renderText({heywoodwarningtext()})
+    
     output$varcompsummary <- DT::renderDT({
       if(input$la_s_equiv == "zero"){
         sumtable <- model()@varcomp %>% select(rel, spe, con) %>%
@@ -446,7 +488,7 @@ shinyServer(function(input, output, session) {
     
     ##### Output covariate res #####
     output$covariatesummary01 <- renderPrint({
-      parameterestimates(model()@lavaanres) %>% filter(op == "~" & rhs %in% input$traitcov)
+      parameterestimates(model()@lavaanres, standardized = TRUE) %>% filter(op == "~" & rhs %in% input$traitcov)
     })
     output$covariatesummary02 <- renderPrint({
       parameterestimates(model()@lavaanres, rsq = TRUE) %>% filter(op == "r2" & grepl("theta", lhs))
