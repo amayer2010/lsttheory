@@ -52,7 +52,6 @@ setMethod ("show", "lstmodel",
 #' @param ntimepoints integer. Number of measurement occasions
 #' @param data a data.frame. This data frame contains the observed variables, sorted by time t and then 
 #' by indicator i, i.e., Y11, Y21, Y31, ... Y12, Y22, Y32 ... Y15, Y25, Y35 ... etc.
-#' @param addsyntax character string. Will be added to generated lavaan syntax.
 #' @param nperiods integer. Number of periods (trait periods, zeta periods, and epsilon periods).
 #' @param equiv character. Equivalence assumption. Can be one of c("invar", "period.invar", "free")
 #' @param ar logical. Should autoregressive effects be included

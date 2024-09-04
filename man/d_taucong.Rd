@@ -3,14 +3,18 @@
 \docType{data}
 \name{d_taucong}
 \alias{d_taucong}
-\title{Dataset d_taucong.}
+\title{lsttheory}
 \format{
 A data frame with 300 rows and 3 variables
 }
 \description{
-A simulated dataset. The variables are:
+Compute several models of latent state-trait theory..
+_PACKAGE
+Dataset d_taucong.
 }
 \details{
+A simulated dataset. The variables are:
+
 \itemize{
   \item y1.
   \item y2.

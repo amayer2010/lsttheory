@@ -8,11 +8,7 @@ utils::globalVariables(c("est", "gamma_t_equiv", "label", "lhs",
 #' lsttheory
 #' 
 #' Compute several models of latent state-trait theory..
-#'
-#' @name lsttheory
-#' @aliases lsttheory-package
-#' @docType package
-NULL
+#' _PACKAGE
 
 
 #' Dataset d_taucong.
@@ -136,7 +132,7 @@ NULL
 #'   \item satisfaction_1. Self-reported life satisfaction on occasion 1.
 #'   \item happy_2. Self-reported happiness on occasion 2.
 #'   \item satisfaction_2. Self-reported life satisfaction on occasion 2.
-#'   \item \cdot
+#'   \item ...
 #'   \item happy_25. Self-reported happiness on occasion 25.
 #'   \item satisfaction_25. Self-reported life satisfaction on occasion 25.
 #' }
@@ -166,7 +162,7 @@ NULL
 #'   \item satisfaction_1. Self-reported life satisfaction on occasion 1.
 #'   \item happy_2. Self-reported happiness on occasion 2.
 #'   \item satisfaction_2. Self-reported life satisfaction on occasion 2.
-#'   \item \cdot
+#'   \item ...
 #'   \item happy_25. Self-reported happiness on occasion 25.
 #'   \item satisfaction_25. Self-reported life satisfaction on occasion 25.
 #'   \item Big5_OE_M. Openness.

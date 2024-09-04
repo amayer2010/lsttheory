@@ -17,13 +17,13 @@ The variables are:
 }
 \details{
 \itemize{
-  \item happy_1.
-  \item satisfaction_1.
-  \item happy_2.
-  \item satisfaction_2.
-  \item \cdot
-  \item happy_25.
-  \item satisfaction_25.
+  \item happy_1. Self-reported happiness on occasion 1. 
+  \item satisfaction_1. Self-reported life satisfaction on occasion 1.
+  \item happy_2. Self-reported happiness on occasion 2.
+  \item satisfaction_2. Self-reported life satisfaction on occasion 2.
+  \item ...
+  \item happy_25. Self-reported happiness on occasion 25.
+  \item satisfaction_25. Self-reported life satisfaction on occasion 25.
 }
 }
 \keyword{datasets}
