@@ -441,16 +441,3 @@ createConstraintConY <- function(mod)
 checkInput <- function(){}
 
 
-
-
-############ shiny ##############
-
-#' Shiny interface for lsttheory()
-#' 
-#' This function calls a shiny interface for lsttheory().
-#' 
-#' @export
-lsttheoryGUI <- function(){  
-  shiny::runApp(system.file('lsttheorygui', package='lsttheory'))
-}
-

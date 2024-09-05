@@ -825,14 +825,3 @@ NULL
 #' @importFrom utils capture.output read.csv read.csv2 read.table combn
 NULL
 
-############### Shiny ###############
-
-#' Shiny interface for lst_models_es()
-#' 
-#' This function calls a shiny interface for LST-R models with experience sampling data.
-#' @author Julia Norget
-#' 
-#' @export
-lstesGUI <- function(){  
-  shiny::runApp(system.file('lstesgui', package='lsttheory'))
-}

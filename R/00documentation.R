@@ -117,6 +117,23 @@ NULL
 NULL
 
 
+#' Dataset mmLSTrf_exampledata.
+#' 
+#' A simulated dataset. The variables are:
+#' 
+#' \itemize{
+#'   \item Y_1111.
+#'   \item ...
+#'   \item Y_3232
+#' }
+#' 
+#' @docType data
+#' @keywords datasets
+#' @format A data frame with 500 rows and 36 variables
+#' @name mmLSTrf_exampledata
+NULL
+
+
 
 #' Dataset happy
 #' 
@@ -179,3 +196,10 @@ NULL
 NULL
 
 
+############## namespace ###########
+
+#' @importFrom utils tail
+NULL
+
+#' @importFrom magrittr %>%
+NULL
