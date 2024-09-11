@@ -1,4 +1,5 @@
 
+##
 ## These "global" variables are used in subset() or dplyr commands and are
 ## mistakenly classified as global variables by R CMD Check. Therefore they
 ## are added here as "global" variables to avoid the NOTE.
