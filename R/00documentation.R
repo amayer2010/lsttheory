@@ -120,13 +120,54 @@ NULL
 
 #' Dataset mmLSTrf_exampledata.
 #' 
-#' A simulated dataset. The variables are:
+#' A simulated dataset illustrating data for a study design with 2 fixed 
+#' situations, 3 measurement occasions, 2 methods and 3 indicators. 
 #' 
+#' The variables are named after the following format: \eqn{Y_{imts}}
+#' (i = indicator, m = method, t = occasion, s = fixed situation)
 #' \itemize{
-#'   \item Y_1111.
+#'   \item \eqn{Y_{1111}}
+#'   \item \eqn{Y_{2111}}
+#'   \item \eqn{Y_{3111}}
+#'   \item \eqn{Y_{1211}}
+#'   \item \eqn{Y_{2211}}
 #'   \item ...
-#'   \item Y_3232
+#'   \item \eqn{Y_{2132}}
+#'   \item \eqn{Y_{3132}}
+#'   \item \eqn{Y_{1132}}
+#'   \item \eqn{Y_{2232}}
+#'   \item \eqn{Y_{3232}}
 #' }
+#' 
+#' This format reflects the order of indicator variables in a path diagram, where
+#' indicators are first grouped by fixed situations, within those they are then
+#' grouped by occasions and within those they are lastly grouped by methods. 
+#' The resulting nested structure has indicators nested within methods, nested
+#' within occasions, nested within fixed situations.
+#' 
+#' The specified population values underlying the simulated data are: 
+#' \itemize{
+#'   \item \eqn{E(T_{111})} = 2.90
+#'   \item \eqn{Comm(T_{112})} = 0.74
+#'   \item \eqn{E(T_{112})} = 3.50
+#'   \item \eqn{\epsilon_{imts}} = 0.15
+#'   \item \eqn{Var(T_{111})} = 0.40
+#'   \item \eqn{\alpha_{ims}} = 0.00
+#'   \item \eqn{Var(T_{112})} = 0.98
+#'   \item \eqn{\lambda_{ims}} = 1.00
+#'   \item \eqn{Var(O_{11t1})} = 0.20
+#'   \item \eqn{\delta_{ims}} = 1.00
+#'   \item \eqn{Var(O_{11t2})} = 0.35
+#'   \item \eqn{\gamma_{ims}} = 1.00
+#'   \item \eqn{Var(TM_{ims})} = 0.10
+#'   \item \eqn{\beta_{1112}} = 0.35
+#'   \item \eqn{Var(OM_{mts})} = 0.10
+#'   \item \eqn{\beta_{0112}} = -0.21
+#'   \item \eqn{Var(\omega_{11s})} = 0.20
+#'   }
+#' Trait factors are essentially parallel, other latent variables are essentially 
+#' equivalent. Scalar MI holds across fixed situations and methods. Latent 
+#' variables are orthogonal apart from trait factors.
 #' 
 #' @docType data
 #' @keywords datasets
