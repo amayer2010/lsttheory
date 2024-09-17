@@ -39,7 +39,9 @@ server <- shinyServer(function(input, output, session) {
   
   
   ###### Run Model #########
-  model <- reactive({
+  model <- eventReactive(input$runModel, {
+    
+    id <- showNotification("Model is being estimated. This may take a few minutes.", duration = NULL)
     
     # Base arguments for mmLSTrf function
     base_args <- paste0("data=dataInput(), nSit=input$nSit, nTime=input$nTime, nMth=input$nMth,",
@@ -57,7 +59,11 @@ server <- shinyServer(function(input, output, session) {
     }
 
     function_call <- paste0("mmLSTrf(", all_args, ")")
-    eval(parse(text = function_call))
+    result <- eval(parse(text = function_call))
+    
+    removeNotification(id)
+    
+    return(result)
   })
   
   
@@ -284,7 +290,9 @@ Check mmLSTrf() documentation from lsttheory package for variable naming convent
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
                      bs_embed_popover(title="This field is optional.
-Check sem() documentation from lavaan package for additional arguments!"))  
+Check sem() documentation from lavaan package for additional arguments!")),
+               
+               actionButton("runModel", "Estimate Model", style = "background-color: blue; color: white; font-weight: bold;")
                )
       
       )
