@@ -26,9 +26,9 @@
 #' and the number of occasions needs to be equal across fixed situations. 
 #' Lastly, only one Trait Factor is estimated per fixed situation.
 #'
-#'\strong{Syntax notation:}\cr
-#'Example for Y_2132 with i = 2, m = 1, t = 3, s = 2 (covariances with s = 3)
-#'\tabular{lll}{
+#' \strong{Syntax notation:}\cr
+#' Example for Y_2132 with i = 2, m = 1, t = 3, s = 2 (covariances with s = 3)
+#' \tabular{lll}{
 #' \strong{Variable / Parameter}           \tab \strong{Notation}  \tab \strong{Example}   \cr
 #' Trait factors (TF)                      \tab Ts                 \tab T2                 \cr
 #' Occasion factors (OF)                   \tab Ots                \tab O32                \cr
