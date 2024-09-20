@@ -26,46 +26,47 @@
 #' and the number of occasions needs to be equal across fixed situations. 
 #' Lastly, only one Trait Factor is estimated per fixed situation.
 #'
-#'\strong{Syntax notation:}\cr
-#'Example for Y_2132 with i = 2, m = 1, t = 3, s = 2 (covariances with s = 3)
+#' \strong{Syntax notation:}\cr
+#' Example for Y_2132 with i = 2, m = 1, t = 3, s = 2 (covariances with s = 3)
 #' \tabular{lll}{
 #' \strong{Variable / Parameter}           \tab \strong{Notation}  \tab \strong{Example}   \cr
 #' Trait factors (TF)                      \tab Ts                 \tab T2                 \cr
-#' Mean TF                                 \tab M_Ts               \tab M_T2               \cr
-#' Variance TF                             \tab V_Ts               \tab V_T2               \cr
 #' Occasion factors (OF)                   \tab Ots                \tab O32                \cr
-#' Variance OF                             \tab V_Ots              \tab V_O32              \cr
 #' Trait-method factors (TMF)              \tab TMims              \tab TM212              \cr
-#' Variance TMF                            \tab V_TMims            \tab V_TM212            \cr
 #' Occasion-method factors (OMF)           \tab OMmts              \tab OM132              \cr
-#' Variance OMF                            \tab V_OMmts            \tab V_OM132            \cr
-#' Variance Y_imts                         \tab V_Y_imts           \tab V_(variable name)  \cr
-#' Covariance TF                           \tab Cv_TaxTb           \tab Cv_T2xT3           \cr
-#' Covariance OF                           \tab Cv_OaxOb           \tab Cv_O32xO33         \cr
-#' Covariance TMF                          \tab Cv_TMaxTMb         \tab Cv_TM212xTM213     \cr
-#' Covariance OMF                          \tab Cv_OMaxOMb         \tab Cv_OM132xOM133     \cr
+#' TF mean                                 \tab M_Ts               \tab M_T2               \cr
+#' TF variance                             \tab V_Ts               \tab V_T2               \cr
+#' OF variance                             \tab V_Ots              \tab V_O32              \cr
+#' OMF variance                            \tab V_OMmts            \tab V_OM132            \cr
+#' TMF variance                            \tab V_TMims            \tab V_TM212            \cr
+#' Observed variable variance              \tab V_Y_imts           \tab V_(variable name)  \cr
+#' TF covariance                           \tab Cv_TaxTb           \tab Cv_T2xT3           \cr
+#' OF covariance                           \tab Cv_OaxOb           \tab Cv_O32xO33         \cr
+#' TMF covariance                          \tab Cv_TMaxTMb         \tab Cv_TM212xTM213     \cr
+#' OMF covariance                          \tab Cv_OMaxOMb         \tab Cv_OM132xOM133     \cr
+#' Residual variance epsilon               \tab eps_imts           \tab eps_2132           \cr
 #' Intercept alpha                         \tab alph_ims           \tab alph_212           \cr
 #' Loading lambda                          \tab lam_ims            \tab lam_212            \cr
 #' Loading delta                           \tab del_ims            \tab del_212            \cr
 #' Loading gamma                           \tab gam_ims            \tab gam_212            \cr
-#' Residual variance epsilon               \tab eps_imts           \tab eps_2132           \cr
 #' Difference TF                           \tab Dif_Ts             \tab Dif_T2             \cr
+#' Regression intercept (TF)               \tab b0_Ts              \tab b0_T2              \cr
+#' Regression slope beta (TF)              \tab b1_Ts              \tab b1_T2              \cr
+#' Residual variance omega (TF)            \tab omg_Ts             \tab omg_T2             \cr
 #' Difference TMF                          \tab Dif_TMims          \tab Dif_TM212          \cr
-#' Regression intercept TF                 \tab b0_Ts              \tab b0_T2              \cr
-#' Regression slope beta TF                \tab b1_Ts              \tab b1_T2              \cr
-#' Residual variance omega TF              \tab omg_Ts             \tab omg_T2             \cr
 #' Regression slope beta (TMF)             \tab b1_TMims           \tab b1_T212            \cr
 #' Residual variance omega (TMF)           \tab omg_TMims          \tab omg_T212           \cr
-#' Communality TF                          \tab Com_Ts             \tab Com_T2             \cr
-#' Situation Specificity TF                \tab SitSp_Ts           \tab SitSp_T2           \cr
-#' Communality TMF                         \tab Com_TMims          \tab Com_TM212          \cr
-#' Situation Specificity TMF               \tab SitSp_TMims        \tab SitSp_TM212        \cr
-#' Reliability Y_imts                      \tab RelY_imts          \tab Rel(variable name) \cr
-#' Consistency Y_imts                      \tab ConY_imts          \tab Con(variable name) \cr
-#' Specificity Y_imts                      \tab SpeY_imts          \tab Spe(variable name) \cr
+#' Commonality TF                          \tab Com_Ts             \tab Com_T2             \cr
+#' Fixed situation specificity TF          \tab SitSp_Ts           \tab SitSp_T2           \cr
+#' Commonality TMF                         \tab Com_TMims          \tab Com_TM212          \cr
+#' Fixed situation specificity TMF         \tab SitSp_TMims        \tab SitSp_TM212        \cr
+#' Observed variable reliability           \tab RelY_imts          \tab Rel(variable name) \cr
+#' Observed variable consistency           \tab ConY_imts          \tab Con(variable name) \cr
+#' Observed variable specificity           \tab SpeY_imts          \tab Spe(variable name) \cr
 #' }
-#' Note that for Difference and Commonality variables the reference situation is
-#' always s = 1. 
+#' Note that for difference and commonality variables the fixed reference
+#' situation is always s = 1. 
+#' 
 #'
 #' @param data Data frame.\cr 
 #' This data frame contains only the indicator variables which will be used to 
