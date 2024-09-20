@@ -32,7 +32,7 @@ server <- shinyServer(function(input, output, session) {
       if (grepl(".csv", inFile$name)) {
         return(read.csv(inFile$datapath))      
       } else if (grepl(".sav", inFile$name)) {
-        return(spss.get(inFile$datapath))      
+        return(foreign::read.spss(inFile$datapath, to.data.frame=TRUE))
       }
     }
   })
