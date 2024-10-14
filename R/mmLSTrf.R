@@ -148,7 +148,7 @@
 #' \item \code{"residual.b"} assumes time invariance & equal loading + intercepts + error 
 #' variances across methods & fixed situations.
 #' }
-#' @param equiv.ass List. Default = \code{"cong"}.\cr
+#' @param equiv.ass List. Default: TF = \code{"par"}, OF & OMF= \code{"ess.equiv"}.\cr
 #' Equivalence assumptions for latent variables.
 #' For TF, OF & OMF the following equivalence assumptions can be made separately 
 #' for each latent variable:
@@ -196,7 +196,8 @@
 mmLSTrf <- function(data, nSit=2, nTime=2, nMth=2, structural="TF", includeOMF=TRUE, 
                     lat.cov=list(TFcov=FALSE, OFcov=FALSE, TMFcov=FALSE, 
                     OMFcov=FALSE), meanstructure=FALSE, meas.invar="time.invar", 
-                    equiv.ass=list(TF="cong", OF="cong", OMF="cong"), addsyntax="", ...){  
+                    equiv.ass=list(TF="par", OF="ess.equiv", OMF="ess.equiv"), 
+                    addsyntax="", ...){  
   
   
   

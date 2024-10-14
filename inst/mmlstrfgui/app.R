@@ -4,9 +4,7 @@ require(magrittr)
 require(shiny)
 require(bsplus)
 
-# library(shiny)
 # require(Hmisc)
-# require(bsplus)
 # require(htmltools)
 # require(sass)
 # require(DT)
@@ -17,7 +15,6 @@ require(bsplus)
 
 server <- shinyServer(function(input, output, session) {
   
-  ### path / directory needs to be same as Shiny App 
   
   ######## Data Input ########
   dataInput <- reactive({
@@ -87,7 +84,7 @@ server <- shinyServer(function(input, output, session) {
   ###### Output Lavaan Results #########
   output$fit_par <- renderPrint({      
     mod <- model()
-    summary(mod@lavaanres, fit.measures=TRUE)
+    summary(mod@lavaanres, fit.measures=TRUE, standardized = TRUE)
   })
   
   ###### Output Lavaan Syntax #########
@@ -250,7 +247,7 @@ Equality constraints can either be applied across methods, across fixed situatio
                                       "Equivalence"           = "equiv", 
                                       "Essential parallelity" = "ess.par", 
                                       "Parallelity"           = "par"),
-                          selected = "cong")%>%
+                          selected = "par")%>%
                 shinyInput_label_embed(
                   shiny_iconlink() %>%
                     bs_embed_popover(title="Congenericity: First indicator of latent variable loading = 1 & intercept = 0 (required for model identification).
@@ -263,12 +260,12 @@ Parallelity: Equal loadings (= 1), intercepts (= 0) & error variances for all in
               selectInput("OFequiv", "Occasion Factor Equivalence", 
                           choices = c("Congenericity"         = "cong", 
                                       "Essential equivalence" = "ess.equiv"),
-                          selected = "cong"),
+                          selected = "ess.equiv"),
               
               selectInput("OMFequiv", "Occasion-Method Factor Equivalence", 
                           choices = c("Congenericity"         = "cong", 
                                       "Essential equivalence" = "ess.equiv"),
-                          selected = "cong"),
+                          selected = "ess.equiv"),
       ),
               
               
@@ -290,11 +287,17 @@ Check mmLSTrf() documentation from lsttheory package for variable naming convent
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
                      bs_embed_popover(title="This field is optional.
-Check sem() documentation from lavaan package for additional arguments!")),
-               
-               actionButton("runModel", "Estimate Model", style = "background-color: blue; color: white; font-weight: bold;")
-               )
+Check sem() documentation from lavaan package for additional arguments!"))
+      ),
       
+      
+      
+      
+      tabPanel(actionButton("runModel", "Estimate Model", class = "btn btn-primary", 
+                            style = "background-color: blue; color: white; font-weight: bold;"),
+               h5("The model is being estimated. This may take a few minutes. \n
+Click on one of the panels other than 'Data' to see when the estimation is finished!")
+      )
       )
       ),
   
