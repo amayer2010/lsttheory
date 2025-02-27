@@ -219,7 +219,7 @@ If only specific covariances should be estimated, use the free input field for a
       
       
                        
-              selectInput("invar", "Measurment Invariance (MI)", 
+              selectInput("invar", "Measurement Invariance (MI)", 
                           choices = c("Time Invariance"                = "time.invar", 
                                       "Metric MI - Methods"            = "metric.m", 
                                       "Metric MI - Fixed situations"   = "metric.s", 
