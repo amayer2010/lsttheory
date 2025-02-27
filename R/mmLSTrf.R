@@ -851,7 +851,12 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
       CovOMF   <- character(0)
       OMFpair1 <- character(0)
       OMFpair2 <- character(0)
-    } 
+    }
+    
+  } else {
+    CovOMF   <- character(0)
+    OMFpair1 <- character(0)
+    OMFpair2 <- character(0)
   }
   
 ## Coefficients ##
