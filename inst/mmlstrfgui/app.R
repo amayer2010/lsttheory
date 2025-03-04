@@ -23,8 +23,8 @@ server <- shinyServer(function(input, output, session) {
     
     if (is.null(inFile) & exdata == "none") {
       return(NULL)
-    } else if (is.null(inFile) & exdata == "mmLSTrf_SimulatedExampleData") {
-      return(mmLSTrf_SimulatedExampleData)
+    } else if (is.null(inFile) & exdata == "mmLSTrf_SimulatedDataExample") {
+      return(mmLSTrf_SimulatedDataExample)
     } else if (!is.null(inFile)) {
       if (grepl(".csv", inFile$name)) {
         return(read.csv(inFile$datapath))      
@@ -119,7 +119,7 @@ ui <- fluidPage(
         
         tabPanel("Model",        
                selectInput("exdata", "Select Example Data", 
-                           c("none", "mmLSTrf_SimulatedExampleData"), selected="none")%>%
+                           c("none", "mmLSTrf_SimulatedDataExample"), selected="none")%>%
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
                      bs_embed_popover(title="The example dataset consists of 2 fixed situations (nSit = 2),
