@@ -23,8 +23,10 @@ server <- shinyServer(function(input, output, session) {
     
     if (is.null(inFile) & exdata == "none") {
       return(NULL)
-    } else if (is.null(inFile) & exdata == "mmLSTrf_exampledata") {
-      return(mmLSTrf_exampledata)
+    } else if (is.null(inFile) & exdata == "mmLSTrf_SimulatedDataExample") {
+      return(mmLSTrf_SimulatedDataExample)
+    } else if (is.null(inFile) & exdata == "mmLSTrf_RealDataExample") {
+      return(mmLSTrf_RealDataExample)
     } else if (!is.null(inFile)) {
       if (grepl(".csv", inFile$name)) {
         return(read.csv(inFile$datapath))      
@@ -119,10 +121,12 @@ ui <- fluidPage(
         
         tabPanel("Model",        
                selectInput("exdata", "Select Example Data", 
-                           c("none", "mmLSTrf_exampledata"), selected="none")%>%
+                           c("none", "mmLSTrf_RealDataExample", "mmLSTrf_SimulatedDataExample"), selected="none")%>%
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
-                     bs_embed_popover(title="The example dataset consists of 2 fixed situations (nSit = 2),
+                     bs_embed_popover(title="The real dataset consists of 2 fixed situations (nSit = 2), 
+2 time points (nTime = 2) and 2 methods (nMth = 2). 
+The simulated example dataset consists of 2 fixed situations (nSit = 2),
 3 time points (nTime = 3) and 2 methods (nMth = 2).")),
                
                
