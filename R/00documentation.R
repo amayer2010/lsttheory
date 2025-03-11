@@ -118,12 +118,59 @@ NULL
 NULL
 
 
-#' Dataset mmLSTrf_exampledata.
+
+#' Dataset mmLSTrf_RealDataExample
+#'
+#' This dataset is a subsample from a larger longitudinal study assessing the 
+#' Big Five personality traits in both offline (real-world) and online (digital) 
+#' contexts. Data were collected using the self- and other-rating versions of 
+#' the Big Five Inventory-2 (BFI-2; Soto and John, 2017b) at two measurement 
+#' occasions, with an average interval of 11 days.
 #' 
-#' A simulated dataset illustrating data for a study design with 2 fixed 
-#' situations, 3 measurement occasions, 2 methods and 3 indicators. 
+#' From this broader study, six self-rated items measuring the dimension of 
+#' Negative Emotionality (N) were selected. These chosen items correspond to 
+#' those of the short version of the BFI-2 (BFI-2-S; Soto and John, 2017a) and 
+#' are rated on a five-point Likert scale. Three of the items are true-keyed, 
+#' and three are false-keyed.
+#'
+#' The six items are listed below; the false-keyed are marked with “*”.
 #' 
-#' The variables are named after the following format: \eqn{Y_{imts}}
+#' \itemize{
+#'   \item N1. Is relaxed, handles stress well*. 
+#'   \item N5. Feels secure, comfortable with self*. 
+#'   \item N6. Is emotionally stable, not easily upset*. 
+#'   \item N7. Worries a lot. 
+#'   \item N11. Tends to feel depressed, blue. 
+#'   \item N12. Is temperamental, gets emotional easily. 
+#' }
+#' 
+#' Each item exists in four versions in the dataset, resulting in a total of 
+#' 24 variables. Items assessing self-rated Negative Emotionality in the 
+#' offline context are labeled with the prefixes “Sf1_” (measurement occasion 
+#' one) and “Sf2_” (measurement occasion two), while those in the online 
+#' context are labeled “Sn1_” and “Sn2_” respectively.
+#' 
+#' The resulting dataset reflects a study design with two fixed situations 
+#' (offline and online), two measurement occasions, two measurement methods 
+#' (true- and false-keyed), and three indicators per method (true-keyed: 
+#' N7, N11, N12; false-keyed: N1, N5, N6).
+#' 
+#' Note: The dataset contains missing values.
+#'
+#' @docType data
+#' @keywords datasets
+#' @format A data frame with 425 rows and 24 variables
+#' @name mmLSRrf_RealDataExample
+NULL
+
+
+
+#' Dataset mmLSTrf_SimulatedDataExample.
+#' 
+#' A simulated dataset illustrating data for a study design with two fixed 
+#' situations, three measurement occasions, two methods and three indicators. 
+#' 
+#' The variables are named according to the following format: \eqn{Y_{imts}}
 #' (i = indicator, m = method, t = occasion, s = fixed situation)
 #' \itemize{
 #'   \item \eqn{Y_{1111}}
@@ -172,7 +219,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 500 rows and 36 variables
-#' @name mmLSTrf_exampledata
+#' @name mmLSTrf_SimulatedDataExample
 NULL
 
 
