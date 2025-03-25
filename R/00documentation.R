@@ -136,24 +136,24 @@ NULL
 #' The six items are listed below; the false-keyed are marked with “*”.
 #' 
 #' \itemize{
-#'   \item N1. Is relaxed, handles stress well*. 
-#'   \item N5. Feels secure, comfortable with self*. 
-#'   \item N6. Is emotionally stable, not easily upset*. 
-#'   \item N7. Worries a lot. 
-#'   \item N11. Tends to feel depressed, blue. 
-#'   \item N12. Is temperamental, gets emotional easily. 
+#'   \item NAt. Worries a lot. 
+#'   \item NDt. Tends to feel depressed, blue. 
+#'   \item NVf. Is emotionally stable, not easily upset*. 
+#'   \item NAf. Is relaxed, handles stress well*. 
+#'   \item NDf. Feels secure, comfortable with self*. 
+#'   \item NVt. Is temperamental, gets emotional easily. 
 #' }
 #' 
-#' Each item exists in four versions in the dataset, resulting in a total of 
-#' 24 variables. Items assessing self-rated Negative Emotionality in the 
-#' offline context are labeled with the prefixes “Sf1_” (measurement occasion 
-#' one) and “Sf2_” (measurement occasion two), while those in the online 
-#' context are labeled “Sn1_” and “Sn2_” respectively.
+#' Each item exists in four versions in the dataset, resulting in a total 
+#' of 24 variables. Items assessing Negative Emotionality in the offline 
+#' context are labeled with the prefixes “Of1_” (measurement occasion 
+#' one) and “Of2_” (measurement occasion two), while those in the online 
+#' context are labeled “On1_” and “On2_” respectively.
 #' 
 #' The resulting dataset reflects a study design with two fixed situations 
 #' (offline and online), two measurement occasions, two measurement methods 
 #' (true- and false-keyed), and three indicators per method (true-keyed: 
-#' N7, N11, N12; false-keyed: N1, N5, N6).
+#' NAt, NDt, NVt; false-keyed: NAf, NDf, NVf).
 #' 
 #' Note: The dataset contains missing values.
 #'
@@ -194,27 +194,28 @@ NULL
 #' 
 #' The specified population values underlying the simulated data are: 
 #' \itemize{
-#'   \item \eqn{E(T_{111})} = 2.90
-#'   \item \eqn{Comm(T_{112})} = 0.74
-#'   \item \eqn{E(T_{112})} = 3.50
+#'   \item \eqn{E(T_{111})} = 2.75
+#'   \item \eqn{Comm(T_{112})} = 0.44
+#'   \item \eqn{E(T_{112})} = 3.25
 #'   \item \eqn{\epsilon_{imts}} = 0.15
 #'   \item \eqn{Var(T_{111})} = 0.40
 #'   \item \eqn{\alpha_{ims}} = 0.00
-#'   \item \eqn{Var(T_{112})} = 0.98
+#'   \item \eqn{Var(T_{112})} = 0.45
 #'   \item \eqn{\lambda_{ims}} = 1.00
 #'   \item \eqn{Var(O_{11t1})} = 0.20
 #'   \item \eqn{\delta_{ims}} = 1.00
-#'   \item \eqn{Var(O_{11t2})} = 0.35
+#'   \item \eqn{Var(O_{11t2})} = 0.30
 #'   \item \eqn{\gamma_{ims}} = 1.00
 #'   \item \eqn{Var(TM_{ims})} = 0.10
-#'   \item \eqn{\beta_{1112}} = 0.35
+#'   \item \eqn{\beta_{1112}}* = 0.35
 #'   \item \eqn{Var(OM_{mts})} = 0.10
-#'   \item \eqn{\beta_{0112}} = -0.21
-#'   \item \eqn{Var(\omega_{11s})} = 0.20
+#'   \item \eqn{\beta_{0112}} = 1.31
+#'   \item \eqn{Var(\omega_{11s})} = 0.25
 #'   }
+#' *\eqn{\beta_{1112}} represents the standardized beta coefficient.
 #' Trait factors are essentially parallel, other latent variables are essentially 
-#' equivalent. Scalar MI holds across fixed situations and methods. Latent 
-#' variables are orthogonal apart from trait factors.
+#' equivalent. Scalar measurement invariance holds across fixed situations and  
+#' methods. Latent variables are orthogonal apart from trait factors.
 #' 
 #' @docType data
 #' @keywords datasets

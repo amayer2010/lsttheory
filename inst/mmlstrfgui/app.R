@@ -124,10 +124,10 @@ ui <- fluidPage(
                            c("none", "mmLSTrf_RealDataExample", "mmLSTrf_SimulatedDataExample"), selected="none")%>%
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
-                     bs_embed_popover(title="The real dataset consists of 2 fixed situations (nSit = 2), 
-2 time points (nTime = 2) and 2 methods (nMth = 2). 
-The simulated example dataset consists of 2 fixed situations (nSit = 2),
-3 time points (nTime = 3) and 2 methods (nMth = 2).")),
+                     bs_embed_popover(title="The real dataset consists of 2 fixed situations (s = 2), 
+2 measurement occasions (t = 2) and 2 methods (m = 2). 
+The simulated example dataset consists of 2 fixed situations (s = 2),
+3 measurement occasions (t = 3) and 2 methods (m = 2).")),
                
                
                fileInput("file1", "Choose File (.sav or .csv)", accept=c(".sav", ".csv")),
@@ -137,7 +137,7 @@ The simulated example dataset consists of 2 fixed situations (nSit = 2),
                            min=2, max=25, step=1, value=2),
                
                
-               sliderInput(inputId="nTime", label="Number of Time Points",
+               sliderInput(inputId="nTime", label="Number of Measurement Occasions",
                            min=2, max=25, step=1, value=2),
                
                

@@ -184,7 +184,7 @@
 #' model for analyzing states, traits, situations, method effects, and their 
 #' interactions. Journal of Personality (1-21). https://doi.org/10.1111/jopy.12400
 #' @examples 
-#' modelfit <- mmLSTrf(mmLSTrf_exampledata, nSit=2, nTime=3, nMth=2, structural="TF", 
+#' modelfit <- mmLSTrf(mmLSTrf_SimulatedDataExample, nSit=2, nTime=3, nMth=2, structural="TF", 
 #'                     includeOMF=TRUE, lat.cov=list(TFcov=FALSE, OFcov=FALSE, 
 #'                     TMFcov=FALSE, OMFcov=FALSE), meanstructure=TRUE, 
 #'                     meas.invar="scalar.b", equiv.ass=list(TF="ess.par", 
