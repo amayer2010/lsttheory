@@ -173,8 +173,8 @@
 #' due to the combination of identification requirements and time invariance.
 #' @param addsyntax Character string.\cr
 #' Optional argument where additional model specifications, such as covariances
-#' between specific TMFs and TFs, can be passed to the function and will 
-#' automatically be added to the generated lavaan syntax. 
+#' between specific TMFs and TFs, can be passed to the function in standard lavaan
+#' notation and will automatically be added to the generated lavaan syntax.
 #' For more information about the used variable notation refer to the function 
 #' details.
 #' @param ... Further arguments passed to \code{lavaan::sem()}.
@@ -211,7 +211,7 @@ mmLSTrf <- function(data, nSit=2, nTime=2, nMth=2, structural="TF", includeOMF=T
   
   
   completesyntax <- createCompleteSyntax_mmLSTrf(mod) 
-  completesyntax <- paste0(addsyntax, completesyntax, sep="\n") 
+  completesyntax <- paste(addsyntax, completesyntax, sep="\n") 
     #"addsyntax" first so manual input gets priority when there are potential duplicates
   
   
