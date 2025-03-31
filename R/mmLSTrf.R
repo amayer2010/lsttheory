@@ -173,8 +173,8 @@
 #' due to the combination of identification requirements and time invariance.
 #' @param addsyntax Character string.\cr
 #' Optional argument where additional model specifications, such as covariances
-#' between specific TMFs and TFs, can be passed to the function and will 
-#' automatically be added to the generated lavaan syntax. 
+#' between specific TMFs and TFs, can be passed to the function in standard lavaan
+#' notation and will automatically be added to the generated lavaan syntax.
 #' For more information about the used variable notation refer to the function 
 #' details.
 #' @param ... Further arguments passed to \code{lavaan::sem()}.
@@ -211,7 +211,7 @@ mmLSTrf <- function(data, nSit=2, nTime=2, nMth=2, structural="TF", includeOMF=T
   
   
   completesyntax <- createCompleteSyntax_mmLSTrf(mod) 
-  completesyntax <- paste0(addsyntax, completesyntax, sep="\n") 
+  completesyntax <- paste(addsyntax, completesyntax, sep="\n") 
     #"addsyntax" first so manual input gets priority when there are potential duplicates
   
   
@@ -357,11 +357,28 @@ setMethod("show", "mmLSTrf",
             print(object@lavaanres)
             cat("\n" ,"\n")
             
-            cat("\n" , "MM-LST-RF Coefficients", "\n \n")
-            fac <- as.data.frame(object@coeff.fac[c(1:2)])
-            rownames(fac) <- object@labels$CoefTF
-            print(fac, digits=2)
-            cat ("\n")
+           cat("\n", "MM-LST-RF Coefficients", "\n\n")
+            fac <- NULL
+            
+            if (length(object@coeff.fac$CommTF) > 0) {
+              tf <- data.frame(Comm = object@coeff.fac$CommTF,
+                               SitSpe = object@coeff.fac$SitSpeTF,
+                               row.names = object@labels$CoefTF)
+              fac <- tf
+            }
+            
+            if (length(object@coeff.fac$CommTMF) > 0) {
+              tmf <- data.frame(Comm = object@coeff.fac$CommTMF,
+                                SitSpe = object@coeff.fac$SitSpeTMF,
+                                row.names = object@labels$CoefTMF)
+              fac <- if (is.null(fac)) tmf else rbind(fac, tmf)
+            }
+            
+            if (!is.null(fac)) {
+              print(fac, digits = 2)
+            } else {
+              cat("No commonality or fixed situation specificity coefficients were calculated.\n")
+            }
             
             cat(" The commonality coefficient 'CommTF' quantifies the proportion", "\n",
                 "of trait-like variance which is common across fixed situations", "\n",
@@ -485,7 +502,8 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
                 rep(1:number$nTF, each=number$nTMF/number$nTF))
   TMF <- paste0("TM", ims)
   
-  if(restrictions$structural == "TMF" || restrictions$structural == "both"){
+  if(restrictions$lat.cov$TMFcov == TRUE || restrictions$structural == "TMF" || 
+     restrictions$structural == "both"){
     sTMim1 <- paste0("TM", rep(ims[1:(number$nTMF/number$nTF)], number$nTF-1))
     sTMims <- paste0("TM", ims[(number$nTMF/number$nTF+1):number$nTMF])
       # Prefix "s" = Structural label adaption
@@ -621,44 +639,23 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
 
   if(restrictions$structural == "TF" || restrictions$structural == "both"){
     beta0 <- paste0("b0_T", 2:number$nTF)
-    
-  } else {
-    beta0 <- character(0)
-  }
-
-  
-  
-  if(restrictions$structural == "TF" || restrictions$structural == "both"){
     TFbeta1 <- paste0("b1_T", 2:number$nTF)
-    
-  } else {
-    TFbeta1 <- character(0)
-  }
-
-  
-  
-  if(restrictions$structural == "TF" || restrictions$structural == "both"){
     TFomega <- paste0("omg_T", 2:number$nTF)
     
   } else {
+    beta0 <- character(0)
+    TFbeta1 <- character(0)
     TFomega <- character(0)
   }
- 
+
+
   
-  
-  if(restrictions$structural == "TMF" || restrictions$structural == "both"){  
+  if(restrictions$structural == "TMF" || restrictions$structural == "both"){ 
     TMFbeta1 <-  paste0("b1_TM", ims[(number$nTMF/number$nTF+1):number$nTMF])
-    
-  } else {
-    TMFbeta1 <- character(0)
-  }
-  
-  
-  
-  if(restrictions$structural == "TMF" || restrictions$structural == "both"){  
     TMFomega <- paste0("omg_TM", ims[(number$nTMF/number$nTF+1):number$nTMF])
     
   } else {
+    TMFbeta1 <- character(0)
     TMFomega <- character(0)
   } 
   
@@ -709,7 +706,8 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   }))
   
   
-  if(restrictions$structural == "TMF" || restrictions$structural == "both"){
+  if(restrictions$lat.cov$TMFcov == TRUE || restrictions$structural == "TMF" || 
+     restrictions$structural == "both"){
     sVarTMim1  <- paste0("V_", sTMim1)
     sVarTMims  <- paste0("V_", sTMims)
     
@@ -791,9 +789,11 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   if(restrictions$lat.cov$TMFcov == TRUE){
     TMFpairs <- combn(ims, 2) 
     CovTMF   <- paste0("Cv_TM", TMFpairs[1,], "x", TMFpairs[2,])
+    cCovTMF  <- paste0("Cv_", sTMim1, "x", ims[(number$nTMF/number$nTF+1):number$nTMF])
   
   } else {
     CovTMF <- character(0)
+    cCovTMF <- character(0)
   }
   
   
@@ -861,12 +861,8 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
 ## Coefficients ##
   
-  if(restrictions$lat.cov$TFcov == TRUE){  
-    CommTF   <- paste0("Com_", TFpairs[2,])                                  
-    SitSpeTF <- paste0("SitSp_", TFpairs[2,])                                
-    CoefTF   <- paste0("T", TFpairs[1,], " x T", TFpairs[2,]) 
-    
-  } else if(restrictions$structural == "TF" || restrictions$structural == "both"){
+  if(restrictions$lat.cov$TFcov == TRUE || restrictions$structural == "TF" ||
+     restrictions$structural == "both"){
     CommTF   <- paste0("Com_", tail(TF, length(TF)-1))     
     SitSpeTF <- paste0("SitSp_", tail(TF, length(TF)-1))                               
     CoefTF   <- paste0(TF[1], " x ", tail(TF, length(TF)-1))
@@ -879,12 +875,8 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   
   
-  if(restrictions$lat.cov$TMFcov == TRUE){ 
-    CommTMF   <- paste0("Com_TM", TMFpairs[2,])                       #TMFpairs[1,], "x", 
-    SitSpeTMF <- paste0("SitSp_TM", TMFpairs[2,])                     #TMFpairs[1,], "x",
-    CoefTMF   <- paste0("TM", TMFpairs[1,], " x TM", TMFpairs[2,])    
-    
-  } else if(restrictions$structural == "TMF" || restrictions$structural == "both"){
+  if(restrictions$lat.cov$TMFcov == TRUE || restrictions$structural == "TMF" ||
+     restrictions$structural == "both"){
     CommTMF   <- paste0("Com_", sTMims)                         
     SitSpeTMF <- paste0("SitSp_", sTMims)                       
     CoefTMF   <- paste0(sTMim1, " x ", sTMims)
@@ -936,6 +928,7 @@ labels <- list(TF        = TF,
                VarY      = VarY,
                CovTF     = CovTF,
                CovTMF    = CovTMF,
+               cCovTMF   = cCovTMF,
                CoefTMF   = CoefTMF,
                CovOF     = CovOF,
                OFpair1   = OFpair1,
@@ -1526,9 +1519,9 @@ createCoefficientCommTF_mmLSTrf <- function(mod){
 
   if(mod@restrictions$lat.cov$TFcov == TRUE){
     lhs <- mod@labels$CommTF
-    rhs <- paste0("(", mod@labels$CovTF, " / sqrt(" , 
-                  mod@labels$VarTF[combn(mod@number$nTF, 2)[1,]], "*", 
-                  mod@labels$VarTF[combn(mod@number$nTF, 2)[2,]], "))^2")
+    rhs <- paste0("(", head(mod@labels$CovTF, length(mod@labels$TF)-1), " / sqrt(" , 
+                       rep(mod@labels$VarTF[1], times=mod@number$nTF-1), "*", 
+                       tail(mod@labels$VarTF, length(mod@labels$VarTF)-1), "))^2")
     res <- paste(lhs, ":=", rhs, collapse="\n") 
     
     
@@ -1569,9 +1562,8 @@ createCoefficientCommTMF_mmLSTrf <- function(mod){
 
   if(mod@restrictions$lat.cov$TMFcov == TRUE){
     lhs <- mod@labels$CommTMF
-    rhs <- paste0("(", mod@labels$CovTMF, " / sqrt(" , 
-                  mod@labels$VarTMF[combn(mod@number$nTMF, 2)[1,]], "*", 
-                  mod@labels$VarTMF[combn(mod@number$nTMF, 2)[2,]], "))^2")
+    rhs <- paste0("(", mod@labels$cCovTMF, " / sqrt(", mod@labels$sVarTMim1, "*", 
+                       mod@labels$sVarTMims, "))^2")
     res <- paste(lhs, ":=", rhs, collapse="\n")
     
     } else if(mod@restrictions$structural == "TMF" || 
@@ -1620,7 +1612,7 @@ createCoefficientConY_mmLSTrf <- function(mod){
 
 createCoefficientSpeY_mmLSTrf <- function(mod){
   lhs <- mod@labels$SpeY
-  rhs <- paste0("(",    mod@labels$delta, "^2 * ", mod@labels$cVarOMF, 
+  rhs <- paste0("(",    mod@labels$delta, "^2 * ", mod@labels$cVarOF, 
                 ") / ", mod@labels$VarY)
   res <- paste(lhs, ":=", rhs, collapse="\n")      
   return(res)
