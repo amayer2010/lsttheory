@@ -278,10 +278,12 @@ Parallelity: Equal loadings (= 1), intercepts (= 0) & error variances for all in
       tabPanel("Additional Options" ,
                textAreaInput(inputId="addsyntax", label="Additional lavaan model syntax", 
                              value="", width="100%" ,height="100%", 
-                             placeholder="TM211 ~~ TM322") %>%
+                             placeholder="O11 ~ O12 
+TM211 ~~ TM322") %>%
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
                      bs_embed_popover(title="This field is optional.
+Every individual specification needs to be written in a new line.
 Check mmLSTrf() documentation from lsttheory package for variable naming convention!")),
                
                
@@ -291,6 +293,7 @@ Check mmLSTrf() documentation from lsttheory package for variable naming convent
                  shinyInput_label_embed(
                    shiny_iconlink() %>%
                      bs_embed_popover(title="This field is optional.
+Individual arguments need to be separated by a comma.
 Check sem() documentation from lavaan package for additional arguments!"))
       ),
       
