@@ -14,7 +14,7 @@ mmLSTrf(
   lat.cov = list(TFcov = FALSE, OFcov = FALSE, TMFcov = FALSE, OMFcov = FALSE),
   meanstructure = FALSE,
   meas.invar = "time.invar",
-  equiv.ass = list(TF = "cong", OF = "cong", OMF = "cong"),
+  equiv.ass = list(TF = "par", OF = "ess.equiv", OMF = "ess.equiv"),
   addsyntax = "",
   ...
 )
@@ -109,7 +109,7 @@ variances across fixed situations.
 variances across methods & fixed situations.
 }}
 
-\item{equiv.ass}{List. Default = \code{"cong"}.\cr
+\item{equiv.ass}{List. Default: TF = \code{"par"}, OF & OMF= \code{"ess.equiv"}.\cr
 Equivalence assumptions for latent variables.
 For TF, OF & OMF the following equivalence assumptions can be made separately 
 for each latent variable:
@@ -135,8 +135,8 @@ due to the combination of identification requirements and time invariance.}
 
 \item{addsyntax}{Character string.\cr
 Optional argument where additional model specifications, such as covariances
-between specific TMFs and TFs, can be passed to the function and will 
-automatically be added to the generated lavaan syntax. 
+between specific TMFs and TFs, can be passed to the function in standard lavaan
+notation and will automatically be added to the generated lavaan syntax.
 For more information about the used variable notation refer to the function 
 details.}
 
@@ -214,7 +214,7 @@ Note that for difference and commonality variables the fixed reference
 situation is always s = 1.
 }
 \examples{
-modelfit <- mmLSTrf(mmLSTrf_exampledata, nSit=2, nTime=3, nMth=2, structural="TF", 
+modelfit <- mmLSTrf(mmLSTrf_SimulatedDataExample, nSit=2, nTime=3, nMth=2, structural="TF", 
                     includeOMF=TRUE, lat.cov=list(TFcov=FALSE, OFcov=FALSE, 
                     TMFcov=FALSE, OMFcov=FALSE), meanstructure=TRUE, 
                     meas.invar="scalar.b", equiv.ass=list(TF="ess.par", 

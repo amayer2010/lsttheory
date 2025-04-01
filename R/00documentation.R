@@ -160,7 +160,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @format A data frame with 425 rows and 24 variables
-#' @name mmLSRrf_RealDataExample
+#' @name mmLSTrf_RealDataExample
 NULL
 
 
@@ -288,7 +288,7 @@ NULL
 
 ############## namespace ###########
 
-#' @importFrom utils tail
+#' @importFrom utils head tail
 NULL
 
 #' @importFrom magrittr %>%
