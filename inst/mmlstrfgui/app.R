@@ -41,6 +41,8 @@ server <- shinyServer(function(input, output, session) {
   model <- eventReactive(input$runModel, {
     
     id <- showNotification("Model is being estimated. This may take a few minutes.", duration = NULL)
+
+    warning_list <- character(0)
     
     # Base arguments for mmLSTrf function
     base_args <- paste0("data=dataInput(), nSit=input$nSit, nTime=input$nTime, nMth=input$nMth,",
@@ -58,9 +60,23 @@ server <- shinyServer(function(input, output, session) {
     }
 
     function_call <- paste0("mmLSTrf(", all_args, ")")
-    result <- eval(parse(text = function_call))
+    
+    warnings <- character()
+    result <- withCallingHandlers(
+      expr = eval(parse(text = function_call)),
+      warning = function(w) {
+        warnings <<- c(warnings, conditionMessage(w))
+        invokeRestart("muffleWarning")
+      })
     
     removeNotification(id)
+
+    if (length(warnings) > 0) {
+      showNotification(
+        paste("Warning(s) during model estimation:\n", paste(warnings, collapse = "\n")),
+        type = "warning",
+        duration = NULL)
+    }
     
     return(result)
   })
