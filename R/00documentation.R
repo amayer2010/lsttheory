@@ -136,12 +136,12 @@ NULL
 #' The six items are listed below; the false-keyed are marked with “*”.
 #' 
 #' \itemize{
+#'   \item NVt. Is temperamental, gets emotional easily. 
 #'   \item NAt. Worries a lot. 
 #'   \item NDt. Tends to feel depressed, blue. 
 #'   \item NVf. Is emotionally stable, not easily upset*. 
 #'   \item NAf. Is relaxed, handles stress well*. 
 #'   \item NDf. Feels secure, comfortable with self*. 
-#'   \item NVt. Is temperamental, gets emotional easily. 
 #' }
 #' 
 #' Each item exists in four versions in the dataset, resulting in a total 
@@ -153,7 +153,7 @@ NULL
 #' The resulting dataset reflects a study design with two fixed situations 
 #' (offline and online), two measurement occasions, two measurement methods 
 #' (true- and false-keyed), and three indicators per method (true-keyed: 
-#' NAt, NDt, NVt; false-keyed: NAf, NDf, NVf).
+#' NVt, NAt, NDt; false-keyed: NVf, NAf, NDf).
 #' 
 #' Note: The dataset contains missing values.
 #'
