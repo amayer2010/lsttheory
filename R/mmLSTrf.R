@@ -550,24 +550,23 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   ind_m <- rep(1:number$nMth, each=number$nInd, times=number$nOF)
   ind_t <- rep(1:number$nTime, each=number$nInd*number$nMth, times=number$nTF)
   ind_s <- rep(1:number$nTF, each=number$nInd*number$nMth*number$nTime) 
+
+  ires.f <- paste0(ind_i, ind_m, ind_s) # time invariance (no t index)
   
   if(restrictions$meas.invar == "metric.m" || 
      restrictions$meas.invar == "scalar.m" ||         #time & method invariance
      restrictions$meas.invar == "residual.m"){
-    ires <- paste0(ind_i, rep("m", number$manifest), ind_s)
+    ires.r <- paste0(ind_i, rep("m", number$manifest), ind_s)
     
   } else if(restrictions$meas.invar == "metric.s" || 
             restrictions$meas.invar == "scalar.s" ||  #time & situation invariance
             restrictions$meas.invar == "residual.s"){
-    ires <- paste0(ind_i, ind_m, rep("s", number$manifest))
+    ires.r <- paste0(ind_i, ind_m, rep("s", number$manifest))
     
   } else if(restrictions$meas.invar == "metric.b" || 
             restrictions$meas.invar == "scalar.b" ||  #time, method & situation invariance
             restrictions$meas.invar == "residual.b"){
-    ires <- paste0(ind_i, rep("m", number$manifest), rep("s", number$manifest))
-    
-  } else {                                            # time invariance (no t index)
-    ires <- paste0(ind_i, ind_m, ind_s)
+    ires.r <- paste0(ind_i, rep("m", number$manifest), rep("s", number$manifest))
   }
   
   
@@ -584,6 +583,10 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(restrictions$equiv.ass$TF != "cong"){
     lambda <- rep("1", number$manifest)
+      
+  } else if(restrictions$meas.invar == "time.invar"){ 
+    lambda <- paste0("lam_", ires.f)
+    lambda <- ref(lambda)
     
   } else {
     lambda <- paste0("lam_", ires)
@@ -594,6 +597,10 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(restrictions$equiv.ass$OF != "cong"){
     delta <- rep("1", number$manifest)
+    
+  } else if(restrictions$meas.invar == "time.invar"){
+    delta <- paste0("del_", ires.f)
+    delta <- ref(delta)
     
   } else {
     delta <- paste0("del_", ires)
@@ -607,6 +614,25 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
       gamma  <- rep("1", number$manifest-number$nOF)
       cgamma <- rep(c("0", rep("1", number$nInd*number$nMth-1)), number$nOF)
       
+    } else if(restrictions$meas.invar == "time.invar"){ 
+      gv0 <- seq(1, number$manifest, number$nInd)
+      gv1 <- seq(1, number$manifest, number$nInd*number$nMth)
+      gv0 <- replace(gv0, which(gv0 %in% gv1), gv1+1)
+      
+      gamma <- paste0("gam_", ires.f)
+      gamma[gv0] <- 1
+      gv2 <- NULL
+      for(i in 1:number$nOF){
+        gamma_temp <- gamma[(i*(number$nInd*number$nMth)-((number$nInd*number$nMth)-2)):
+                              (i*(number$nInd*number$nMth))]
+        gv2 <- c(gv2, gamma_temp)
+      }
+      gamma <- gv2
+      
+      cgamma <- paste0("gam_", ires.f)
+      cgamma[gv0] <- 1
+      cgamma[gv1] <- 0
+
     } else {
       gv0 <- seq(1, number$manifest, number$nInd)
       gv1 <- seq(1, number$manifest, number$nInd*number$nMth)
@@ -665,6 +691,14 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(any(restrictions$equiv.ass$TF == c("equiv", "par"))){ 
     alpha <- rep("0", number$manifest)
+
+    } else if(restrictions$meas.invar == "time.invar" ||
+            restrictions$meas.invar == "metric.m" ||
+            restrictions$meas.invar == "metric.s" ||
+            restrictions$meas.invar == "metric.b"){
+    alpha <- paste0("alph_", ires.f)
+    val   <- alpha[seq(1, number$manifest, number$manifest / number$nTF)]
+    alpha[alpha %in% val] <- 0
     
   } else {
     alpha <- paste0("alph_", ires)
