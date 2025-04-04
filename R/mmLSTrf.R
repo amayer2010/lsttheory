@@ -528,10 +528,12 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
 ## Difference Variables ##
   
   if(restrictions$structural == "TF" || restrictions$structural == "both"){
-    DiffTF <- paste0("Dif_", tail(TF, length(TF)-1))                        
+    DiffTF <- paste0("Dif_T", 2:number$nTF)  
+    MDif_TF <- paste0("MDif_T", 2:number$nTF) 
     
   } else {
     DiffTF <- character(0)
+    MDif_TF <- character(0) 
   }
   
   
@@ -667,11 +669,13 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
     beta0 <- paste0("b0_T", 2:number$nTF)
     TFbeta1 <- paste0("b1_T", 2:number$nTF)
     TFomega <- paste0("omg_T", 2:number$nTF)
+    MDif_TF <- paste0("MDif_T", 2:number$nTF)
     
   } else {
     beta0 <- character(0)
     TFbeta1 <- character(0)
     TFomega <- character(0)
+    MDif_TF <- character(0)
   }
 
 
@@ -936,6 +940,7 @@ labels <- list(TF        = TF,
                sTMims    = sTMims,
                OMF       = OMF,
                DiffTF    = DiffTF,
+               MDif_TF   = MDif_TF,
                DiffTMF   = DiffTMF,
                lambda    = lambda,
                delta     = delta,
@@ -990,6 +995,7 @@ createCompleteSyntax_mmLSTrf <- function(mod){
                            createSyntaxLoadingsTMF_mmLSTrf(mod), "\n",
                            createSyntaxLoadingsOMF_mmLSTrf(mod), "\n",
                            createSyntaxLoadingsDiffTF_mmLSTrf(mod), "\n",
+                           createSyntaxMeanDifTF_mmLSTrf(mod), "\n", 
                            createSyntaxLoadingsDiffTMF_mmLSTrf(mod), "\n",
                            createSyntaxRegTF_mmLSTrf(mod), "\n",
                            createSyntaxBeta0_mmLSTrf(mod), "\n",
@@ -1298,6 +1304,22 @@ createSyntaxMeanTFs_mmLSTrf <- function(mod){
     lhs <- tail(mod@labels$MeanTF, length(mod@labels$MeanTF)-1)
     rhs <- paste0(mod@labels$MeanTF[1], " + (", mod@labels$beta0, " + ", 
                   mod@labels$TFbeta1, "*", mod@labels$MeanTF[1], ")")
+    res <- paste(lhs, ":=", rhs, collapse="\n")
+    
+  } else {
+    res <- character(0)
+  }
+  
+  return(res)
+}
+
+
+createSyntaxMeanDifTF_mmLSTrf <- function(mod){  
+  
+  if(mod@restrictions$meanstructure == TRUE && 
+    (mod@restrictions$structural == "TF" || mod@restrictions$structural == "both")){
+    lhs <- mod@labels$MDif_TF 
+    rhs <- paste(mod@labels$beta0, "+", mod@labels$TFbeta1, "*", mod@labels$MeanTF[1])
     res <- paste(lhs, ":=", rhs, collapse="\n")
     
   } else {
