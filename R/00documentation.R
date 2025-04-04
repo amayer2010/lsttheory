@@ -136,12 +136,12 @@ NULL
 #' The six items are listed below; the false-keyed are marked with “*”.
 #' 
 #' \itemize{
-#'   \item NVt. Is temperamental, gets emotional easily. 
 #'   \item NAt. Worries a lot. 
-#'   \item NDt. Tends to feel depressed, blue. 
-#'   \item NVf. Is emotionally stable, not easily upset*. 
+#'   \item NDt. Tends to feel depressed, blue.
+#'   \item NVt. Is temperamental, gets emotional easily. 
 #'   \item NAf. Is relaxed, handles stress well*. 
-#'   \item NDf. Feels secure, comfortable with self*. 
+#'   \item NDf. Feels secure, comfortable with self*.
+#'   \item NVf. Is emotionally stable, not easily upset*. 
 #' }
 #' 
 #' Each item exists in four versions in the dataset, resulting in a total 
