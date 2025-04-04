@@ -378,29 +378,29 @@ setMethod("show", "mmLSTrf",
               print(fac, digits = 2)
             } else {
               cat("No commonality or fixed situation specificity coefficients were calculated.\n")
-            }
+            } 
+            cat("\n")
             
             cat(" The commonality coefficient 'CommTF' quantifies the proportion", "\n",
-                "of trait-like variance which is common across fixed situations", "\n",
-                "(only calculated when TFcov=TRUE).", "\n",
+                "of trait-like variance which is common across fixed situations.", "\n",
                 "CommTF is calculated as follows:", "\n",
                 "CommTF = (cor(T_111, T_11s))^2", "\n \n",
                 
                 "The situation specificity coefficient 'SitSpeTF' quantifies", "\n",
                 "the proportion of stable variance which is specific to the", "\n",
-                "fixed situation (only calculated when TFcov=TRUE).", "\n",
+                "fixed situation.", "\n",
                 "SitSpeTMF is calculated as follows:", "\n",
                 "SitSpeTMF = 1 - (cor(T_111, T_11s))^2", "\n \n",
                 
                 "The commonality coefficient 'CommTMF' quantifies the proportion", "\n",
                 "of variance in trait-method effects which is shared across", "\n",
-                "fixed situations (only calculated when TMFcov=TRUE).", "\n",
+                "fixed situations.", "\n",
                 "CommTMF is calculated as follows:", "\n",
                 "CommTMF = (cor(TM_im1, TM_ims))^2", "\n \n",
                 
                 "The situation specificity coefficient 'SitSpeTMF' quantifies", "\n",
                 "the proportion of variance in trait-method effects which is", "\n",
-                "specific to the fixed situation (only calculated when TMFcov=TRUE).", "\n",
+                "specific to the fixed situation.", "\n",
                 "SitSpeTMF is calculated as follows:", "\n",
                 "SitSpeTMF = 1 - (cor(TM_im1, TM_ims))^2", "\n \n")
             
