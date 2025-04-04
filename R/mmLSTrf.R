@@ -378,29 +378,29 @@ setMethod("show", "mmLSTrf",
               print(fac, digits = 2)
             } else {
               cat("No commonality or fixed situation specificity coefficients were calculated.\n")
-            }
+            } 
+            cat("\n")
             
             cat(" The commonality coefficient 'CommTF' quantifies the proportion", "\n",
-                "of trait-like variance which is common across fixed situations", "\n",
-                "(only calculated when TFcov=TRUE).", "\n",
+                "of trait-like variance which is common across fixed situations.", "\n",
                 "CommTF is calculated as follows:", "\n",
                 "CommTF = (cor(T_111, T_11s))^2", "\n \n",
                 
                 "The situation specificity coefficient 'SitSpeTF' quantifies", "\n",
                 "the proportion of stable variance which is specific to the", "\n",
-                "fixed situation (only calculated when TFcov=TRUE).", "\n",
+                "fixed situation.", "\n",
                 "SitSpeTMF is calculated as follows:", "\n",
                 "SitSpeTMF = 1 - (cor(T_111, T_11s))^2", "\n \n",
                 
                 "The commonality coefficient 'CommTMF' quantifies the proportion", "\n",
                 "of variance in trait-method effects which is shared across", "\n",
-                "fixed situations (only calculated when TMFcov=TRUE).", "\n",
+                "fixed situations.", "\n",
                 "CommTMF is calculated as follows:", "\n",
                 "CommTMF = (cor(TM_im1, TM_ims))^2", "\n \n",
                 
                 "The situation specificity coefficient 'SitSpeTMF' quantifies", "\n",
                 "the proportion of variance in trait-method effects which is", "\n",
-                "specific to the fixed situation (only calculated when TMFcov=TRUE).", "\n",
+                "specific to the fixed situation.", "\n",
                 "SitSpeTMF is calculated as follows:", "\n",
                 "SitSpeTMF = 1 - (cor(TM_im1, TM_ims))^2", "\n \n")
             
@@ -528,10 +528,12 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
 ## Difference Variables ##
   
   if(restrictions$structural == "TF" || restrictions$structural == "both"){
-    DiffTF <- paste0("Dif_", tail(TF, length(TF)-1))                        
+    DiffTF <- paste0("Dif_T", 2:number$nTF)  
+    MDif_TF <- paste0("MDif_T", 2:number$nTF) 
     
   } else {
     DiffTF <- character(0)
+    MDif_TF <- character(0) 
   }
   
   
@@ -550,24 +552,23 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   ind_m <- rep(1:number$nMth, each=number$nInd, times=number$nOF)
   ind_t <- rep(1:number$nTime, each=number$nInd*number$nMth, times=number$nTF)
   ind_s <- rep(1:number$nTF, each=number$nInd*number$nMth*number$nTime) 
+
+  ires.f <- paste0(ind_i, ind_m, ind_s) # time invariance (no t index)
   
   if(restrictions$meas.invar == "metric.m" || 
      restrictions$meas.invar == "scalar.m" ||         #time & method invariance
      restrictions$meas.invar == "residual.m"){
-    ires <- paste0(ind_i, rep("m", number$manifest), ind_s)
+    ires.r <- paste0(ind_i, rep("m", number$manifest), ind_s)
     
   } else if(restrictions$meas.invar == "metric.s" || 
             restrictions$meas.invar == "scalar.s" ||  #time & situation invariance
             restrictions$meas.invar == "residual.s"){
-    ires <- paste0(ind_i, ind_m, rep("s", number$manifest))
+    ires.r <- paste0(ind_i, ind_m, rep("s", number$manifest))
     
   } else if(restrictions$meas.invar == "metric.b" || 
             restrictions$meas.invar == "scalar.b" ||  #time, method & situation invariance
             restrictions$meas.invar == "residual.b"){
-    ires <- paste0(ind_i, rep("m", number$manifest), rep("s", number$manifest))
-    
-  } else {                                            # time invariance (no t index)
-    ires <- paste0(ind_i, ind_m, ind_s)
+    ires.r <- paste0(ind_i, rep("m", number$manifest), rep("s", number$manifest))
   }
   
   
@@ -584,6 +585,10 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(restrictions$equiv.ass$TF != "cong"){
     lambda <- rep("1", number$manifest)
+      
+  } else if(restrictions$meas.invar == "time.invar"){ 
+    lambda <- paste0("lam_", ires.f)
+    lambda <- ref(lambda)
     
   } else {
     lambda <- paste0("lam_", ires)
@@ -594,6 +599,10 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(restrictions$equiv.ass$OF != "cong"){
     delta <- rep("1", number$manifest)
+    
+  } else if(restrictions$meas.invar == "time.invar"){
+    delta <- paste0("del_", ires.f)
+    delta <- ref(delta)
     
   } else {
     delta <- paste0("del_", ires)
@@ -607,6 +616,25 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
       gamma  <- rep("1", number$manifest-number$nOF)
       cgamma <- rep(c("0", rep("1", number$nInd*number$nMth-1)), number$nOF)
       
+    } else if(restrictions$meas.invar == "time.invar"){ 
+      gv0 <- seq(1, number$manifest, number$nInd)
+      gv1 <- seq(1, number$manifest, number$nInd*number$nMth)
+      gv0 <- replace(gv0, which(gv0 %in% gv1), gv1+1)
+      
+      gamma <- paste0("gam_", ires.f)
+      gamma[gv0] <- 1
+      gv2 <- NULL
+      for(i in 1:number$nOF){
+        gamma_temp <- gamma[(i*(number$nInd*number$nMth)-((number$nInd*number$nMth)-2)):
+                              (i*(number$nInd*number$nMth))]
+        gv2 <- c(gv2, gamma_temp)
+      }
+      gamma <- gv2
+      
+      cgamma <- paste0("gam_", ires.f)
+      cgamma[gv0] <- 1
+      cgamma[gv1] <- 0
+
     } else {
       gv0 <- seq(1, number$manifest, number$nInd)
       gv1 <- seq(1, number$manifest, number$nInd*number$nMth)
@@ -641,11 +669,13 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
     beta0 <- paste0("b0_T", 2:number$nTF)
     TFbeta1 <- paste0("b1_T", 2:number$nTF)
     TFomega <- paste0("omg_T", 2:number$nTF)
+    MDif_TF <- paste0("MDif_T", 2:number$nTF)
     
   } else {
     beta0 <- character(0)
     TFbeta1 <- character(0)
     TFomega <- character(0)
+    MDif_TF <- character(0)
   }
 
 
@@ -665,6 +695,14 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
   
   if(any(restrictions$equiv.ass$TF == c("equiv", "par"))){ 
     alpha <- rep("0", number$manifest)
+
+    } else if(restrictions$meas.invar == "time.invar" ||
+            restrictions$meas.invar == "metric.m" ||
+            restrictions$meas.invar == "metric.s" ||
+            restrictions$meas.invar == "metric.b"){
+    alpha <- paste0("alph_", ires.f)
+    val   <- alpha[seq(1, number$manifest, number$manifest / number$nTF)]
+    alpha[alpha %in% val] <- 0
     
   } else {
     alpha <- paste0("alph_", ires)
@@ -902,6 +940,7 @@ labels <- list(TF        = TF,
                sTMims    = sTMims,
                OMF       = OMF,
                DiffTF    = DiffTF,
+               MDif_TF   = MDif_TF,
                DiffTMF   = DiffTMF,
                lambda    = lambda,
                delta     = delta,
@@ -956,6 +995,7 @@ createCompleteSyntax_mmLSTrf <- function(mod){
                            createSyntaxLoadingsTMF_mmLSTrf(mod), "\n",
                            createSyntaxLoadingsOMF_mmLSTrf(mod), "\n",
                            createSyntaxLoadingsDiffTF_mmLSTrf(mod), "\n",
+                           createSyntaxMeanDifTF_mmLSTrf(mod), "\n", 
                            createSyntaxLoadingsDiffTMF_mmLSTrf(mod), "\n",
                            createSyntaxRegTF_mmLSTrf(mod), "\n",
                            createSyntaxBeta0_mmLSTrf(mod), "\n",
@@ -1264,6 +1304,22 @@ createSyntaxMeanTFs_mmLSTrf <- function(mod){
     lhs <- tail(mod@labels$MeanTF, length(mod@labels$MeanTF)-1)
     rhs <- paste0(mod@labels$MeanTF[1], " + (", mod@labels$beta0, " + ", 
                   mod@labels$TFbeta1, "*", mod@labels$MeanTF[1], ")")
+    res <- paste(lhs, ":=", rhs, collapse="\n")
+    
+  } else {
+    res <- character(0)
+  }
+  
+  return(res)
+}
+
+
+createSyntaxMeanDifTF_mmLSTrf <- function(mod){  
+  
+  if(mod@restrictions$meanstructure == TRUE && 
+    (mod@restrictions$structural == "TF" || mod@restrictions$structural == "both")){
+    lhs <- mod@labels$MDif_TF 
+    rhs <- paste(mod@labels$beta0, "+", mod@labels$TFbeta1, "*", mod@labels$MeanTF[1])
     res <- paste(lhs, ":=", rhs, collapse="\n")
     
   } else {
