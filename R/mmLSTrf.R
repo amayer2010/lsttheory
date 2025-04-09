@@ -591,7 +591,7 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
     lambda <- ref(lambda)
     
   } else {
-    lambda <- paste0("lam_", ires)
+    lambda <- paste0("lam_", ires.r)
     lambda <- ref(lambda)
   }
   
@@ -605,7 +605,7 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
     delta <- ref(delta)
     
   } else {
-    delta <- paste0("del_", ires)
+    delta <- paste0("del_", ires.r)
     delta <- ref(delta)
   }
   
@@ -640,7 +640,7 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
       gv1 <- seq(1, number$manifest, number$nInd*number$nMth)
       gv0 <- replace(gv0, which(gv0 %in% gv1), gv1+1)
       
-      gamma <- paste0("gam_", ires)
+      gamma <- paste0("gam_", ires.r)
       gamma[gv0] <- 1
       gv2 <- NULL
       for(i in 1:number$nOF){
@@ -650,7 +650,7 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
       }
       gamma <- gv2
       
-      cgamma <- paste0("gam_", ires)
+      cgamma <- paste0("gam_", ires.r)
       cgamma[gv0] <- 1
       cgamma[gv1] <- 0
     }
@@ -705,7 +705,7 @@ createLabels_mmLSTrf <- function(data, number, restrictions){
     alpha[alpha %in% val] <- 0
     
   } else {
-    alpha <- paste0("alph_", ires)
+    alpha <- paste0("alph_", ires.r)
     val   <- alpha[seq(1, number$manifest, number$manifest / number$nTF)]
     alpha[alpha %in% val] <- 0
   }
